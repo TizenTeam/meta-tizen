@@ -84,7 +84,7 @@ do_install() {
  Libs : -L\${libdir} -liniparser
  Cflags : -I\${includedir}
  
- EOF
+EOF
  
 }
 
