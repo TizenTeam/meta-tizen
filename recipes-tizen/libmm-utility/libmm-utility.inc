@@ -66,7 +66,7 @@ do_compile() {
 
 
  CFLAGS="$CFLAGS -DEXPORT_API=\"__attribute__((visibility(\\\"default\\\")))\" -D_MM_PROJECT_FLOATER" \
- LDFLAGS+="-Wl,--rpath=${prefix}/lib -Wl,--hash-style=both -Wl,--as-needed" \
+ LDFLAGS+=" -Wl,--rpath=${prefix}/lib -Wl,--hash-style=both -Wl,--as-needed " \
 
    CFLAGS="${CFLAGS:--O2 -g -m64 -fmessage-length=0 -D_FORTIFY_SOURCE=2 -fstack-protector -funwind-tables -fasynchronous-unwind-tables}" ; export CFLAGS ;
    CXXFLAGS="${CXXFLAGS:--O2 -g -m64 -fmessage-length=0 -D_FORTIFY_SOURCE=2 -fstack-protector -funwind-tables -fasynchronous-unwind-tables}" ; export CXXFLAGS ;
