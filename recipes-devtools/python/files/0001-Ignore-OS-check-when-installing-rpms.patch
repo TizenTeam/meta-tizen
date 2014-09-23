@@ -1,0 +1,33 @@
+From 24f3e296774647642e94163a43291667a38d4e8b Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?K=C3=A9vin=20THIERRY?= <kevin.thierry@open.eurogiciel.org>
+Date: Fri, 12 Sep 2014 11:36:15 +0200
+Subject: [PATCH] Ignore OS check when installing rpms
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Add "RPMPROB_FILTER_IGNOREOS" flag to prevent checking of the operating
+system when installing RPM. This is necessary when using specific
+BSP/MACHINE leading to uncommon OS values.
+
+Signed-off-by: Kévin THIERRY <kevin.thierry@open.eurogiciel.org>
+Signed-off-by: Ronan Le Martret <ronan@fridu.net>
+---
+ smart/backends/rpm/pm.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/smart/backends/rpm/pm.py b/smart/backends/rpm/pm.py
+index f5c3051..b8c7c24 100644
+--- a/smart/backends/rpm/pm.py
++++ b/smart/backends/rpm/pm.py
+@@ -217,6 +217,7 @@ class RPMPackageManager(PackageManager):
+             ts.order()
+         probfilter = rpm.RPMPROB_FILTER_OLDPACKAGE
+         probfilter |= rpm.RPMPROB_FILTER_IGNOREARCH
++        probfilter |= rpm.RPMPROB_FILTER_IGNOREOS
+         if force or reinstall:
+             probfilter |= rpm.RPMPROB_FILTER_REPLACEPKG
+             probfilter |= rpm.RPMPROB_FILTER_REPLACEOLDFILES
+-- 
+1.8.1.4
+

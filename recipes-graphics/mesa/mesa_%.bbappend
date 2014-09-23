@@ -1,6 +1,6 @@
-PACKAGECONFIG_append = " gallium"
-PACKAGECONFIG_append = " gallium-egl"
-PACKAGECONFIG_append = " gallium-gbm"
-PACKAGECONFIG_append = " gallium-llvm"
+# PACKAGECONFIG_append = " gallium"
+# PACKAGECONFIG_append = " gallium-egl"
+# PACKAGECONFIG_append = " gallium-gbm"
+# PACKAGECONFIG_append = " gallium-llvm"
 
-GALLIUMDRIVERS_append = ",i915"
+#  GALLIUMDRIVERS_append = ",i915"
