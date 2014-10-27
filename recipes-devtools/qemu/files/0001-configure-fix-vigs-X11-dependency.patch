@@ -1,0 +1,28 @@
+From f028a6ce8f93abf937de14f3e7595b6740726309 Mon Sep 17 00:00:00 2001
+From: Patrick Ohly <patrick.ohly@intel.com>
+Date: Mon, 27 Oct 2014 03:45:16 -0700
+Subject: [PATCH] configure: fix vigs -> X11 dependency
+
+hw/vigs/display.c calls X11 on Linux, and thus needs -lX11 on the
+link line (indirectly linking is not enough).
+---
+ configure | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/configure b/configure
+index 8e06cf8..7702c1b 100755
+--- a/configure
++++ b/configure
+@@ -4686,6 +4686,9 @@ fi
+ 
+ if test "$vigs" = "yes" ; then
+   echo "CONFIG_VIGS=y" >> $config_host_mak
++  if test "$linux" = "yes"; then
++      LIBS="$LIBS -lX11" # for X11 calls in hw/vigs/display.c
++  fi
+ fi
+ 
+ if test "$smartcard" = "yes" ; then
+-- 
+1.8.4.5
+
