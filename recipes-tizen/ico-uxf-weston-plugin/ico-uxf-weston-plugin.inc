@@ -39,7 +39,7 @@ DEPENDS += "weston-ivi-shell"
 inherit pkgconfig
 DEPENDS += "weston"
 DEPENDS += "ecore"
-DEPENDS += "mesa"
+DEPENDS += "virtual/libgl"
 DEPENDS += "pixman"
 
 do_prep() {

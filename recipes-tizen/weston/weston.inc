@@ -42,7 +42,7 @@ DEPENDS += "udev"
 DEPENDS += "libvpx"
 DEPENDS += "xz"
 DEPENDS += "poppler"
-DEPENDS += "mesa"
+DEPENDS += "virtual/libgl"
 DEPENDS += "systemd"
 inherit pkgconfig
 DEPENDS += "glib-2.0"

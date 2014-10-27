@@ -28,7 +28,7 @@ DEPENDS += "ico-uxf-utilities"
 inherit pkgconfig
 DEPENDS += "glib-2.0"
 DEPENDS += "wayland"
-DEPENDS += "mesa"
+DEPENDS += "virtual/libgl"
 DEPENDS += "ico-uxf-weston-plugin"
 
 do_prep() {
