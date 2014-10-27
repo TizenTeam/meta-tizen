@@ -44,7 +44,7 @@ DEPENDS += "libvpx"
 DEPENDS += "xz"
 DEPENDS_append_class-native = " automake-native"
 DEPENDS_append_class-target = " automake-native"
-DEPENDS += "mesa"
+DEPENDS += "virtual/libgl"
 DEPENDS += "systemd"
 inherit pkgconfig
 DEPENDS += "glib-2.0"
