@@ -1,0 +1,27 @@
+From f4d838179389513168a1ebe124b04ebfe9576cb9 Mon Sep 17 00:00:00 2001
+From: Patrick Ohly <patrick.ohly@intel.com>
+Date: Fri, 24 Oct 2014 04:55:44 -0700
+Subject: [PATCH] make egltext.h more compatible with Mesa
+
+Weston expects to get the definition of PFNEGLQUERYWAYLANDBUFFERWL
+(defined in eglmesaext.h) when including eglext.h. Support that
+the same way as Mesa does, by including that second file.
+---
+ include/EGL/eglext.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/include/EGL/eglext.h b/include/EGL/eglext.h
+index a392b31..07ea7fd 100644
+--- a/include/EGL/eglext.h
++++ b/include/EGL/eglext.h
+@@ -625,4 +625,7 @@ EGLAPI EGLuint64NV EGLAPIENTRY eglGetSystemTimeNV (void);
+ }
+ #endif
+ 
++/* emulate Mesa behavior and provide definitions of Mesa extensions via eglext.h */
++#include <EGL/eglmesaext.h>
++
+ #endif
+-- 
+1.8.4.5
+
