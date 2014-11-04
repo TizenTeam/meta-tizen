@@ -1,6 +1,7 @@
 # Switch to pulling from Tizen git. This is qemu 2.0.0 with lots of Tizen patches.
 SRC_URI_remove = "http://wiki.qemu-project.org/download/${BP}.tar.bz2 file://Qemu-Arm-versatilepb-Add-memory-size-checking.patch"
-SRC_URI_prepend = " git://review.tizen.org/sdk/emulator/qemu;rev=333915ea45a76653c2f54ad066b79d86f3994e48;branch=tizen "
+SRC_URI_prepend = " git://review.tizen.org/sdk/emulator/qemu;rev=ed403ab0f23052948f5e060e937f7105e4381c43;nobranch=1 "
+
 S = "${WORKDIR}/git"
 PV = "2.0.0.tizen"
 
