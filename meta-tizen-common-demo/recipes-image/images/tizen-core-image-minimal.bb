@@ -8,7 +8,11 @@ inherit core-image distro_features_check
 
 REQUIRED_DISTRO_FEATURES = "wayland pam"
 
-CORE_IMAGE_BASE_INSTALL += "weston weston-init clutter-1.0-examples"
+CORE_IMAGE_BASE_INSTALL += "weston weston-init"
+
+# clutter-1.0-examples depends on clutter -> cogl -> mesa.
+# Don't pull all of that into Tizen images, in particular
+# not mesa.
 
 DESCRIPTION = "A weston image with Tizen common."
 
