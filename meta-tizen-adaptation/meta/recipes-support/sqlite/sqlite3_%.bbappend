@@ -1,4 +1,5 @@
 SECTION = "Application Framework/Database"
+SRPM_IS_LIB = "lib${PN}"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
