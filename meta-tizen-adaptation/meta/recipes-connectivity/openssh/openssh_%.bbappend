@@ -10,3 +10,7 @@ do_install_append () {
         install -D -m 0755 ${WORKDIR}/pam.d/sshd ${D}${sysconfdir}/pam.d/sshd
     fi
 }
+
+# Tizen does not use tcp-wrappers by default, which is the only
+# feature enabled by default in the base .bb.
+PACKAGECONFIG ??= ""
