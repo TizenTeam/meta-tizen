@@ -8,3 +8,7 @@ PACKAGECONFIG[udev] = "--with-udev-rules-dir=/lib/udev/rules.d,,udev"
 
 # Not enabled in Tizen, also fails to build.
 EXTRA_OECONF_append = " --disable-nls"
+
+# Disable interactive command line tools. Allows us to remove the ncurses dependency.
+EXTRA_OECONF_append = " --disable-alsamixer --disable-alsatest"
+DEPENDS_remove = "ncurses"
