@@ -36,7 +36,18 @@ SRC_URI += "file://0030-multi-user-Add-multi-user-support-for-auto-connect-s.pat
 SRC_URI += "file://0031-multi-user-Expose-function-to-check-service-user-fav.patch"
 SRC_URI += "file://0032-multi-user-Fix-service-load-save-issues.patch"
 
+# The Tizen patches add a build dependency on readline.
+DEPENDS_append = " readline"
+
 # Use bluez5 instead of bluez4
 DEPENDS_remove = "bluez4"
 RDEPENDS_${PN}_remove = "bluez4"
 PACKAGECONFIG[bluetooth] = "--enable-bluetooth, --disable-bluetooth, bluez5, bluez5"
+
+# Build without ppp, not in Tizen.
+DEPENDS_remove = "ppp"
+
+# Build without the wpa-supplicant build dependency,
+# it was not used in Tizen so far and seems to be optional.
+# Tizen does not even provide a wpa-supplicant-devel.
+DEPENDS_remove = "wpa-supplicant"
