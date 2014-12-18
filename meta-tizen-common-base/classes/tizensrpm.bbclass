@@ -125,7 +125,7 @@ icu=libicu \
 json-glib=libjson-glib \
 kmod-dev=libkmod-dev \
 libcheck(.*)=check\1 \
-libcms=liblcms2 lcms-dev=libcms2-dev lcms=lcms2 \
+liblcms=liblcms2 lcms-dev=liblcms2-dev lcms=lcms2 \
 libjpeg-turbo=libjpeg libjpeg-turbo-dev=libjpeg-dev \
 libnl=libnl3 libnl-(.*)=libnl3-\1 \
 libpam(.*)=pam\1 \
