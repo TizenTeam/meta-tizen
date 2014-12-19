@@ -1,1 +1,1 @@
-SECTION = "Applications/System"
+SECTION = "System/Utilities"

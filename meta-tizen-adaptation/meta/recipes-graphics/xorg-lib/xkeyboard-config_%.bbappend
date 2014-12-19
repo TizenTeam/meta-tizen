@@ -1,1 +1,1 @@
-SECTION = "System/X11/Utilities"
+SECTION = "Graphics & UI Framework/X Window System"

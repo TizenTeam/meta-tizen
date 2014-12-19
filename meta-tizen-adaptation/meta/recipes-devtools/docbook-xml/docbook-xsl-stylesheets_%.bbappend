@@ -1,1 +1,1 @@
-SECTION = "Productivity/Publishing/DocBook"
+SECTION = "System/Documentation"

@@ -1,1 +1,1 @@
-SECTION = "Base / Libraries"
+SECTION = "Base/Libraries"

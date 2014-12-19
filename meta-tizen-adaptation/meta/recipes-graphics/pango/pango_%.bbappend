@@ -1,2 +1,2 @@
-SECTION = "System/i18n"
+SECTION = "System/Other"
 SRPM_IS_LIB = "lib${PN}"

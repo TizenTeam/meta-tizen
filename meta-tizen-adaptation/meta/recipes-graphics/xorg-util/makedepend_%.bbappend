@@ -1,1 +1,1 @@
-SECTION = "Development/Tools/Building"
+SECTION = "Development/Building"
