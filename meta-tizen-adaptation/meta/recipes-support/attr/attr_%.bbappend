@@ -5,3 +5,8 @@ SECTION = "Base/File Systems"
 # of setting AUTOHEADER to true.
 EXTRA_AUTORECONF_append = " --exclude=autoheader"
 export AUTOHEADER = ""
+
+# Not enabled in Tizen.
+EXTRA_OECONF_append = " --disable-gettext"
+EXTRA_OECONF_remove = "--enable-gettext"
+DEPENDS_remove = "virtual/libintl virtual/gettext gettext-native"
