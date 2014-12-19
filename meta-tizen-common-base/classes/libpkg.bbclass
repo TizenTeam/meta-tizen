@@ -40,6 +40,10 @@
 #
 # SRPM_IS_LIB += "lib${PN}"
 def generate_libs(d):
+    def set_if_unset(var, value, d):
+        if d.getVar(var, True) is None:
+            d.setVar(var, value)
+
     def add_lib(lib, files, d):
         # Support re-defining an existing package by removing it first.
         pkgs = (d.getVar('PACKAGES', True) or "").split()
@@ -47,12 +51,8 @@ def generate_libs(d):
             pkgs.remove(lib)
         pkgs.insert(0, lib)
         d.setVar('PACKAGES', ' '.join(pkgs))
-        var = 'FILES_%s' % lib
-        if d.getVar(var, True) is None:
-            d.setVar(var, files)
-        var = 'SECTION_%s' % lib
-        if d.getVar(var, True) is None:
-            d.setVar(var, 'libs')
+        set_if_unset('FILES_%s' % lib, files, d)
+        set_if_unset('SECTION_%s' % lib, 'libs', d)
         d.appendVar('RDEPENDS_%s-dev' % pn, (' %s (= $' + '{EXTENDPKGV})') % lib)
         d.appendVar('SRPM_IS_LIB', ' ' + lib)
 
