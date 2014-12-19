@@ -1,1 +1,1 @@
-SECTION = "System/Daemons"
+SECTION = "System/Other"

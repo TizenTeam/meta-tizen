@@ -1,1 +1,1 @@
-SECTION = "Productivity/Networking/Other"
+SECTION = "Network & Connectivity/Other"

@@ -1,1 +1,1 @@
-SECTION = "Graphics/Font Management"
+SECTION = "Graphics & UI Framework/Fonts"

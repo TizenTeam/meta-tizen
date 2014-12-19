@@ -1,4 +1,4 @@
-SECTION = "Development/Tools/Building"
+SECTION = "Development/Building"
 
 # gnu-conf installs new config.guess files as part of reconfiguring.
 # This is useful when adding new architectures often. In Tizen, it

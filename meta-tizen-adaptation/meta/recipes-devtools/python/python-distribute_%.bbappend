@@ -1,1 +1,1 @@
-SECTION = "Development/Languages/Python"
+SECTION = "Development/Python"
