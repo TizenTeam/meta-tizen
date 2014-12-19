@@ -13,6 +13,11 @@
 # can be changed by setting SUMMARY_<lib> and DESCRIPTION_<lib> for
 # them. The FILES_<lib> variable can be set, in which case this class
 # will not modify it at all.
+#
+# It is possible to list an existing package in PKG_LIBS. libpkg will
+# then add the additional settings and reorder PACKAGES to match the
+# order as if the package had not existed. It will not overwrite
+# the FILES_<lib> variable or SECTION_<lib>
 
 # What generate_libs creates is similar to these variable assignments,
 # except that is potentially done for multiple different libs:
@@ -36,7 +41,12 @@
 # SRPM_IS_LIB += "lib${PN}"
 def generate_libs(d):
     def add_lib(lib, files, d):
-        d.prependVar('PACKAGES', '%s ' % lib)
+        # Support re-defining an existing package by removing it first.
+        pkgs = (d.getVar('PACKAGES', True) or "").split()
+        if lib in pkgs:
+            pkgs.remove(lib)
+        pkgs.insert(0, lib)
+        d.setVar('PACKAGES', ' '.join(pkgs))
         var = 'FILES_%s' % lib
         if d.getVar(var, True) is None:
             d.setVar(var, files)
