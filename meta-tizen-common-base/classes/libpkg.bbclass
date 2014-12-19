@@ -49,7 +49,11 @@ def generate_libs(d):
     libs = d.getVar('PKG_LIBS', True)
     pn = d.getVar('PN', True)
     if libs:
-        for lib in libs.split():
+        libs = libs.split()
+        # Reverse so that they get prepended in the original order to PACKAGES.
+        libs.reverse()
+        for lib in libs:
+            libpn = lib.replace(pn, '$' + '{PN}')
             add_lib(lib, ('$' + '{libdir}/%s.so.*') % lib, d)
     else:
         add_lib('lib' + pn, '$' + '{libdir}/*.so.*', d)
