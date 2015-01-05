@@ -68,9 +68,10 @@ def generate_libs(d):
     else:
         add_lib('lib' + pn, '$' + '{libdir}/*.so.*', d)
 
-# Trigger code above after other code set up default packaging.
+# Trigger code before other code set up default packaging.
 # When converting, the order does not really matter because populate_packages
-# is empty.
-python populate_packages_append () {
+# is empty. But when compiling, we need to do that before the regular
+# populate_packages runs because it needs to know about the final package list.
+python populate_packages_prepend () {
     generate_libs(d)
 }
