@@ -19,11 +19,20 @@ ARCHIVER_MODE[srpm] = "1"
 inherit srpm-replacelnr
 inherit srpm-manifest
 
+# Do not use bconds for PACKAGECONFIG. Instead we convert for multiple
+# different build configs and then merge the resulting .spec files. That
+# way we also cover the many other ways how a recipe may be modified
+# (.bbappend in profiles, DISTRO_FEATURES, etc.).
+SRPM_IGNORE_PACKAGECONFIG = "1"
+
 # By default, use file-list-generator.py to generate file lists as
 # part of rpmbuild. This avoids the need to maintain exact file lists
 # in the Tizen adaption layers. Can be changed on a per-recipe basis
 # in .bbappend.
 SRPM_DYNAMIC_FILE_LISTS = "1"
+
+# Make the .spec file more readable by reflowing command line invocations.
+SRPM_EXTRA_HOOKS += "srpm_reflow_cmds"
 
 # Simplify compile flags in .spec.
 TARGET_CPPFLAGS = ""
