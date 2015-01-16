@@ -212,6 +212,13 @@ SRPM_REWRITE_DEPENDS_append += "\
 perl=perl \
 "
 
+# meta-tizen-adaption already ensures that all dependencies on Bluez4
+# get replaced by dependencies on Bluez5. However, in connman the
+# RDEPENDS_${PN}_remove = "bluez4"
+# from the .bbappend file fails to work in the translator, while
+# it works in "bitbake -e". Therefore also remap here.
+SRPM_REWRITE_RUNTIME_DEPS += "bluez4=bluez5"
+
 # Rewrite build dependencies. In contrast to runtime dependencies,
 # these are simple string mappings. The replacement may consist
 # of zero or more comma-separated package names.
@@ -282,6 +289,7 @@ aul=pkgconfig(aul) \
 badge=pkgconfig(badge) \
 bluetooth-frwk=pkgconfig(bluetooth-api) \
 bluez4=pkgconfig(bluez) \
+bluez5=pkgconfig(bluez) \
 bundle=pkgconfig(bundle) \
 bundle=pkgconfig(bundle) \
 bzip2=pkgconfig(bzip2) \
