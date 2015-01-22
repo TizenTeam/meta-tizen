@@ -115,6 +115,7 @@ SRPM_RENAME += "\
 ((?:lib)?)sqlite3(.*)=\1sqlite\2 \
 alsa-lib-dev=libasound-dev \
 atk=libatk \
+bluez5(.*)=bluez\1 \
 bjam=boost-jam \
 boost=libboost \
 cairo=libcairo \
@@ -129,21 +130,26 @@ gdbm=libgdbm \
 glib-2.0=glib2 \
 gmp=libgmp \
 gnutls-xx(.*)=libgnutlsxx\1 gnutls(.*)=libgnutls\1 \
+gstreamer1.0(.*)=gstreamer\1 gstreamer-plugins-(.*)=gst-plugins-\1 \
 harfbuzz=libharfbuzz \
 icu=libicu \
 json-glib=libjson-glib \
 kmod-dev=libkmod-dev \
 libcheck(.*)=check\1 \
+libegl(.*)-mesa(.*)=mesa-libEGL\1\2 \
+libgles(.*)-mesa(.*)=mesa-libGLESv\1\2 \
+libglapi(.*)=mesa-libglapi\1 \
+libgl-mesa(.*)=mesa-libGL\1 \
 liblcms=liblcms2 lcms-dev=liblcms2-dev lcms=lcms2 \
 libjpeg-turbo=libjpeg libjpeg-turbo-dev=libjpeg-dev \
 libnl=libnl3 libnl-(.*)=libnl3-\1 \
 libpam(.*)=pam\1 \
 libpcre-dev=pcre-dev pcregrep=pcre \
+libsm(.*)=libSM\1 \
 libsndfile1(.*)=libsndfile\1 \
 libsqlite-dev=sqlite-dev \
 libusb1(.*)=libusb\1 \
-libx11(.*)=libX11\1 \
-libxft(.*)=libXft\1 \
+libx(11|au|composite|damage|dmcp|ext|fixes|ft|i|randr|render|v|xf86vm)(.*)=libX\1\2 \
 libxml-parser-perl(.*)=perl-XML-Parser\1 \
 llvm3.3(.*)=llvm\1 \
 mpfr=libmpfr \
@@ -257,8 +263,8 @@ virtual/egl=pkgconfig(egl) \
 virtual/libgl=pkgconfig(gl) \
 virtual/libgles2=pkgconfig(glesv2) \
 virtual/libiconv=glibc-dev \
-virtual/libintl=gettext-dev \
-virtual/libx11=libx11-dev \
+virtual/libintl=glibc-dev \
+virtual/libx11=pkgconfig(x11) \
 virtual/mesa=mesa-dev \
 "
 
@@ -266,6 +272,9 @@ virtual/mesa=mesa-dev \
 # different projects in Tizen. We don't know what from
 # util-linux is needed, so require everything.
 SRPM_REWRITE_DEPENDS_append = " util-linux=libblkid-dev,libmount-dev,pkgconfig(uuid)"
+
+# Dependency not unique in Tizen.
+SRPM_REWRITE_DEPENDS_append = " pulseaudio=pulseaudio-module-dev,libpulse-dev"
 
 # Avoid hard dependency on specific packages via the corresponding
 # pkgconfig(<.pc name>) or perl(<package>).
@@ -288,6 +297,7 @@ audio-session-manager=pkgconfig(audio-session-mgr) \
 aul=pkgconfig(aul) \
 badge=pkgconfig(badge) \
 bluetooth-frwk=pkgconfig(bluetooth-api) \
+bluez=pkgconfig(bluez) \
 bluez4=pkgconfig(bluez) \
 bluez5=pkgconfig(bluez) \
 bundle=pkgconfig(bundle) \
@@ -338,11 +348,13 @@ ethumb=pkgconfig(ethumb) \
 evas=pkgconfig(evas) \
 evolution-data-server=pkgconfig(libebook-contacts-1.2) \
 expat=pkgconfig(expat) \
+fixesproto=pkgconfig(fixesproto) \
 fontconfig=pkgconfig(fontconfig) \
 freetype=pkgconfig(freetype2) \
 fribidi=pkgconfig(fribidi) \
 gconf=pkgconfig(gconf-2.0) \
 gcr=pkgconfig(gcr-base-3) \
+glproto=pkgconfig(glproto) \
 gnutls=pkgconfig(gnutls) \
 gsignond=pkgconfig(gsignond) \
 gssdp=pkgconfig(gssdp-1.0) \
@@ -356,6 +368,7 @@ heynoti=pkgconfig(heynoti) \
 ibus=pkgconfig(ibus-1.0) \
 icu=pkgconfig(icu-i18n) \
 iniparser=pkgconfig(iniparser) \
+inputproto=pkgconfig(inputproto) \
 json-c=pkgconfig(json) \
 json-glib=pkgconfig(json-glib-1.0) \
 kmod=pkgconfig(libkmod) \
@@ -399,6 +412,7 @@ libsf-common=pkgconfig(sf_common) \
 libslp-db-util=pkgconfig(db-util) \
 libslp-location=pkgconfig(location) \
 libslp-memo=pkgconfig(memo) \
+libsm=pkgconfig(sm) \
 libsndfile1=pkgconfig(sndfile) \
 libsoup-2.4=pkgconfig(libsoup-2.4) \
 libsvi=pkgconfig(feedback),pkgconfig(svi) \
@@ -410,9 +424,20 @@ libusb=pkgconfig(libusb-1.0) \
 libwbxml2=pkgconfig(libwbxml2) \
 libwebsockets=pkgconfig(libwebsockets) \
 libwifi-direct=pkgconfig(wifi-direct) \
+libxau=pkgconfig(xau) \
+libxcomposite=pkgconfig(xcomposite) \
+compositeproto=pkgconfig(compositeproto) \
+libxdamage=pkgconfig(xdamage) \
+libxdmcp=pkgconfig(xdmcp) \
+libxext=pkgconfig(xext) \
+libxfixes=pkgconfig(xfixes) \
 libxkbcommon=pkgconfig(xkbcommon) \
+libxi=pkgconfig(xi) \
 libxml2=pkgconfig(libxml-2.0) \
+libxrandr=pkgconfig(xrandr) \
+libxrender=pkgconfig(xrender) \
 libxslt=pkgconfig(libxslt) \
+libxf86vm=pkgconfig(xf86vm) \
 lua=pkgconfig(lua) \
 media-server=pkgconfig(libmedia-utils) \
 message-port=pkgconfig(message-port) \
@@ -427,11 +452,11 @@ p11-kit=pkgconfig(p11-kit-1) \
 pciutils=pkgconfig(libpci) \
 pims-ipc=pkgconfig(pims-ipc) \
 pixman=pkgconfig(pixman-1) \
-pkgconfig=pkgconfig(pkg-config) \
 poppler=pkgconfig(poppler-glib) \
 popt=pkgconfig(popt) \
 privacy-manager-server=pkgconfig(privacy-manager-client) \
 python=pkgconfig(python-2.7) \
+randrproto=pkgconfig(randrproto) \
 sbc=pkgconfig(sbc) \
 secure-storage=pkgconfig(secure-storage) \
 security-server=pkgconfig(security-server) \
@@ -448,8 +473,14 @@ tizen-platform-config=pkgconfig(libtzplatform-config) \
 tizen-platform-wrapper=pkgconfig(tizen-platform-wrapper) \
 udev=pkgconfig(udev) \
 usbutils=pkgconfig(usbutils) \
+util-macros=pkgconfig(xorg-macros) \
 vconf-internal-keys=pkgconfig(vconf-internal-keys) \
 weston=pkgconfig(weston) \
+xext=pkgconfig(xext) \
+xextproto=pkgconfig(xextproto) \
+xf86driproto=pkgconfig(xf86driproto) \
+xf86vidmodeproto=pkgconfig(xf86vidmodeproto) \
+xproto=pkgconfig(xproto) \
 xdgmime=pkgconfig(xdgmime) \
 xmlsec1=pkgconfig(xmlsec1) \
 zeromq=pkgconfig(libzmq) \

@@ -1,7 +1,11 @@
 SECTION = "Graphics & UI Framework/Wayland Window System"
+SRPM_IS_LIB = "libwayland"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+# Disabling building of the scanner is a cross-compile trick.
+# Enabling it for native compilation adds a dependency on expat.
+EXTRA_OECONF_remove_srpm = "--disable-scanner"
+DEPENDS_append_srpm = " expat"
 
-SRC_URI += "file://0001-Added-APIstosupportmultiseatinwayland.patch"
-
-EXTRA_OECONF += "--enable-multiseat"
+# Split out libs as done in Tizen traditionally.
+PKG_LIBS = "libwayland-client libwayland-cursor libwayland-server"
+inherit libpkg

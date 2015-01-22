@@ -15,3 +15,10 @@ ${libdir}/libgnutls-openssl.so \
 ${includedir}/libgnutls/openssl.h \
 "
 RDEPENDS_gnutls-openssl-dev = "gnutls-openssl"
+
+# Missing in upstream. Checked for during configure:
+# checking for __gmpz_cmp in -lgmp... no
+# configure: error: 
+# ***
+# *** gmp was not found.
+DEPENDS += "gmp"

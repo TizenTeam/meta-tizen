@@ -58,7 +58,9 @@ def generate_libs(d):
 
     libs = d.getVar('PKG_LIBS', True)
     pn = d.getVar('PN', True)
-    if libs:
+    if libs == '':
+        pass
+    elif libs:
         libs = libs.split()
         # Reverse so that they get prepended in the original order to PACKAGES.
         libs.reverse()
