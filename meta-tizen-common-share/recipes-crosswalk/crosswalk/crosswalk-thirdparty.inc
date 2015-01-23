@@ -102,7 +102,7 @@ do_compile() {
  # warn about some conditions that cannot really be reached (ie. variables that
  # may be used uninitialized while in fact thay cannot be uninitialized). See
  # TC-2299.
- export CXXFLAGS=`echo $CXXFLAGS | sed s,-finline-functions,,g`
+ export CXXFLAGS="`echo $CXXFLAGS | sed s,-finline-functions,,g`"
  
  # For ffmpeg on ia32. The original CFLAGS set by the gyp and config files in
  # src/third_party/ffmpeg already pass -O2 -fomit-frame-pointer, but Tizen's
