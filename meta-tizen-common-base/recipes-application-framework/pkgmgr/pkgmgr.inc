@@ -118,8 +118,7 @@ do_compile() {
          -DCMAKE_SKIP_RPATH:BOOL=ON \
          -DBUILD_SHARED_LIBS:BOOL=ON \
          -DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain.cmake \
-         ${EXTRA_OECMAKE} . \
-     -DX11_SUPPORT=Off
+         ${EXTRA_OECMAKE} .
  
  oe_runmake ${PARALLEL_MAKE}
  

@@ -2,7 +2,7 @@ DESCRIPTION = "Open Source Telephony"
 HOMEPAGE = "http://ofono.org"
 SECTION = "Telephony/Cellular"
 LICENSE = "GPL-2.0"
-PV = "1.14"
+PV = "1.15"
 
 SRC_URI = ""
 
@@ -47,12 +47,12 @@ DEPENDS = ""
 #DEPENDS of ofono
 DEPENDS += "mobile-broadband-provider-info"
 DEPENDS += "dbus"
+DEPENDS += "glib-2.0"
 inherit pkgconfig
 DEPENDS += "udev"
 DEPENDS_append_class-native = " automake-native"
 DEPENDS_append_class-target = " automake-native"
 DEPENDS += "bluez5"
-DEPENDS += "glib-2.0"
 DEPENDS_append_class-native = " libtool"
 DEPENDS_append_class-target = " libtool-cross"
 DEPENDS_append_class-native = " autoconf-native"

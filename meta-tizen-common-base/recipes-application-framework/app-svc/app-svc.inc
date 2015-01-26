@@ -51,6 +51,7 @@ do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
  #setup -q
+ sed -i ${S}/packaging/app-svc.manifest -e "s|TZ_SYS_DB|${prefix}/dbspace|g"
  cp ${S}/packaging/app-svc.manifest .
  
  
@@ -113,9 +114,6 @@ do_install() {
  mkdir -p ${D}${prefix}/dbspace
  sqlite3 ${D}${prefix}/dbspace/.appsvc.db < data/appsvc_db.sql
  
- mkdir -p ${D}/usr/share/license
- cp LICENSE ${D}/usr/share/license/app-svc
- 
  
 }
 
@@ -138,10 +136,9 @@ PACKAGES += " app-svc-dev "
 app-svc_files = ""
 app-svc_files += "%verify(not md5 mtime size) %attr(664,root,users) ${prefix}/dbspace/.appsvc.db"
 app-svc_files += "%verify(not md5 mtime size) %attr(664,root,users) ${prefix}/dbspace/.appsvc.db-journal"
-app-svc_files += "/usr/bin/appsvc_test"
+app-svc_files += "${prefix}/bin/appsvc_test"
 app-svc_files += "${prefix}/lib/libappsvc.so.0"
 app-svc_files += "${prefix}/lib/libappsvc.so.0.1.0"
-app-svc_files += "/usr/share/license/app-svc"
 MANIFESTFILES_${PN} = "app-svc.manifest"
 
 app-svc-dev_files = ""
