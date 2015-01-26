@@ -135,9 +135,9 @@ do_install() {
    find ${D} -regex ".*\.la$" | xargs rm -f -- 
    find ${D} -regex ".*\.a$" | xargs rm -f --
  mkdir -p ${D}${prefix}/share/download-provider
- mkdir -p ${D}${systemd_unitdir}/system/graphical.target.wants
+ mkdir -p ${D}${systemd_unitdir}/system/default.target.wants
  mkdir -p ${D}${systemd_unitdir}/system/sockets.target.wants
- ln -s ../download-provider.service ${D}${systemd_unitdir}/system/graphical.target.wants/
+ ln -s ../download-provider.service ${D}${systemd_unitdir}/system/default.target.wants/
  ln -s ../download-provider.socket ${D}${systemd_unitdir}/system/sockets.target.wants/
  
  #find_lang download-provider
@@ -189,7 +189,7 @@ download-provider_files += "${prefix}/share/download-provider/images/*.gif"
 download-provider_files += "${prefix}/lib/libdownloadagent2.so*"
 download-provider_files += "${prefix}/lib/libdownload-provider-interface.so*"
 download-provider_files += "${systemd_unitdir}/system/download-provider.service"
-download-provider_files += "${systemd_unitdir}/system/graphical.target.wants/download-provider.service"
+download-provider_files += "${systemd_unitdir}/system/default.target.wants/download-provider.service"
 download-provider_files += "${systemd_unitdir}/system/download-provider.socket"
 download-provider_files += "${systemd_unitdir}/system/sockets.target.wants/download-provider.socket"
 download-provider_files += "${prefix}/share/download-provider/sql/download-provider-schema.sql"

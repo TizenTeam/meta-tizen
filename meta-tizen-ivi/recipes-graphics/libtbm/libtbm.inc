@@ -2,7 +2,7 @@ DESCRIPTION = "The library for Tizen Buffer Manager"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "System/Libraries"
 LICENSE = "MIT"
-PV = "1.1.0"
+PV = "1.1.1"
 
 SRC_URI = ""
 

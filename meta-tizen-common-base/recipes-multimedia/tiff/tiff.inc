@@ -2,7 +2,7 @@ DESCRIPTION = "Tools for Converting from and to the Tiff Format"
 HOMEPAGE = "http://www.remotesensing.org/libtiff"
 SECTION = "Productivity/Graphics/Convertors"
 LICENSE = "HPND"
-PV = "4.0.2"
+PV = "4.0.3"
 
 SRC_URI = ""
 
@@ -135,7 +135,6 @@ MANIFESTFILES_${PN} = "tiff.manifest"
 tiff-docs_files = ""
 
 libtiff_files = ""
-libtiff_files += "COPYRIGHT"
 libtiff_files += "${prefix}/lib/*.so.*"
 MANIFESTFILES_lib${PN} = "tiff.manifest"
 

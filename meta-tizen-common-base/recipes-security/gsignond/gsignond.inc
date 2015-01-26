@@ -52,6 +52,7 @@ do_prep() {
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
  #setup -q -n gsignond-1.0.3
  cp ${S}/packaging/gsignond.manifest .
+ cp ${S}/packaging/gsignond-cleandb .
  
  
 }
@@ -69,6 +70,7 @@ do_compile() {
   unset DISPLAY
   LD_AS_NEEDED=1; export LD_AS_NEEDED ;
   
+  autoreconf -ivf
   
   autotools_do_configure
   
@@ -100,8 +102,10 @@ do_install() {
    find ${D} -regex ".*\.a$" | xargs rm -f --
  install -m 755 -d ${D}${prefix}/lib/systemd/user
  install -m 644 data/gsignond.service ${D}${prefix}/lib/systemd/user/
- install -m 755 -d ${D}${prefix}/lib/systemd/user/weston.target.wants
- ln -s ../gsignond.service ${D}${prefix}/lib/systemd/user/weston.target.wants/gsignond.service
+ install -m 755 -d ${D}${prefix}/lib/systemd/user/default.target.wants
+ ln -sf ../gsignond.service ${D}${prefix}/lib/systemd/user/default.target.wants/gsignond.service
+ install -m 755 -d ${D}${sysconfdir}/gumd/userdel.d/
+ install -m 755 gsignond-cleandb ${D}${sysconfdir}/gumd/userdel.d/
  
  
 }
@@ -129,15 +133,16 @@ gsignond-doc_files = ""
 gsignond-doc_files += "${prefix}/share/gtk-doc/html/gsignond/*"
 
 gsignond_files = ""
-gsignond_files += "AUTHORS COPYING.LIB INSTALL NEWS README"
+gsignond_files += "AUTHORS COPYING.LIB"
 gsignond_files += "${prefix}/bin/gsignond"
 gsignond_files += "${prefix}/lib/libgsignond-*.so.*"
 gsignond_files += "${prefix}/lib/gsignond/extensions/*.so*"
 gsignond_files += "${prefix}/lib/gsignond/gplugins/*.so*"
 gsignond_files += "${prefix}/lib/gsignond/pluginloaders/gsignond-plugind"
 gsignond_files += "${prefix}/lib/systemd/user/gsignond.service"
-gsignond_files += "${prefix}/lib/systemd/user/weston.target.wants/gsignond.service"
+gsignond_files += "${prefix}/lib/systemd/user/default.target.wants/gsignond.service"
 gsignond_files += "${sysconfdir}/gsignond.conf"
+gsignond_files += "${sysconfdir}/gumd/userdel.d/"
 MANIFESTFILES_${PN} = "gsignond.manifest"
 
 gsignond-dev_files = ""
