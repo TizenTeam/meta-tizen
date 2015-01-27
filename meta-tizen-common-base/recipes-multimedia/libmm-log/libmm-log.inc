@@ -1,6 +1,6 @@
 DESCRIPTION = "Multimedia Framework LOG Lib"
 HOMEPAGE = "http://nohomepage.org"
-SECTION = "Multimedia/Multimedia Framework"
+SECTION = "Multimedia/LOG"
 LICENSE = "Apache-2.0"
 PV = "0.1.9"
 
@@ -31,7 +31,8 @@ do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
  #setup -q -n libmm-log-0.1.9
- # cp ${S}/packaging/libmm-log.manifest .
+ ./autogen.sh
+ 
  
  
 }
@@ -49,16 +50,17 @@ do_compile() {
   unset DISPLAY
   LD_AS_NEEDED=1; export LD_AS_NEEDED ;
   
-  CFLAGS="$CFLAGS -DUSE_DLOG"; export CFLAGS
-  ./autogen.sh
+  export CFLAGS+=" -DUSE_DLOG"
+  
+  
   
   autotools_do_configure
-  oe_runmake ${PARALLEL_MAKE}
+  make ${PARALLEL_MAKE}
   
   
   
 }
-EXTRA_OECONF += " --disable-static --enable-dlog"
+EXTRA_OECONF += " --disable-static --prefix=${prefix} --enable-dlog"
 
 do_install() {
  export RPM_BUILD_ROOT=${D}
@@ -69,6 +71,7 @@ do_install() {
  rm -rf ${D}
  mkdir -p ${D}
  
+ rm -rf ${D}
  
    oe_runmake \
          DESTDIR=${D} \
@@ -78,6 +81,8 @@ do_install() {
    rm -f ${D}${infodir}/dir 
    find ${D} -regex ".*\.la$" | xargs rm -f -- 
    find ${D} -regex ".*\.a$" | xargs rm -f --
+ mkdir -p ${D}${prefix}/share/license
+ cp LICENSE.APLv2 ${D}${prefix}/share/license/libmm-log
  
  
 }
@@ -86,10 +91,9 @@ PACKAGES = "${PN}-dbg ${PN}-doc ${PN}-locale"
 PACKAGES += " libmm-log-dev "
 
 libmm-log-dev_files = ""
+libmm-log-dev_files += "${prefix}/share/license/libmm-log"
 libmm-log-dev_files += "${prefix}/include/mm_log/mm_log.h"
 libmm-log-dev_files += "${prefix}/lib/pkgconfig/mm-log.pc"
-# Gone in recent upstream source.
-# MANIFESTFILES_${PN}-dev = "libmm-log.manifest"
 
 FILES_${PN}-dev = "${libmm-log-dev_files}"
 

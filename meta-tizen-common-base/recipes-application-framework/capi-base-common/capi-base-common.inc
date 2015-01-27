@@ -1,8 +1,8 @@
 DESCRIPTION = "Common header files of Tizen Native API"
 HOMEPAGE = "http://nohomepage.org"
-SECTION = "API/C API"
+SECTION = "System/API"
 LICENSE = "Apache-2.0"
-PV = "0.1.0"
+PV = "0.1.6"
 
 SRC_URI = ""
 
@@ -23,6 +23,9 @@ PROVIDES += "capi-base-common-dev"
 RDEPENDS = ""
 #RDEPENDS of capi-base-common-dev (${PN}-dev)
 RDEPENDS_${PN}-dev += "capi-base-common"
+
+#RDEPENDS of capi-base-common (${PN})
+RDEPENDS_${PN} += "glibc"
 
 
 DEPENDS = ""
@@ -51,6 +54,7 @@ do_compile() {
  unset DISPLAY
  LD_AS_NEEDED=1; export LD_AS_NEEDED ;
  
+ MAJORVER=`echo 0.1.6 | awk 'BEGIN {FS="."}{print $1}'`
  
    cmake \
          -DCMAKE_VERBOSE_MAKEFILE=ON \
@@ -63,8 +67,8 @@ do_compile() {
          -DCMAKE_SKIP_RPATH:BOOL=ON \
          -DBUILD_SHARED_LIBS:BOOL=ON \
          -DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain.cmake \
-         ${EXTRA_OECMAKE} .
- make ${PARALLEL_MAKE}
+         ${EXTRA_OECMAKE} . -DFULLVER=0.1.6 -DMAJORVER=${MAJORVER}
+ oe_runmake ${PARALLEL_MAKE}
  
  
  
@@ -88,8 +92,22 @@ do_install() {
    rm -f ${D}${infodir}/dir 
    find ${D} -regex ".*\.la$" | xargs rm -f -- 
    find ${D} -regex ".*\.a$" | xargs rm -f --
+ mkdir -p ${D}${prefix}/share/license
+ cp LICENSE ${D}${prefix}/share/license/capi-base-common
  
  
+}
+
+pkg_postinst_${PN}() {
+    #!/bin/sh -e
+
+    [ "x$D" == "x" ] && ldconfig
+}
+
+pkg_postrm_${PN}() {
+    #!/bin/sh -e
+
+    [ "x$D" == "x" ] && ldconfig
 }
 
 PACKAGES = "${PN}-dbg ${PN}-doc ${PN}-locale"
@@ -99,9 +117,12 @@ PACKAGES += " capi-base-common "
 capi-base-common-dev_files = ""
 capi-base-common-dev_files += "${prefix}/include/*.h"
 capi-base-common-dev_files += "${prefix}/lib/pkgconfig/capi-base-common.pc"
+capi-base-common-dev_files += "${prefix}/share/license/capi-base-common"
 MANIFESTFILES_${PN}-dev = "capi-base-common.manifest"
 
 capi-base-common_files = ""
+capi-base-common_files += "${prefix}/lib/libcapi-base-common.so*"
+capi-base-common_files += "${prefix}/share/license/capi-base-common"
 MANIFESTFILES_${PN} = "capi-base-common.manifest"
 
 FILES_${PN}-dev = "${capi-base-common-dev_files}"
