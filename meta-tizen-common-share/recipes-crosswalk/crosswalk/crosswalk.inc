@@ -131,7 +131,7 @@ do_compile() {
  
  
  mkdir -p src/out
- tar -zxvf ${prefix}/share/crosswalk-thirdparty/out.tgz
+ tar -zxvf ${STAGING_DIR_HOST}/${prefix}/share/crosswalk-thirdparty/out.tgz
  python ./changedate.py
  
  # Stop unconditionally passing -Wall to the compiler. Chromium has its own
