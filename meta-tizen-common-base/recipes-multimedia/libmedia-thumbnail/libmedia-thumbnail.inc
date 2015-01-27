@@ -56,7 +56,7 @@ DEPENDS += "libmm-utility"
 DEPENDS += "media-server"
 DEPENDS += "heynoti"
 DEPENDS += "vconf"
-DEPENDS += "pkgconfig(gdk-pixbuf-2.0)"
+DEPENDS += "gdk-pixbuf"
 
 do_prep() {
  cd ${S}
