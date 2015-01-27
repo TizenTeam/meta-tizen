@@ -175,11 +175,11 @@ RDEPENDS_bluemonkey-modules-db += "automotive-message-broker"
 
 DEPENDS = ""
 #DEPENDS of automotive-message-broker
-DEPENDS += "qt5-plugin-bearer-nm"
-DEPENDS += "qt5-plugin-bearer-connman"
+# DEPENDS += "qt5-plugin-bearer-nm"
+# DEPENDS += "qt5-plugin-bearer-connman"
 inherit tizen_cmake
-DEPENDS += "qt5-qtnetwork-dev"
-DEPENDS += "qt5-qtdbus-dev"
+# DEPENDS += "qt5-qtnetwork-dev"
+# DEPENDS += "qt5-qtdbus-dev"
 DEPENDS += "opencv"
 DEPENDS += "json-c"
 DEPENDS += "dbus"
@@ -187,16 +187,16 @@ DEPENDS += "murphy"
 inherit pkgconfig
 DEPENDS += "glib-2.0"
 DEPENDS += "sqlite3"
-DEPENDS += "qt5-qtcore-dev"
+# DEPENDS += "qt5-qtcore-dev"
 DEPENDS_append_class-native = " libtool"
 DEPENDS_append_class-target = " libtool-cross"
-DEPENDS += "qt5-plugin-bearer-generic"
+# DEPENDS += "qt5-plugin-bearer-generic"
 DEPENDS += "libwebsockets"
-DEPENDS += "qt5-plugin-sqldriver-sqlite"
-DEPENDS += "qt5-qtdeclarative-dev"
+# DEPENDS += "qt5-plugin-sqldriver-sqlite"
+# DEPENDS += "qt5-qtdeclarative"
 DEPENDS += "util-linux"
 DEPENDS += "boost"
-DEPENDS += "qt5-qtconcurrent-dev"
+# DEPENDS += "qt5-qtconcurrent-dev"
 
 do_prep() {
  cd ${S}
@@ -234,11 +234,11 @@ do_compile() {
          ${EXTRA_OECMAKE} \
  	   -Dxwalk_vehicle_extension=ON \
  	   -DXWALK_EXTENSION_PATH=/tizen-extensions-crosswalk \
- 	   -Dqtmainloop=ON \
- 	   -Dopencvlux_plugin=ON \
- 	   -Dwebsocket_plugin=ON \
- 	   -Dbluetooth_plugin=ON \
- 	   -Dbluemonkey_plugin=ON \
+ 	   -Dqtmainloop=OFF \
+ 	   -Dopencvlux_plugin=OFF \
+ 	   -Dwebsocket_plugin=OFF \
+ 	   -Dbluetooth_plugin=OFF \
+ 	   -Dbluemonkey_plugin=OFF \
  	   -Ddatabase_plugin=ON \
  	   -Dmurphy_plugin=ON \
  	   -Dobd2_plugin=ON \
@@ -247,7 +247,7 @@ do_compile() {
  	   -Dcangen_plugin=ON \
  	   -Dcansim_plugin=ON \
  	   -Dusebluez5=ON \
- 	   -Denable_docs=ON
+ 	   -Denable_docs=OFF
  
  
  oe_runmake ${PARALLEL_MAKE}
@@ -316,22 +316,22 @@ PACKAGES = "${PN}-dbg ${PN}-doc ${PN}-locale"
 PACKAGES += " automotive-message-broker-plugins-bluetooth "
 PACKAGES += " automotive-message-broker-plugins-cangen "
 PACKAGES += " automotive-message-broker-plugins-common "
-PACKAGES += " automotive-message-broker-plugins-qtmainloop "
+# PACKAGES += " automotive-message-broker-plugins-qtmainloop "
 PACKAGES += " automotive-message-broker-plugins-murphy "
 PACKAGES += " automotive-message-broker-plugins "
 PACKAGES += " automotive-message-broker-plugins-opencvlux "
 PACKAGES += " automotive-message-broker-plugins-test "
 PACKAGES += " automotive-message-broker-plugins-wheel "
 PACKAGES += " automotive-message-broker-plugins-cansim "
-PACKAGES += " automotive-message-broker-plugins-bluemonkey "
+# PACKAGES += " automotive-message-broker-plugins-bluemonkey "
 PACKAGES += " automotive-message-broker-xwalk-vehicle-extension "
 PACKAGES += " automotive-message-broker "
 PACKAGES += " automotive-message-broker-plugins-database "
-PACKAGES += " automotive-message-broker-plugins-websocket "
+# PACKAGES += " automotive-message-broker-plugins-websocket "
 PACKAGES += " automotive-message-broker-plugins-obd2 "
 PACKAGES += " automotive-message-broker-dev "
 PACKAGES += " automotive-message-broker-plugins-gpsnmea "
-PACKAGES += " bluemonkey-modules-db "
+# PACKAGES += " bluemonkey-modules-db "
 
 automotive-message-broker-plugins-bluetooth_files = ""
 automotive-message-broker-plugins-bluetooth_files += "${prefix}/lib/automotive-message-broker/bluetoothplugin.so"
