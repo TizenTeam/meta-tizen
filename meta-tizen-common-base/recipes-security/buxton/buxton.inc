@@ -43,7 +43,6 @@ RDEPENDS_${PN}simple += "buxton"
 RDEPENDS_${PN}simple-dev += "buxton"
 
 #RDEPENDS of buxton (${PN})
-RDEPENDS_${PN} += "/usr/bin/chown"
 RDEPENDS_${PN} += "smack"
 RDEPENDS_${PN} += "buxton"
 
@@ -54,7 +53,7 @@ inherit pkgconfig
 DEPENDS += "libcheck"
 DEPENDS += "systemd"
 DEPENDS += "attr"
-DEPENDS += "gdbm-dev"
+DEPENDS += "gdbm"
 
 do_prep() {
  cd ${S}
