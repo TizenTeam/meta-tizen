@@ -37,23 +37,23 @@ DEPENDS += "weston"
 DEPENDS += "wayland"
 DEPENDS += "libffi"
 
-do_prep() {
+do_compile_prepend() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
  #setup -q
  cp ${S}/packaging/genivi-shell.manifest .
- 
- /usr/bin/wayland-scanner code < protocol/ivi-controller.xml \
+
+ ${STAGING_BINDIR_NATIVE}/wayland-scanner code < protocol/ivi-controller.xml \
      > protocol/ivi-controller-protocol.c
- 
+
  cat ivi-extension-protocol.pc.in \
      | sed s\#@libdir@\#${prefix}/lib\#g \
      | sed s\#@includedir@\#${prefix}/include/genivi-shell\#g \
      | sed s\#@name@\#genivi-shell\#g \
      | sed s\#@package_version@\#0.2.5\#g \
      > ivi-extension-protocol.pc
- 
- 
+
+
    cmake \
          -DCMAKE_VERBOSE_MAKEFILE=ON \
          -DCMAKE_INSTALL_PREFIX:PATH=${prefix} \
@@ -66,11 +66,8 @@ do_prep() {
          -DBUILD_SHARED_LIBS:BOOL=ON \
          -DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain.cmake \
          ${EXTRA_OECMAKE} .
- 
- 
-}
-do_patch_append() {
-    bb.build.exec_func('do_prep', d)
+
+
 }
 
 do_configure() {
