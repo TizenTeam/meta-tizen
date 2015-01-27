@@ -22,6 +22,7 @@ do_install_append() {
     rm -fr ${D}/usr/share/weston/border.png
     rm -fr ${D}/usr/lib/weston/gl-renderer.so
     rm -fr ${D}/usr/share/weston/wayland.svg
+    rm -rf ${D}/usr/share/weston/wayland.png
     rm -fr ${D}/usr/lib/pkgconfig/weston.pc
     rm -fr ${D}/usr/bin/weston-terminal
     rm -fr ${D}/usr/bin/weston
