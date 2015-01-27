@@ -43,13 +43,13 @@ RDEPENDS_${PN}-keys-dev += "vconf-buxton"
 RDEPENDS_${PN}-keys-dev += "vconf-internal-keys-dev"
 
 #RDEPENDS of vconf-buxton (${PN})
-RDEPENDS_${PN} += "glibc"
+RDEPENDS_${PN}_class-target += "glibc"
 
 
 DEPENDS = ""
 #DEPENDS of vconf-buxton
 DEPENDS += "vconf-internal-keys"
-DEPENDS += "pkgconfig(buxton)"
+DEPENDS += "buxton"
 inherit tizen_cmake
 inherit pkgconfig
 DEPENDS += "glib-2.0"
