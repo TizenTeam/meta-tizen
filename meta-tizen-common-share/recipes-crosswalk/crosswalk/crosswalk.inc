@@ -39,7 +39,7 @@ RDEPENDS_widget-manifest-parser-dev += "widget-manifest-parser"
 
 DEPENDS = ""
 #DEPENDS of crosswalk
-DEPENDS += "pkgconfig(protobuf)"
+DEPENDS += "protobuf"
 DEPENDS += "cairo"
 DEPENDS += "pkgmgr"
 DEPENDS += "expat"
