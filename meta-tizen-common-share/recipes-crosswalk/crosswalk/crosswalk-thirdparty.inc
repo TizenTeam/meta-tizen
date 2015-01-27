@@ -25,7 +25,8 @@ RDEPENDS_${PN} += "ss-server"
 
 DEPENDS = ""
 #DEPENDS of crosswalk-thirdparty
-DEPENDS += "pkgconfig(protobuf)"
+DEPENDS_append_class-target = " protobuf-native"
+DEPENDS += "protobuf"
 DEPENDS += "cairo"
 DEPENDS += "expat"
 DEPENDS += "udev"
