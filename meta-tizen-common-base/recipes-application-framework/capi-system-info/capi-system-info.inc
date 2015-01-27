@@ -96,8 +96,8 @@ do_install() {
    rm -f ${D}${infodir}/dir 
    find ${D} -regex ".*\.la$" | xargs rm -f -- 
    find ${D} -regex ".*\.a$" | xargs rm -f --
- mkdir -p ${D}${sysconfdir}
- cp -f script/make_info_file.sh ${D}${sysconfdir}/make_info_file.sh
+ mkdir -p ${D}${prefix}/bin
+ cp -f script/make_info_file.sh ${D}${prefix}/bin/make_info_file.sh
  
  
 }
@@ -126,7 +126,7 @@ MANIFESTFILES_${PN}-dev = "capi-system-info.manifest"
 
 capi-system-info_files = ""
 capi-system-info_files += "${prefix}/lib/libcapi-system-info.so.*"
-capi-system-info_files += "${sysconfdir}/make_info_file.sh"
+capi-system-info_files += "${prefix}/bin/make_info_file.sh"
 MANIFESTFILES_${PN} = "capi-system-info.manifest"
 
 FILES_${PN}-dev = "${capi-system-info-dev_files}"

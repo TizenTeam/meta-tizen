@@ -27,6 +27,7 @@ DEPENDS += "expat"
 inherit pkgconfig
 #Replace "DEPENDS" on gettext by "inherit gettext"
 inherit gettext
+DEPENDS += "aul"
 DEPENDS += "json-glib"
 
 do_prep() {
@@ -97,8 +98,8 @@ do_install() {
    find ${D} -regex ".*\.a$" | xargs rm -f --
  
  
- mkdir -p ${D}/${systemd_unitdir}/system/../user/weston.target.wants 
- ln -s ../phoned.service  ${D}/${systemd_unitdir}/system/../user/weston.target.wants/phoned.service  
+ mkdir -p ${D}/${systemd_unitdir}/system/../user/default.target.wants 
+ ln -s ../phoned.service  ${D}/${systemd_unitdir}/system/../user/default.target.wants/phoned.service  
  
  
 }
@@ -111,7 +112,7 @@ phoned_files += "${prefix}/lib/pkgconfig/phoned.pc"
 phoned_files += "${prefix}/bin/phoned"
 phoned_files += "${prefix}/share/dbus-1/services/org.tizen.phone.service"
 phoned_files += "${prefix}/lib/systemd/user/phoned.service"
-phoned_files += "${prefix}/lib/systemd/user/weston.target.wants/phoned.service"
+phoned_files += "${prefix}/lib/systemd/user/default.target.wants/phoned.service"
 MANIFESTFILES_${PN} = "phoned.manifest"
 
 FILES_${PN} = "${phoned_files}"

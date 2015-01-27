@@ -1,7 +1,7 @@
 DESCRIPTION = "ALSA Scenario pkg"
 HOMEPAGE = "http://nohomepage.org"
-SECTION = "Multimedia/Audio FW"
-LICENSE = "LGPL-2.0+"
+SECTION = "Multimedia/Audio"
+LICENSE = "LGPLv2+"
 PV = "0.2.1"
 
 SRC_URI = ""
@@ -23,9 +23,6 @@ PROVIDES += "alsa-scenario-dev"
 RDEPENDS = ""
 #RDEPENDS of alsa-scenario-dev (${PN}-dev)
 RDEPENDS_${PN}-dev += "alsa-scenario"
-
-#RDEPENDS of alsa-scenario (${PN})
-RDEPENDS_${PN} += "glibc"
 
 
 DEPENDS = ""
@@ -76,7 +73,6 @@ do_install() {
  rm -rf ${D}
  mkdir -p ${D}
  
- rm -rf ${D}
  
    oe_runmake \
          DESTDIR=${D} \
@@ -86,7 +82,6 @@ do_install() {
    rm -f ${D}${infodir}/dir 
    find ${D} -regex ".*\.la$" | xargs rm -f -- 
    find ${D} -regex ".*\.a$" | xargs rm -f --
- 
  
  
 }

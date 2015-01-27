@@ -2,7 +2,7 @@ DESCRIPTION = "GnuPG 2"
 HOMEPAGE = "http://www.gnupg.org/aegypten2/"
 SECTION = "Security/Certificate Management"
 LICENSE = "GPL-3.0+"
-PV = "2.0.19"
+PV = "2.0.26"
 
 SRC_URI = ""
 
@@ -14,7 +14,7 @@ BBCLASSEXTEND = ""
 PROVIDES = ""
 
 #PROVIDES by gpg2
-# the PROVIDES rules is ignore "gnupg = 2.0.19"
+# the PROVIDES rules is ignore "gnupg = 2.0.26"
 PROVIDES += "gnupg"
 RPROVIDES_gpg2 += "gnupg"
 # the PROVIDES rules is ignore "gpg = 1.4.9"
@@ -55,7 +55,7 @@ DEPENDS += "libgcrypt"
 do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
- #setup  -q -n gnupg-2.0.19
+ #setup  -q -n gnupg-2.0.26
  cp ${S}/packaging/gpg2.manifest .
  
  
@@ -68,26 +68,7 @@ do_configure() {
 }
 
 do_compile() {
- cd ${S}
-  LANG=C
-  export LANG
-  unset DISPLAY
-  LD_AS_NEEDED=1; export LD_AS_NEEDED ;
-  
-  # build PIEs (position independent executables) for address space randomisation:
-  PIE="-fpie"
-  export CFLAGS="$CFLAGS ${PIE}"
-  export LDFLAGS=-pie
-  
-  
-  autotools_do_configure
-  
-  oe_runmake -j16
-  
-  
-  
 }
-EXTRA_OECONF += " --libexecdir=${prefix}/lib --docdir=${prefix}/share/doc/packages/gpg2 --with-agent-pgm=${prefix}/bin/gpg-agent --with-scdaemon-pgm=${prefix}/bin/scdaemon --enable-gpgsm=yes --enable-gpg --with-gnu-ld --disable-doc"
 
 do_install() {
  export RPM_BUILD_ROOT=${D}

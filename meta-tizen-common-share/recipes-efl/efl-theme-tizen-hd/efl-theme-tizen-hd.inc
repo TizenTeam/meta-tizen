@@ -1,6 +1,6 @@
 DESCRIPTION = "Tizen theme files"
 HOMEPAGE = "http://nohomepage.org"
-SECTION = "System/Libraries"
+SECTION = "Graphics & UI Framework/Configuration"
 LICENSE = "Apache-2.0"
 PV = "1.0.204r07"
 
@@ -24,13 +24,15 @@ RDEPENDS = ""
 
 DEPENDS = ""
 #DEPENDS of efl-theme-tizen-hd
+DEPENDS += "elementary"
 DEPENDS += "efl"
+inherit pkgconfig
 inherit perlnative
 
 do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
- #setup -q 
+ #setup -q
  
  
  
@@ -78,8 +80,6 @@ do_install() {
    rm -f ${D}${infodir}/dir 
    find ${D} -regex ".*\.la$" | xargs rm -f -- 
    find ${D} -regex ".*\.a$" | xargs rm -f --
- mkdir -p ${D}${prefix}/share/license
- cp ${WORKDIR}/git/LICENSE ${D}${prefix}/share/license/efl-theme-tizen-hd
  cp ${D}${prefix}/share/elementary/themes/tizen-HD-dark.edj ${D}${prefix}/share/elementary/themes/tizen-hd.edj
  
  
@@ -96,7 +96,6 @@ efl-theme-tizen-hd_files = ""
 efl-theme-tizen-hd_files += "${prefix}/share/elementary/themes/tizen-HD-dark.edj"
 efl-theme-tizen-hd_files += "${prefix}/share/elementary/themes/tizen-HD-light.edj"
 efl-theme-tizen-hd_files += "${prefix}/share/elementary/themes/tizen-hd.edj"
-efl-theme-tizen-hd_files += "${prefix}/share/license/efl-theme-tizen-hd"
 MANIFESTFILES_${PN} = "efl-theme-tizen-hd.manifest"
 
 FILES_efl-theme-tizen-dev = "${efl-theme-tizen-dev_files}"

@@ -55,22 +55,7 @@ do_configure() {
 }
 
 do_compile() {
- cd ${S}
-  LANG=C
-  export LANG
-  unset DISPLAY
-  LD_AS_NEEDED=1; export LD_AS_NEEDED ;
-  
-  ./autogen.sh
-  
-  autotools_do_configure
-  oe_runmake -j16
-  
-  
-  
-  
 }
-EXTRA_OECONF += " --enable-dlog --enable-debug"
 
 do_install() {
  export RPM_BUILD_ROOT=${D}

@@ -2,7 +2,7 @@ DESCRIPTION = "Login manager for Tizen"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "System/Service"
 LICENSE = "LGPL-2.1+"
-PV = "1.0.1"
+PV = "1.0.3"
 
 SRC_URI = ""
 
@@ -50,15 +50,15 @@ RDEPENDS_${PN}-doc += "tlm"
 
 DEPENDS = ""
 #DEPENDS of tlm
-DEPENDS += "gumd"
-inherit pkgconfig
 DEPENDS += "libpam"
+DEPENDS += "pkgconfig(libgum)"
+inherit pkgconfig
 DEPENDS += "glib-2.0"
 
 do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
- #setup -q -n tlm-1.0.1
+ #setup -q -n tlm-1.0.3
  cp ${S}/packaging/tlm.manifest .
  
  
@@ -141,8 +141,8 @@ pkg_prerm_${PN}() {
     #!/bin/sh -e
 
     if [ $1 == 0 ]; then
-      systemctl disable tlm
-      systemctl daemon-reload
+    	systemctl disable tlm
+    	systemctl daemon-reload
     fi
 
 }
@@ -156,8 +156,8 @@ pkg_postrm_${PN}() {
 pkg_postrm_${PN}() {
     #!/bin/sh -e
 
-    if [ -h /etc/tlm.conf ]; then
-    rm -f /etc/tlm.conf
+    if [ -h /etc/tlm.conf ] && [ $1 == 0 ]; then
+    	rm -f /etc/tlm.conf
     fi
 
 }
@@ -182,7 +182,7 @@ tlm_files += "AUTHORS NEWS README"
 tlm_files += "${prefix}/bin/tlm"
 tlm_files += "${prefix}/bin/tlm-sessiond"
 tlm_files += "${prefix}/bin/tlm-client"
-tlm_files += "${prefix}/bin/tlm-weston-launch"
+tlm_files += "${prefix}/bin/tlm-launcher"
 tlm_files += "${prefix}/lib/libtlm*.so.*"
 tlm_files += "${prefix}/lib/tlm/plugins/*.so*"
 tlm_files += "${systemd_unitdir}/system/tlm.service"
