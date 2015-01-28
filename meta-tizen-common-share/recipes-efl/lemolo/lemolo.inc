@@ -33,7 +33,6 @@ DEPENDS += "evas"
 DEPENDS += "app-svc"
 inherit pkgconfig
 DEPENDS += "app-core"
-DEPENDS += "contacts-service"
 DEPENDS += "aul"
 DEPENDS += "efl"
 DEPENDS += "notification"
