@@ -46,8 +46,9 @@ FILES_${PN}-dbg += "${crosswalk-dbg_files}"
 # breaks the "smart" command during do_rootfs:
 #   File "/data/yocto/build/tizen-distro/ivi/x86_64/tmp-glibc/sysroots/x86_64-linux/usr/lib/python2.7/site-packages/smart/backends/rpm/metadata.py", line 242, in load
 #    info["installed_size"] = int(elem.get("installed"))
-# As a workaround, disable building that package.
+# As a workaround, disable building that package and creation of the files.
 PACKAGES_remove = "${PN}-dbg"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 pkg_postinst_${PN}() {
     #!/bin/sh -e
