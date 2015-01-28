@@ -1,5 +1,13 @@
 require recipes-image/images/tizen-core-image-minimal.bb
 
+# meta-common is not used in Tizen IVI 3.0. It is also not clear which
+# purpose it would serve when building with Yocto (it contains package
+# groups for mic, which is not used yet). Remove it.
+CORE_IMAGE_BASE_INSTALL_remove = "meta-common"
+
+# Obsolete, at least in Tizen IVI 3.0.
+CORE_IMAGE_BASE_INSTALL_remove = "user-session-units"
+
 SUMMARY = "Tizen IVI core image"
 
 LICENSE = "MIT"
