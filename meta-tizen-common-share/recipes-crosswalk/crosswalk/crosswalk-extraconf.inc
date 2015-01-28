@@ -39,6 +39,16 @@ crosswalk-dbg_files += "/usr/lib/xwalk/.debug/xwalk"
 
 FILES_${PN}-dbg += "${crosswalk-dbg_files}"
 
+# Unfortunately building crosswalk-dbg breaks Yocto tools, perhaps
+# because the unpacked size is so large that it overflows (theory untested).
+# The result is an invalid installed="None" in the channels xml files.
+# It should have the number of bytes used after installation. This
+# breaks the "smart" command during do_rootfs:
+#   File "/data/yocto/build/tizen-distro/ivi/x86_64/tmp-glibc/sysroots/x86_64-linux/usr/lib/python2.7/site-packages/smart/backends/rpm/metadata.py", line 242, in load
+#    info["installed_size"] = int(elem.get("installed"))
+# As a workaround, disable building that package.
+PACKAGES_remove = "${PN}-dbg"
+
 pkg_postinst_${PN}() {
     #!/bin/sh -e
 
