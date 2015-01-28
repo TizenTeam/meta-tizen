@@ -55,7 +55,6 @@ DEPENDS = ""
 #DEPENDS of gumd
 DEPENDS += "systemd"
 DEPENDS += "dbus"
-DEPENDS += "pkgconfig(gtk-doc)"
 inherit pkgconfig
 DEPENDS += "glib-2.0"
 
