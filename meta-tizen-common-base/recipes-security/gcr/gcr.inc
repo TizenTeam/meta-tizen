@@ -73,7 +73,7 @@ DEPENDS += "gnome-common"
 DEPENDS += "dbus"
 DEPENDS += "libtasn1"
 inherit pkgconfig
-DEPENDS += "gpg2"
+DEPENDS += "gnupg"
 DEPENDS += "glib-2.0"
 DEPENDS += "update-desktop-files"
 DEPENDS += "gtk-doc-stub"
