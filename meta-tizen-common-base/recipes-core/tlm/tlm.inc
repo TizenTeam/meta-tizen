@@ -51,7 +51,7 @@ RDEPENDS_${PN}-doc += "tlm"
 DEPENDS = ""
 #DEPENDS of tlm
 DEPENDS += "libpam"
-DEPENDS += "pkgconfig(libgum)"
+DEPENDS += "gumd"
 inherit pkgconfig
 DEPENDS += "glib-2.0"
 
