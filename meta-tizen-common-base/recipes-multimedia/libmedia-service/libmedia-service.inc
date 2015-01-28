@@ -1,7 +1,7 @@
 DESCRIPTION = "Media information service library for multimedia applications"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "System/Libraries"
-LICENSE = "Apache License, Version 2.0"
+LICENSE = "Apache License"
 PV = "0.2.44"
 
 SRC_URI = ""
