@@ -70,7 +70,7 @@ DEPENDS += "capi-system-runtime-info"
 DEPENDS += "libtapi"
 DEPENDS += "capi-web-favorites"
 DEPENDS += "capi-appfw-app-manager"
-DEPENDS += "pkgconfig(automotive-message-broker)"
+DEPENDS += "automotive-message-broker"
 inherit pythonnative
 DEPENDS += "evas"
 DEPENDS += "tizen-platform-config"
