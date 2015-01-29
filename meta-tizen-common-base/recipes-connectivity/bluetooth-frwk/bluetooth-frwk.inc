@@ -143,6 +143,7 @@ do_install() {
  install -m 0644 ${S}/packaging/bt-icon.png ${D}${prefix}/share/icons/default/bt-icon.png
  
  # On IVI bt-service needs to be run as 'app' even if there is a 'guest' user.
+ sed -i 's/app/app/' ${D}${prefix}/share/dbus-1/system-services/org.projectx.bt.service
  
  
 }

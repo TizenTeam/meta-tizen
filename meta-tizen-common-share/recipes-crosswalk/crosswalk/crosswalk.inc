@@ -69,6 +69,7 @@ DEPENDS += "freetype"
 DEPENDS += "gperf"
 inherit pythonnative
 DEPENDS += "tizen-platform-config"
+DEPENDS += "murphy"
 DEPENDS += "pkgmgr-info"
 DEPENDS += "glib-2.0"
 DEPENDS += "libdrm"
@@ -183,6 +184,7 @@ do_compile() {
  # So force it.
  
  
+ GYP_EXTRA_FLAGS="${GYP_EXTRA_FLAGS} -Denable_murphy=1"
  
  # --no-parallel is added because chroot does not mount a /dev/shm, this will
  # cause python multiprocessing.SemLock error.

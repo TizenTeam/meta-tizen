@@ -70,6 +70,7 @@ DEPENDS += "capi-system-runtime-info"
 DEPENDS += "libtapi"
 DEPENDS += "capi-web-favorites"
 DEPENDS += "capi-appfw-app-manager"
+DEPENDS += "pkgconfig(automotive-message-broker)"
 inherit pythonnative
 DEPENDS += "evas"
 DEPENDS += "tizen-platform-config"
@@ -118,7 +119,7 @@ do_compile() {
  
  
  export GYP_GENERATORS='ninja'
- GYP_OPTIONS="--depth=. -Dtizen=1 -Dextension_build_type=Debug -Dextension_host_os=pc"
+ GYP_OPTIONS="--depth=. -Dtizen=1 -Dextension_build_type=Debug -Dextension_host_os=ivi"
  
  GYP_OPTIONS="$GYP_OPTIONS -Ddisplay_type=wayland"
  

@@ -46,6 +46,7 @@ DEPENDS += "libcap"
 DEPENDS += "flex"
 DEPENDS += "gperf"
 inherit pythonnative
+DEPENDS += "murphy"
 DEPENDS += "python-xml"
 DEPENDS_append_class-native = " ninja-native"
 DEPENDS_append_class-target = " ninja-native"
@@ -145,6 +146,7 @@ do_compile() {
  # So force it.
  
  
+ GYP_EXTRA_FLAGS="${GYP_EXTRA_FLAGS} -Denable_murphy=1"
  
  
  # --no-parallel is added because chroot does not mount a /dev/shm, this will
