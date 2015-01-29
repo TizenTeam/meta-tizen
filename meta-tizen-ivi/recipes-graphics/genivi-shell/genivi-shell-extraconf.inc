@@ -5,9 +5,7 @@ INSANE_SKIP_${PN}-dev = "staticdev"
 
 B="${S}"
 
-do_prep_prepend() {
-    cd ${S}
-
+do_configure_prepend() {
     sed -i "s@\${LIBS} \${WESTON_LIBDIR}/weston/ivi-shell.so@\${LIBS} ${PKG_CONFIG_SYSROOT_DIR}\${WESTON_LIBDIR}/weston/ivi-shell.so@g" ${S}/weston-ivi-shell/CMakeLists.txt 
 }
 
