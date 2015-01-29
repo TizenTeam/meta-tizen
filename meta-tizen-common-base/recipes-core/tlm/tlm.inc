@@ -13,39 +13,85 @@ inherit manifest autotools-brokensep
 BBCLASSEXTEND = ""
 PROVIDES = ""
 
-#PROVIDES by tlm-config-common
-PROVIDES += "tlm-config-common"
+#PROVIDES by tlm-config-ivi-vtc1010
+PROVIDES += "tlm-config-ivi-vtc1010"
 # the PROVIDES rules is ignore "tlm-config  "
 PROVIDES += "tlm-config"
-RPROVIDES_tlm-config-common += "tlm-config"
+RPROVIDES_tlm-config-ivi-vtc1010 += "tlm-config"
+
+
+#PROVIDES by tlm-config-ivi-singleseat
+PROVIDES += "tlm-config-ivi-singleseat"
+# the PROVIDES rules is ignore "tlm-config  "
+PROVIDES += "tlm-config"
+RPROVIDES_tlm-config-ivi-singleseat += "tlm-config"
+
+
+#PROVIDES by tlm-config-ivi-multiseat
+PROVIDES += "tlm-config-ivi-multiseat"
+# the PROVIDES rules is ignore "tlm-config  "
+PROVIDES += "tlm-config"
+RPROVIDES_tlm-config-ivi-multiseat += "tlm-config"
+
+
+#PROVIDES by tlm-config-ivi-singleseat-modello
+PROVIDES += "tlm-config-ivi-singleseat-modello"
+# the PROVIDES rules is ignore "tlm-config  "
+PROVIDES += "tlm-config"
+RPROVIDES_tlm-config-ivi-singleseat-modello += "tlm-config"
 
 
 #PROVIDES by tlm-dev
 PROVIDES += "tlm-dev"
 
 
-#PROVIDES by tlm
-
-
 #PROVIDES by tlm-doc
 PROVIDES += "tlm-doc"
 
 
+#PROVIDES by tlm-config-ivi-singleseat-ico
+PROVIDES += "tlm-config-ivi-singleseat-ico"
+# the PROVIDES rules is ignore "tlm-config  "
+PROVIDES += "tlm-config"
+RPROVIDES_tlm-config-ivi-singleseat-ico += "tlm-config"
+
+
+#PROVIDES by tlm
+
+
 RDEPENDS = ""
-#RDEPENDS of tlm-config-common (${PN}-config-common)
-RDEPENDS_${PN}-config-common += "tlm"
+#RDEPENDS of tlm-config-ivi-vtc1010 (${PN}-config-ivi-vtc1010)
+RDEPENDS_${PN}-config-ivi-vtc1010 += "weekeyboard"
+RDEPENDS_${PN}-config-ivi-vtc1010 += "tlm"
+
+#RDEPENDS of tlm-config-ivi-singleseat (${PN}-config-ivi-singleseat)
+RDEPENDS_${PN}-config-ivi-singleseat += "weekeyboard"
+RDEPENDS_${PN}-config-ivi-singleseat += "tlm"
+
+#RDEPENDS of tlm-config-ivi-multiseat (${PN}-config-ivi-multiseat)
+RDEPENDS_${PN}-config-ivi-multiseat += "weekeyboard"
+RDEPENDS_${PN}-config-ivi-multiseat += "tlm"
+
+#RDEPENDS of tlm-config-ivi-singleseat-modello (${PN}-config-ivi-singleseat-modello)
+RDEPENDS_${PN}-config-ivi-singleseat-modello += "weekeyboard"
+RDEPENDS_${PN}-config-ivi-singleseat-modello += "Modello-Installer-xwalk"
+RDEPENDS_${PN}-config-ivi-singleseat-modello += "tlm"
 
 #RDEPENDS of tlm-dev (${PN}-dev)
 RDEPENDS_${PN}-dev += "tlm"
+
+#RDEPENDS of tlm-doc (${PN}-doc)
+RDEPENDS_${PN}-doc += "tlm"
+
+#RDEPENDS of tlm-config-ivi-singleseat-ico (${PN}-config-ivi-singleseat-ico)
+RDEPENDS_${PN}-config-ivi-singleseat-ico += "tlm"
+RDEPENDS_${PN}-config-ivi-singleseat-ico += "ico-uxf-homescreen"
 
 #RDEPENDS of tlm (${PN})
 RDEPENDS_${PN} += "libsystemd"
 RDEPENDS_${PN} += "glibc"
 RDEPENDS_${PN} += "systemd"
 RDEPENDS_${PN} += "gumd"
-
-#RDEPENDS of tlm-doc (${PN}-doc)
-RDEPENDS_${PN}-doc += "tlm"
 
 
 DEPENDS = ""
@@ -115,8 +161,14 @@ do_install() {
  install -m 644 data/tlm-default-login ${D}${sysconfdir}/pam.d/
  install -m 644 data/tlm-system-login ${D}${sysconfdir}/pam.d/
  install -m 755 -d ${D}${sysconfdir}/session.d
- install -m 644 data/tizen-common/etc/tlm.conf ${D}${sysconfdir}
- install -m 755 data/tizen-common/etc/session.d/* ${D}${sysconfdir}/session.d/
+ install -m 755 -d ${D}${sysconfdir}/xdg/weston
+ install -m 644 data/tizen-ivi/etc/tlm*.conf ${D}${sysconfdir}
+ install -m 755 data/tizen-ivi/etc/session.d/* ${D}${sysconfdir}/session.d/
+ install -m 644 data/tizen-ivi/etc/xdg/weston/*.ini ${D}${sysconfdir}/xdg/weston/
+ install -m 755 -d ${D}${sysconfdir}/udev/rules.d
+ install -m 644 data/tizen-ivi/10-multiseat-vtc1010.rules ${D}${sysconfdir}/udev/rules.d/
+ install -m 755 -d ${D}${sysconfdir}/profile.d
+ install -m 644 data/tizen-ivi/etc/profile.d/* ${D}${sysconfdir}/profile.d/
  
  
  
@@ -125,6 +177,9 @@ do_install() {
 pkg_postinst_${PN}() {
     #!/bin/sh -e
 
+    if [ ! -e /etc/tlm.conf ] || [ -h /etc/tlm.conf ]; then
+    	ln -s -f /etc/tlm-singleseat-modello.conf /etc/tlm.conf
+    fi
     systemctl enable tlm
     systemctl daemon-reload
 
@@ -137,12 +192,132 @@ pkg_postinst_${PN}() {
 
 }
 
+pkg_postinst_${PN}() {
+    #!/bin/sh -e
+
+    if [ ! -e /etc/tlm.conf ] || [ -h /etc/tlm.conf ]; then
+    	ln -s -f /etc/tlm-multiseat.conf /etc/tlm.conf
+    fi
+    systemctl enable tlm
+    systemctl daemon-reload
+
+}
+
+pkg_postinst_${PN}() {
+    #!/bin/sh -e
+
+    if [ ! -e /etc/tlm.conf ] || [ -h /etc/tlm.conf ]; then
+    	ln -s -f /etc/tlm-singleseat-ico.conf /etc/tlm.conf
+    fi
+    systemctl enable tlm
+    systemctl daemon-reload
+
+}
+
+pkg_postinst_${PN}() {
+    #!/bin/sh -e
+
+    if [ ! -e /etc/tlm.conf ] || [ -h /etc/tlm.conf ]; then
+    	ln -s -f /etc/tlm-singleseat.conf /etc/tlm.conf
+    fi
+    systemctl enable tlm
+    systemctl daemon-reload
+
+}
+
+pkg_postinst_${PN}() {
+    #!/bin/sh -e
+
+    if [ ! -e /etc/tlm.conf ] || [ -h /etc/tlm.conf ]; then
+    	ln -s -f /etc/tlm-vtc1010.conf /etc/tlm.conf
+    fi
+    systemctl enable tlm
+    systemctl daemon-reload
+
+}
+
 pkg_prerm_${PN}() {
     #!/bin/sh -e
 
     if [ $1 == 0 ]; then
     	systemctl disable tlm
     	systemctl daemon-reload
+    fi
+
+}
+
+pkg_prerm_${PN}() {
+    #!/bin/sh -e
+
+    if [ $1 == 0 ]; then
+    	systemctl disable tlm
+    	systemctl daemon-reload
+    fi
+
+}
+
+pkg_prerm_${PN}() {
+    #!/bin/sh -e
+
+    if [ $1 == 0 ]; then
+    	systemctl disable tlm
+    	systemctl daemon-reload
+    fi
+
+}
+
+pkg_prerm_${PN}() {
+    #!/bin/sh -e
+
+    if [ $1 == 0 ]; then
+    	systemctl disable tlm
+    	systemctl daemon-reload
+    fi
+
+}
+
+pkg_prerm_${PN}() {
+    #!/bin/sh -e
+
+    if [ $1 == 0 ]; then
+    	systemctl disable tlm
+    	systemctl daemon-reload
+    fi
+
+}
+
+pkg_postrm_${PN}() {
+    #!/bin/sh -e
+
+    if [ -h /etc/tlm.conf ] && [ $1 == 0 ]; then
+    	rm -f /etc/tlm.conf
+    fi
+
+}
+
+pkg_postrm_${PN}() {
+    #!/bin/sh -e
+
+    if [ -h /etc/tlm.conf ] && [ $1 == 0 ]; then
+    	rm -f /etc/tlm.conf
+    fi
+
+}
+
+pkg_postrm_${PN}() {
+    #!/bin/sh -e
+
+    if [ -h /etc/tlm.conf ] && [ $1 == 0 ]; then
+    	rm -f /etc/tlm.conf
+    fi
+
+}
+
+pkg_postrm_${PN}() {
+    #!/bin/sh -e
+
+    if [ -h /etc/tlm.conf ] && [ $1 == 0 ]; then
+    	rm -f /etc/tlm.conf
     fi
 
 }
@@ -163,19 +338,67 @@ pkg_postrm_${PN}() {
 }
 
 PACKAGES = "${PN}-dbg ${PN}-doc ${PN}-locale"
-PACKAGES += " tlm-config-common "
+PACKAGES += " tlm-config-ivi-vtc1010 "
+PACKAGES += " tlm-config-ivi-singleseat "
+PACKAGES += " tlm-config-ivi-multiseat "
+PACKAGES += " tlm-config-ivi-singleseat-modello "
 PACKAGES += " tlm-dev "
+PACKAGES += " tlm-config-ivi-singleseat-ico "
 PACKAGES += " tlm "
 
-tlm-config-common_files = ""
-tlm-config-common_files += "${sysconfdir}/tlm.conf"
-tlm-config-common_files += "${sysconfdir}/session.d/*"
-MANIFESTFILES_${PN}-config-common = "tlm.manifest"
+tlm-config-ivi-vtc1010_files = ""
+tlm-config-ivi-vtc1010_files += "${sysconfdir}/tlm-vtc1010.conf"
+tlm-config-ivi-vtc1010_files += "${sysconfdir}/session.d/genivi-session-vtc1010"
+tlm-config-ivi-vtc1010_files += "${sysconfdir}/session.d/user-session"
+tlm-config-ivi-vtc1010_files += "${sysconfdir}/xdg/weston/weston-genivi-vtc1010.ini"
+tlm-config-ivi-vtc1010_files += "${sysconfdir}/xdg/weston/weston-user.ini"
+tlm-config-ivi-vtc1010_files += "${sysconfdir}/udev/rules.d/*"
+tlm-config-ivi-vtc1010_files += "${sysconfdir}/profile.d/weston-env-ivi.sh"
+MANIFESTFILES_${PN}-config-ivi-vtc1010 = "tlm.manifest"
+
+tlm-config-ivi-singleseat_files = ""
+tlm-config-ivi-singleseat_files += "${sysconfdir}/tlm-singleseat.conf"
+tlm-config-ivi-singleseat_files += "${sysconfdir}/session.d/genivi-session-singleseat"
+tlm-config-ivi-singleseat_files += "${sysconfdir}/session.d/user-session"
+tlm-config-ivi-singleseat_files += "${sysconfdir}/xdg/weston/weston-genivi.ini"
+tlm-config-ivi-singleseat_files += "${sysconfdir}/xdg/weston/weston-user.ini"
+tlm-config-ivi-singleseat_files += "${sysconfdir}/profile.d/weston-env-ivi.sh"
+MANIFESTFILES_${PN}-config-ivi-singleseat = "tlm.manifest"
+
+tlm-config-ivi-multiseat_files = ""
+tlm-config-ivi-multiseat_files += "${sysconfdir}/tlm-multiseat.conf"
+tlm-config-ivi-multiseat_files += "${sysconfdir}/session.d/genivi-session-multiseat"
+tlm-config-ivi-multiseat_files += "${sysconfdir}/session.d/user-session"
+tlm-config-ivi-multiseat_files += "${sysconfdir}/xdg/weston/weston-genivi.ini"
+tlm-config-ivi-multiseat_files += "${sysconfdir}/xdg/weston/weston-user.ini"
+tlm-config-ivi-multiseat_files += "${sysconfdir}/profile.d/weston-env-ivi.sh"
+MANIFESTFILES_${PN}-config-ivi-multiseat = "tlm.manifest"
+
+tlm-config-ivi-singleseat-modello_files = ""
+tlm-config-ivi-singleseat-modello_files += "${sysconfdir}/tlm-singleseat-modello.conf"
+tlm-config-ivi-singleseat-modello_files += "${sysconfdir}/session.d/genivi-session-modello"
+tlm-config-ivi-singleseat-modello_files += "${sysconfdir}/session.d/user-session-modello"
+tlm-config-ivi-singleseat-modello_files += "${sysconfdir}/xdg/weston/weston-genivi-modello.ini"
+tlm-config-ivi-singleseat-modello_files += "${sysconfdir}/xdg/weston/weston-user-modello.ini"
+tlm-config-ivi-singleseat-modello_files += "${sysconfdir}/profile.d/weston-env-ivi.sh"
+MANIFESTFILES_${PN}-config-ivi-singleseat-modello = "tlm.manifest"
 
 tlm-dev_files = ""
 tlm-dev_files += "${prefix}/include/tlm/*.h"
 tlm-dev_files += "${prefix}/lib/libtlm*.so"
 tlm-dev_files += "${prefix}/lib/pkgconfig/tlm.pc"
+
+tlm-doc_files = ""
+tlm-doc_files += "${prefix}/share/gtk-doc/html/tlm/*"
+
+tlm-config-ivi-singleseat-ico_files = ""
+tlm-config-ivi-singleseat-ico_files += "${sysconfdir}/tlm-singleseat-ico.conf"
+tlm-config-ivi-singleseat-ico_files += "${sysconfdir}/session.d/genivi-session-singleseat"
+tlm-config-ivi-singleseat-ico_files += "${sysconfdir}/session.d/user-session-ico"
+tlm-config-ivi-singleseat-ico_files += "${sysconfdir}/xdg/weston/weston-genivi.ini"
+tlm-config-ivi-singleseat-ico_files += "${sysconfdir}/xdg/weston/weston-user.ini"
+tlm-config-ivi-singleseat-ico_files += "${sysconfdir}/profile.d/weston-env-ivi.sh"
+MANIFESTFILES_${PN}-config-ivi-singleseat-ico = "tlm.manifest"
 
 tlm_files = ""
 tlm_files += "AUTHORS NEWS README"
@@ -195,18 +418,23 @@ CONFFILES_${PN} += "${sysconfdir}/pam.d/tlm-default-login"
 CONFFILES_${PN} += "${sysconfdir}/pam.d/tlm-system-login"
 MANIFESTFILES_${PN} = "tlm.manifest"
 
-tlm-doc_files = ""
-tlm-doc_files += "${prefix}/share/gtk-doc/html/tlm/*"
-
-FILES_${PN}-config-common = "${tlm-config-common_files}"
+FILES_${PN}-config-ivi-vtc1010 = "${tlm-config-ivi-vtc1010_files}"
+FILES_${PN}-config-ivi-singleseat = "${tlm-config-ivi-singleseat_files}"
+FILES_${PN}-config-ivi-multiseat = "${tlm-config-ivi-multiseat_files}"
+FILES_${PN}-config-ivi-singleseat-modello = "${tlm-config-ivi-singleseat-modello_files}"
 FILES_${PN}-dev = "${tlm-dev_files}"
-FILES_${PN} = "${tlm_files}"
 FILES_${PN}-doc = "${tlm-doc_files}"
+FILES_${PN}-config-ivi-singleseat-ico = "${tlm-config-ivi-singleseat-ico_files}"
+FILES_${PN} = "${tlm_files}"
 
-PKG_tlm-config-common= "tlm-config-common"
+PKG_tlm-config-ivi-vtc1010= "tlm-config-ivi-vtc1010"
+PKG_tlm-config-ivi-singleseat= "tlm-config-ivi-singleseat"
+PKG_tlm-config-ivi-multiseat= "tlm-config-ivi-multiseat"
+PKG_tlm-config-ivi-singleseat-modello= "tlm-config-ivi-singleseat-modello"
 PKG_tlm-dev= "tlm-dev"
-PKG_tlm= "tlm"
 PKG_tlm-doc= "tlm-doc"
+PKG_tlm-config-ivi-singleseat-ico= "tlm-config-ivi-singleseat-ico"
+PKG_tlm= "tlm"
 
 require tlm-extraconf.inc
 

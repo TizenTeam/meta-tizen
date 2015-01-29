@@ -238,7 +238,7 @@ EOF
  
  rm -rf ${D}${systemd_unitdir}/system/default.target
  install -m 755 -d ${D}${systemd_unitdir}/system
- install -m 644 ${S}/packaging/default.target ${D}${systemd_unitdir}/system/
+ install -m 644 ${S}/packaging/default.target.ivi ${D}${systemd_unitdir}/system/default.target
  
  rm -rf ${D}${prefix}/share/doc/packages/systemd
  

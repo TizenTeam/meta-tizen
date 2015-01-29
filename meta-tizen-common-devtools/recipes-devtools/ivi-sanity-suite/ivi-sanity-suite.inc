@@ -70,12 +70,12 @@ do_install() {
  rm -rf ${D}
  mkdir -p ${D}
  
- install -d ${D}${prefix}/share/tests/pc/ivi-sanity-suite
- install -m 0755 runtest ${D}${prefix}/share/tests/pc/ivi-sanity-suite
- install -m 0755 process_check/prs_checker ${D}${prefix}/share/tests/pc/ivi-sanity-suite
- install -m 0644 process_check/testkit.xml ${D}${prefix}/share/tests/pc/ivi-sanity-suite
- install -m 0644 LICENSE ${D}${prefix}/share/tests/pc/ivi-sanity-suite
- install -m 0644 process_check/README ${D}${prefix}/share/tests/pc/ivi-sanity-suite
+ install -d ${D}${prefix}/share/tests/ivi/ivi-sanity-suite
+ install -m 0755 runtest ${D}${prefix}/share/tests/ivi/ivi-sanity-suite
+ install -m 0755 process_check/prs_checker ${D}${prefix}/share/tests/ivi/ivi-sanity-suite
+ install -m 0644 process_check/testkit.xml ${D}${prefix}/share/tests/ivi/ivi-sanity-suite
+ install -m 0644 LICENSE ${D}${prefix}/share/tests/ivi/ivi-sanity-suite
+ install -m 0644 process_check/README ${D}${prefix}/share/tests/ivi/ivi-sanity-suite
  
  install -d ${D}${prefix}/share/tests/ivi/ivi-sanity-suite/GUI
  install -m 0755 GUI/runtest.sh ${D}${prefix}/share/tests/ivi/ivi-sanity-suite/GUI
