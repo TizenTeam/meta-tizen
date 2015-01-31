@@ -1,0 +1,50 @@
+From 6f853494e0776317bcc59d20bda40a1428d74934 Mon Sep 17 00:00:00 2001
+From: Jesse Barnes <jbarnes@virtuousgeek.org>
+Date: Tue, 11 Feb 2014 15:28:56 -0800
+Subject: [PATCH 12/45] drm/i915: read out hw state earlier v2
+
+We want to do this early on before we try to fetch the plane config,
+which depends on some of the pipe config state.
+
+Note that the important part is that we do this before we initialize
+gem, since otherwise we can't properly pre-reserve the stolen memory
+for framebuffers inherited from the bios.
+
+v2: split back out from get_plane_config change (Daniel)
+    update for recent locking & reset changes (Jesse)
+
+Signed-off-by: Jesse Barnes <jbarnes@virtuousgeek.org>
+[danvet: Explain a bit more why we need to move this.]
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Change-Id: I2dd546b72346df60d9f80910ed607139bef639dc
+---
+ drivers/gpu/drm/i915/intel_display.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
+index b5c02ee..c2817e3 100644
+--- a/drivers/gpu/drm/i915/intel_display.c
++++ b/drivers/gpu/drm/i915/intel_display.c
+@@ -10968,6 +10968,8 @@ void intel_modeset_init(struct drm_device *dev)
+ 
+ 	/* Just in case the BIOS is doing something questionable. */
+ 	intel_disable_fbc(dev);
++
++	intel_modeset_setup_hw_state(dev, false);
+ }
+ 
+ static void
+@@ -11333,10 +11335,6 @@ void intel_modeset_gem_init(struct drm_device *dev)
+ 	intel_modeset_init_hw(dev);
+ 
+ 	intel_setup_overlay(dev);
+-
+-	mutex_lock(&dev->mode_config.mutex);
+-	intel_modeset_setup_hw_state(dev, false);
+-	mutex_unlock(&dev->mode_config.mutex);
+ }
+ 
+ void intel_modeset_cleanup(struct drm_device *dev)
+-- 
+1.8.4.5
+

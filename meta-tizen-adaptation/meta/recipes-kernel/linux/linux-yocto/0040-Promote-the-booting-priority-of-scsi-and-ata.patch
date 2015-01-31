@@ -1,0 +1,44 @@
+From dbd246c7fff2459e8586f00d58c69ad90acf0c8c Mon Sep 17 00:00:00 2001
+From: "Fang, Neo" <neo.fang@intel.com>
+Date: Thu, 11 Dec 2014 14:41:44 +0000
+Subject: [PATCH 40/45] Promote the booting priority of scsi and ata.
+
+Promote the booting priority of scsi and ata. SATA disk loading will
+waste many msecs, it will delay the whole Tizen system boot-up
+procedure. Hence, promote the priority of sata/ata modules before tty
+devices will improve kernel booting performance. From testing with
+vtc1010, kernel-3.14.19, and kingston 120GB ssd, the original kernel
+booting time is 1.314s; after tuning scsi/ata, the kernel booting time
+is 948ms.
+
+Change-Id: I8023ace1b1a30f09b5b76cac3be732b1c939f873
+Signed-off-by: Fang, Neo <neo.fang@intel.com>
+---
+ drivers/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/Makefile b/drivers/Makefile
+index 8e3b8b0..81ce6af 100644
+--- a/drivers/Makefile
++++ b/drivers/Makefile
+@@ -38,6 +38,8 @@ obj-$(CONFIG_XEN)		+= xen/
+ 
+ # regulators early, since some subsystems rely on them to initialize
+ obj-$(CONFIG_REGULATOR)		+= regulator/
++obj-$(CONFIG_SCSI)		+= scsi/
++obj-$(CONFIG_ATA)		+= ata/
+ 
+ # reset controllers early, since gpu drivers might rely on them to initialize
+ obj-$(CONFIG_RESET_CONTROLLER)	+= reset/
+@@ -61,8 +63,6 @@ obj-y				+= base/ block/ misc/ mfd/ nfc/
+ obj-$(CONFIG_NUBUS)		+= nubus/
+ obj-y				+= macintosh/
+ obj-$(CONFIG_IDE)		+= ide/
+-obj-$(CONFIG_SCSI)		+= scsi/
+-obj-$(CONFIG_ATA)		+= ata/
+ obj-$(CONFIG_TARGET_CORE)	+= target/
+ obj-$(CONFIG_MTD)		+= mtd/
+ obj-$(CONFIG_SPI)		+= spi/
+-- 
+1.8.4.5
+

@@ -1,0 +1,82 @@
+From d6bfdfdcef0d70cbd3ca5eeec4ed13f2bf85047e Mon Sep 17 00:00:00 2001
+From: Chris Wilson <chris@chris-wilson.co.uk>
+Date: Tue, 13 May 2014 16:07:37 +0100
+Subject: [PATCH 23/45] drm/i915: Use the first mode if there is no preferred
+ mode in the EDID
+
+This matches the algorithm used by earlier kernels when selecting the
+mode for the fbcon. And only if there is no modes at all, do we fall
+back to using the BIOS configuration. Seamless transition is still
+preserved (from the BIOS configuration to ours) so long as the BIOS has
+also chosen what we hope is the native configuration.
+
+Change-Id: If11bc97f1d4c29e2828c152a0c40c7579051046b
+Reported-by: Knut Petersen <Knut_Petersen@t-online.de>
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=78655
+Reviewed-by: Jesse Barnes <jbarnes@virtuousgeek.org>
+Tested-by: Knut Petersen <Knut_Petersen@t-online.de>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+[Jani: applied Chris' "Please imagine that I wrote this correctly."]
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+
+Bug-Tizen: TC-354
+Signed-off-by: Jin Song <jin.kyu.song@linux.intel.com>
+---
+ drivers/gpu/drm/i915/intel_fbdev.c | 23 ++++++++++++++++++++---
+ 1 file changed, 20 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/intel_fbdev.c b/drivers/gpu/drm/i915/intel_fbdev.c
+index ff9a509..d2f6c92 100644
+--- a/drivers/gpu/drm/i915/intel_fbdev.c
++++ b/drivers/gpu/drm/i915/intel_fbdev.c
+@@ -289,6 +289,7 @@ static bool intel_fb_initial_config(struct drm_fb_helper *fb_helper,
+ 		struct drm_connector *connector;
+ 		struct drm_encoder *encoder;
+ 		struct drm_fb_helper_crtc *new_crtc;
++		struct drm_display_mode *current_mode;
+ 
+ 		fb_conn = fb_helper->connector_info[i];
+ 		connector = fb_conn->connector;
+@@ -334,20 +335,36 @@ static bool intel_fb_initial_config(struct drm_fb_helper *fb_helper,
+ 							   height);
+ 			intel_mode_from_pipe_config(&encoder->crtc->hwmode,
+ 						    &to_intel_crtc(encoder->crtc)->config);
+-			modes[i] = &encoder->crtc->hwmode;
++			current_mode = &encoder->crtc->hwmode;
+ 
+ 			if (preferred &&
+-			    !drm_mode_same_size(preferred, modes[i])) {
++			    !drm_mode_same_size(preferred, current_mode)) {
+ 				DRM_DEBUG_KMS("using preferred mode %s "
+ 					      "instead of current mode %s "
+ 					      "on connector %d\n",
+ 					      preferred->name,
+-					      modes[i]->name,
++					      current_mode->name,
+ 					      fb_conn->connector->base.id);
+ 				modes[i] = preferred;
+ 			}
+ 		}
+ 
++		/* No preferred mode marked by the EDID? Are there any modes? */
++		if (!modes[i] && !list_empty(&connector->modes)) {
++			DRM_DEBUG_KMS("using first mode listed on connector %s\n",
++				      drm_get_connector_name(connector));
++			modes[i] = list_first_entry(&connector->modes,
++						    struct drm_display_mode,
++						    head);
++		}
++
++		/* last resort: use current mode */
++		if (!modes[i]) {
++			DRM_DEBUG_KMS("looking for current mode on connector %s\n",
++					drm_get_connector_name(connector));
++			modes[i] = current_mode;
++		}
++
+ 		crtcs[i] = new_crtc;
+ 
+ 		DRM_DEBUG_KMS("connector %s on crtc %d: %s\n",
+-- 
+1.8.4.5
+

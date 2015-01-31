@@ -1,0 +1,132 @@
+From be5bf0bdc00e31e00d181aec33a3950070146626 Mon Sep 17 00:00:00 2001
+From: "Fang, Neo" <neo.fang@intel.com>
+Date: Fri, 21 Nov 2014 16:33:13 +0000
+Subject: [PATCH 37/45] Export drm APIs to support early camera.
+
+To mmap camera videos to the spriteC plane(Intel i915), early camera
+will bypass DRM_IOCTL to avoid drm_master conflicting issues, and
+call drm APIs directly. Because drm APIs are for user space
+framworks and applications, it is necessary to export them for
+early camera module.
+For the details of early camera, please check the wiki page:
+https://wiki.tizen.org/wiki/Early_Camera
+
+Change-Id: I26773dd5aa50f68011c92350f8af3ba88aade426
+Signed-off-by: Fang, Neo <neo.fang@intel.com>
+---
+ drivers/gpu/drm/drm_crtc.c           | 10 ++++++++++
+ drivers/gpu/drm/drm_prime.c          |  1 +
+ drivers/gpu/drm/i915/intel_display.c |  1 +
+ 3 files changed, 12 insertions(+)
+
+diff --git a/drivers/gpu/drm/drm_crtc.c b/drivers/gpu/drm/drm_crtc.c
+index 3b7d32d..1043407 100644
+--- a/drivers/gpu/drm/drm_crtc.c
++++ b/drivers/gpu/drm/drm_crtc.c
+@@ -1606,6 +1606,7 @@ out:
+ 	drm_modeset_unlock_all(dev);
+ 	return ret;
+ }
++EXPORT_SYMBOL(drm_mode_getcrtc);
+ 
+ static bool drm_mode_expose_to_userspace(const struct drm_display_mode *mode,
+ 					 const struct drm_file *file_priv)
+@@ -1764,6 +1765,7 @@ out:
+ 
+ 	return ret;
+ }
++EXPORT_SYMBOL(drm_mode_getconnector);
+ 
+ int drm_mode_getencoder(struct drm_device *dev, void *data,
+ 			struct drm_file *file_priv)
+@@ -1844,6 +1846,7 @@ out:
+ 	drm_modeset_unlock_all(dev);
+ 	return ret;
+ }
++EXPORT_SYMBOL(drm_mode_getplane_res);
+ 
+ /**
+  * drm_mode_getplane - get plane info
+@@ -1909,6 +1912,7 @@ out:
+ 	drm_modeset_unlock_all(dev);
+ 	return ret;
+ }
++EXPORT_SYMBOL(drm_mode_getplane);
+ 
+ /**
+  * drm_mode_setplane - set up or tear down an plane
+@@ -2043,6 +2047,7 @@ out:
+ 
+ 	return ret;
+ }
++EXPORT_SYMBOL(drm_mode_setplane);
+ 
+ /**
+  * drm_mode_set_config_internal - helper to call ->set_config
+@@ -2285,6 +2290,7 @@ out:
+ 	drm_modeset_unlock_all(dev);
+ 	return ret;
+ }
++EXPORT_SYMBOL(drm_mode_setcrtc);
+ 
+ static int drm_mode_cursor_common(struct drm_device *dev,
+ 				  struct drm_mode_cursor2 *req,
+@@ -2627,6 +2633,7 @@ int drm_mode_addfb2(struct drm_device *dev,
+ 
+ 	return ret;
+ }
++EXPORT_SYMBOL(drm_mode_addfb2);
+ 
+ /**
+  * drm_mode_rmfb - remove an FB from the configuration
+@@ -2681,6 +2688,7 @@ fail_lookup:
+ 
+ 	return -ENOENT;
+ }
++EXPORT_SYMBOL(drm_mode_rmfb);
+ 
+ /**
+  * drm_mode_getfb - get FB info
+@@ -2836,6 +2844,7 @@ void drm_fb_release(struct drm_file *priv)
+ 	}
+ 	mutex_unlock(&priv->fbs_lock);
+ }
++EXPORT_SYMBOL(drm_fb_release);
+ 
+ struct drm_property *drm_property_create(struct drm_device *dev, int flags,
+ 					 const char *name, int num_values)
+@@ -3766,6 +3775,7 @@ int drm_mode_create_dumb_ioctl(struct drm_device *dev,
+ 		return -ENOSYS;
+ 	return dev->driver->dumb_create(file_priv, dev, args);
+ }
++EXPORT_SYMBOL(drm_mode_create_dumb_ioctl);
+ 
+ int drm_mode_mmap_dumb_ioctl(struct drm_device *dev,
+ 			     void *data, struct drm_file *file_priv)
+diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
+index 56805c3..cf1a4cc 100644
+--- a/drivers/gpu/drm/drm_prime.c
++++ b/drivers/gpu/drm/drm_prime.c
+@@ -582,6 +582,7 @@ int drm_prime_handle_to_fd_ioctl(struct drm_device *dev, void *data,
+ 	return dev->driver->prime_handle_to_fd(dev, file_priv,
+ 			args->handle, flags, &args->fd);
+ }
++EXPORT_SYMBOL(drm_prime_handle_to_fd_ioctl);
+ 
+ int drm_prime_fd_to_handle_ioctl(struct drm_device *dev, void *data,
+ 				 struct drm_file *file_priv)
+diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
+index a538bb3..98700c3 100644
+--- a/drivers/gpu/drm/i915/intel_display.c
++++ b/drivers/gpu/drm/i915/intel_display.c
+@@ -10491,6 +10491,7 @@ int intel_get_pipe_from_crtc_id(struct drm_device *dev, void *data,
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL(intel_get_pipe_from_crtc_id);
+ 
+ static int intel_encoder_clones(struct intel_encoder *encoder)
+ {
+-- 
+1.8.4.5
+

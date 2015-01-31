@@ -1,0 +1,59 @@
+From 1108d2686713edf15ca667480138a834703b0f2d Mon Sep 17 00:00:00 2001
+From: Jesse Barnes <jbarnes@virtuousgeek.org>
+Date: Fri, 7 Feb 2014 12:10:35 -0800
+Subject: [PATCH 10/45] drm/i915: split aligned height calculation out v2
+
+For use by get_plane_config.
+
+v2: cleanup tile_height bits (Chris)
+
+Signed-off-by: Jesse Barnes <jbarnes@virtuousgeek.org>
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Change-Id: Ie4a01d12622ca0a7ffa1385fb41a67c12961e2fc
+---
+ drivers/gpu/drm/i915/intel_display.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
+index d81bb88..949efa6 100644
+--- a/drivers/gpu/drm/i915/intel_display.c
++++ b/drivers/gpu/drm/i915/intel_display.c
+@@ -1932,6 +1932,14 @@ static bool need_vtd_wa(struct drm_device *dev)
+ 	return false;
+ }
+ 
++static int intel_align_height(struct drm_device *dev, int height, bool tiled)
++{
++	int tile_height;
++
++	tile_height = tiled ? (IS_GEN2(dev) ? 16 : 8) : 1;
++	return ALIGN(height, tile_height);
++}
++
+ int
+ intel_pin_and_fence_fb_obj(struct drm_device *dev,
+ 			   struct drm_i915_gem_object *obj,
+@@ -10469,7 +10477,7 @@ int intel_framebuffer_init(struct drm_device *dev,
+ 			   struct drm_mode_fb_cmd2 *mode_cmd,
+ 			   struct drm_i915_gem_object *obj)
+ {
+-	int aligned_height, tile_height;
++	int aligned_height;
+ 	int pitch_limit;
+ 	int ret;
+ 
+@@ -10563,9 +10571,8 @@ int intel_framebuffer_init(struct drm_device *dev,
+ 	if (mode_cmd->offsets[0] != 0)
+ 		return -EINVAL;
+ 
+-	tile_height = IS_GEN2(dev) ? 16 : 8;
+-	aligned_height = ALIGN(mode_cmd->height,
+-			       obj->tiling_mode ? tile_height : 1);
++	aligned_height = intel_align_height(dev, mode_cmd->height,
++					    obj->tiling_mode);
+ 	/* FIXME drm helper for size checks (especially planar formats)? */
+ 	if (obj->base.size < aligned_height * mode_cmd->pitches[0])
+ 		return -EINVAL;
+-- 
+1.8.4.5
+

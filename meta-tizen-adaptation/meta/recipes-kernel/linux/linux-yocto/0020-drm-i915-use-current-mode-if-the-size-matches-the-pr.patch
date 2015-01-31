@@ -1,0 +1,110 @@
+From 6f71ab91a680a083b71ec88c0fc601ddd64f048a Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Kristian=20H=C3=B8gsberg?= <hoegsberg@gmail.com>
+Date: Tue, 25 Feb 2014 14:33:09 -0800
+Subject: [PATCH 20/45] drm/i915: use current mode if the size matches the
+ preferred mode
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The BIOS may set a native mode that doesn't quite match the preferred
+mode timings.  It should be ok to use however if it uses the same size,
+so try to avoid a mode set in that case.
+
+Signed-off-by: Kristian Høgsberg <hoegsberg@gmail.com>
+Signed-off-by: Jesse Barnes <jbarnes@virtuousgeek.org>
+Change-Id: I8b6fecd1522013dfbd1ae975ac6c6557522348e2
+---
+ drivers/gpu/drm/drm_modes.c        |  8 ++++++++
+ drivers/gpu/drm/i915/intel_fbdev.c | 35 +++++++++++++++++------------------
+ include/drm/drm_crtc.h             |  2 ++
+ 3 files changed, 27 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
+index b073315..7d2dda4 100644
+--- a/drivers/gpu/drm/drm_modes.c
++++ b/drivers/gpu/drm/drm_modes.c
+@@ -894,6 +894,14 @@ bool drm_mode_equal_no_clocks_no_stereo(const struct drm_display_mode *mode1,
+ }
+ EXPORT_SYMBOL(drm_mode_equal_no_clocks_no_stereo);
+ 
++bool drm_mode_same_size(const struct drm_display_mode *mode1,
++			const struct drm_display_mode *mode2)
++{
++	return mode1->vdisplay == mode2->vdisplay &&
++		mode1->hdisplay == mode2->hdisplay;
++}
++EXPORT_SYMBOL(drm_mode_same_size);
++
+ /**
+  * drm_mode_validate_size - make sure modes adhere to size constraints
+  * @dev: DRM device
+diff --git a/drivers/gpu/drm/i915/intel_fbdev.c b/drivers/gpu/drm/i915/intel_fbdev.c
+index fb70f5e..8421b91 100644
+--- a/drivers/gpu/drm/i915/intel_fbdev.c
++++ b/drivers/gpu/drm/i915/intel_fbdev.c
+@@ -324,31 +324,30 @@ static bool intel_fb_initial_config(struct drm_fb_helper *fb_helper,
+ 		/* go for command line mode first */
+ 		modes[i] = drm_pick_cmdline_mode(fb_conn, width, height);
+ 
+-		/* try for preferred next */
++		/* try for preferred next or match current */
+ 		if (!modes[i]) {
++			struct drm_display_mode *preferred;
++
+ 			DRM_DEBUG_KMS("looking for preferred mode on connector %d\n",
+ 				      fb_conn->connector->base.id);
+-			modes[i] = drm_has_preferred_mode(fb_conn, width,
+-							  height);
+-		}
+-
+-		/* last resort: use current mode */
+-		if (!modes[i]) {
+-			/*
+-			 * IMPORTANT: We want to use the adjusted mode (i.e.
+-			 * after the panel fitter upscaling) as the initial
+-			 * config, not the input mode, which is what crtc->mode
+-			 * usually contains. But since our current fastboot
+-			 * code puts a mode derived from the post-pfit timings
+-			 * into crtc->mode this works out correctly. We don't
+-			 * use hwmode anywhere right now, so use it for this
+-			 * since the fb helper layer wants a pointer to
+-			 * something we own.
+-			 */
++			preferred = drm_has_preferred_mode(fb_conn, width,
++							   height);
+ 			intel_mode_from_pipe_config(&encoder->crtc->hwmode,
+ 						    &to_intel_crtc(encoder->crtc)->config);
+ 			modes[i] = &encoder->crtc->hwmode;
++
++			if (preferred &&
++			    !drm_mode_same_size(preferred, modes[i])) {
++				DRM_DEBUG_KMS("using preferred mode %s "
++					      "instead of current mode %s "
++					      "on connector %d\n",
++					      preferred->name,
++					      modes[i]->name,
++					      fb_conn->connector->base.id);
++				modes[i] = preferred;
++			}
+ 		}
++
+ 		crtcs[i] = new_crtc;
+ 
+ 		DRM_DEBUG_KMS("connector %s on crtc %d: %s\n",
+diff --git a/include/drm/drm_crtc.h b/include/drm/drm_crtc.h
+index 8f3dee0..c074759 100644
+--- a/include/drm/drm_crtc.h
++++ b/include/drm/drm_crtc.h
+@@ -1019,6 +1019,8 @@ extern bool drm_mode_equal(const struct drm_display_mode *mode1, const struct dr
+ extern bool drm_mode_equal_no_clocks_no_stereo(const struct drm_display_mode *mode1, const struct drm_display_mode *mode2);
+ extern int drm_mode_width(const struct drm_display_mode *mode);
+ extern int drm_mode_height(const struct drm_display_mode *mode);
++extern bool drm_mode_same_size(const struct drm_display_mode *mode1,
++			       const struct drm_display_mode *mode2);
+ 
+ /* for us by fb module */
+ extern struct drm_display_mode *drm_mode_create(struct drm_device *dev);
+-- 
+1.8.4.5
+

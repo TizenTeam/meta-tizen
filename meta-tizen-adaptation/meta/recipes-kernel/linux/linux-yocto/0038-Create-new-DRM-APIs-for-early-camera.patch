@@ -1,0 +1,386 @@
+From f07c7831a89a2ea4a288b493437632c2e4be7f0c Mon Sep 17 00:00:00 2001
+From: "Fang, Neo" <neo.fang@intel.com>
+Date: Fri, 21 Nov 2014 16:33:49 +0000
+Subject: [PATCH 38/45] Create new DRM APIs for early camera.
+
+New drm APIs(drm_open_kernel, drm_release_kernel,
+drm_open_helper_kernel, drm_mode_getresources_kernel)
+are created for early camera.
+For the original drm APIs drm_open, drm_release,
+drm_open_helper and drm_mode_getresources are used by X. And early
+camera should not open/release the drm resources exclusively. To
+avoid the conflict issues with X and bypass drm_master, it is
+necessary to create new APIs. For more details about early camera
+feature, please visit the wiki page:
+https://wiki.tizen.org/wiki/Early_Camera
+
+Change-Id: I0ec645054e425c303dfb710f72ca9f873b54e051
+Signed-off-by: Fang, Neo <neo.fang@intel.com>
+---
+ drivers/gpu/drm/drm_crtc.c |  77 +++++++++++++++
+ drivers/gpu/drm/drm_fops.c | 240 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 317 insertions(+)
+
+diff --git a/drivers/gpu/drm/drm_crtc.c b/drivers/gpu/drm/drm_crtc.c
+index 1043407..9fa6da7 100644
+--- a/drivers/gpu/drm/drm_crtc.c
++++ b/drivers/gpu/drm/drm_crtc.c
+@@ -1365,6 +1365,83 @@ static int drm_crtc_convert_umode(struct drm_display_mode *out,
+ 	return 0;
+ }
+ 
++int drm_mode_getresources_kernel(struct drm_device *dev,
++				 void *data,
++				 struct drm_file *file_priv)
++{
++	struct drm_mode_card_res *card_res = data;
++	struct list_head *lh;
++	struct drm_framebuffer *fb;
++	struct drm_crtc *crtc;
++	int ret = 0;
++	int crtc_count = 0;
++	int fb_count = 0;
++	int copied = 0;
++	uint32_t *fb_id;
++	uint32_t *crtc_id;
++
++	if (!drm_core_check_feature(dev, DRIVER_MODESET))
++		return -EINVAL;
++
++	mutex_lock(&file_priv->fbs_lock);
++	/*
++	 * For the non-control nodes we need to limit the list of resources
++	 * by IDs in the group list for this node
++	 */
++	list_for_each(lh, &file_priv->fbs)
++		fb_count++;
++
++	/* FBs */
++	if (card_res->count_fbs >= fb_count) {
++		copied = 0;
++		fb_id = (uint32_t __user *)(unsigned long)card_res->fb_id_ptr;
++		list_for_each_entry(fb, &file_priv->fbs, filp_head) {
++			if (put_user(fb->base.id, fb_id + copied)) {
++				mutex_unlock(&file_priv->fbs_lock);
++				return -EFAULT;
++			}
++			copied++;
++		}
++	}
++	card_res->count_fbs = fb_count;
++	mutex_unlock(&file_priv->fbs_lock);
++
++	drm_modeset_lock_all(dev);
++
++	list_for_each(lh, &dev->mode_config.crtc_list)
++		crtc_count++;
++
++	card_res->max_height = dev->mode_config.max_height;
++	card_res->min_height = dev->mode_config.min_height;
++	card_res->max_width = dev->mode_config.max_width;
++	card_res->min_width = dev->mode_config.min_width;
++
++	/* CRTCs */
++	if (card_res->count_crtcs >= crtc_count) {
++		copied = 0;
++		crtc_id = (uint32_t __user *)(ulong)card_res->crtc_id_ptr;
++
++		list_for_each_entry(crtc,
++				    &dev->mode_config.crtc_list,
++				    head) {
++			DRM_DEBUG_KMS("[CRTC:%d]\n", crtc->base.id);
++			if (put_user(crtc->base.id, crtc_id + copied)) {
++				ret = -EFAULT;
++				goto out;
++			}
++			copied++;
++		}
++	}
++	card_res->count_crtcs = crtc_count;
++
++	DRM_DEBUG_KMS("CRTC[%d]", card_res->count_crtcs);
++
++out:
++	drm_modeset_unlock_all(dev);
++	return ret;
++}
++EXPORT_SYMBOL(drm_mode_getresources_kernel);
++
+ /**
+  * drm_mode_getresources - get graphics configuration
+  * @dev: drm device for the ioctl
+diff --git a/drivers/gpu/drm/drm_fops.c b/drivers/gpu/drm/drm_fops.c
+index 08ae115..5047c9e 100644
+--- a/drivers/gpu/drm/drm_fops.c
++++ b/drivers/gpu/drm/drm_fops.c
+@@ -46,6 +46,10 @@ EXPORT_SYMBOL(drm_global_mutex);
+ static int drm_open_helper(struct inode *inode, struct file *filp,
+ 			   struct drm_device * dev);
+ 
++static int drm_open_helper_kernel(struct inode *inode,
++				  struct file *filp,
++				  struct drm_device *dev);
++
+ static int drm_setup(struct drm_device * dev)
+ {
+ 	int ret;
+@@ -137,6 +141,64 @@ err_undo:
+ }
+ EXPORT_SYMBOL(drm_open);
+ 
++int drm_open_kernel(struct inode *inode,
++		    struct file *filp,
++		    struct drm_device **pdev)
++{
++	int minor_id = iminor(inode);
++	struct drm_minor *minor;
++	int retcode = 0;
++	int need_setup = 0;
++
++	struct address_space *old_mapping;
++	struct drm_device *dev = NULL;
++
++	minor = idr_find(&drm_minors_idr, minor_id);
++	if (!minor)
++		return -ENODEV;
++
++	dev = minor->dev;
++	if (!dev)
++		return -ENODEV;
++
++	if (!dev->open_count++)
++		need_setup = 1;
++
++	mutex_lock(&dev->struct_mutex);
++	old_mapping = dev->dev_mapping;
++
++	if (old_mapping == NULL)
++		dev->dev_mapping = &inode->i_data;
++
++	inode->i_mapping = dev->dev_mapping;
++
++	filp->f_mapping = dev->dev_mapping;
++	mutex_unlock(&dev->struct_mutex);
++
++	/* By pass drm_master when openning drm inside kernel. */
++	retcode = drm_open_helper_kernel(inode, filp, dev);
++	if (retcode)
++		goto err_undo;
++	if (need_setup) {
++		retcode = drm_setup(dev);
++	if (retcode)
++		goto err_undo;
++	}
++
++	*pdev = dev;
++	return 0;
++
++err_undo:
++	mutex_lock(&dev->struct_mutex);
++	filp->f_mapping = old_mapping;
++	inode->i_mapping = old_mapping;
++	dev->dev_mapping = old_mapping;
++	mutex_unlock(&dev->struct_mutex);
++	dev->open_count--;
++	return retcode;
++}
++EXPORT_SYMBOL(drm_open_kernel);
++
+ /**
+  * File \c open operation.
+  *
+@@ -348,6 +410,104 @@ out_put_pid:
+ 	return ret;
+ }
+ 
++static int drm_open_helper_kernel(struct inode *inode,
++				  struct file *filp,
++				  struct drm_device *dev)
++{
++	int minor_id = iminor(inode);
++	struct drm_file *priv;
++	int ret;
++
++	/* No exclusive opens */
++	if (filp->f_flags & O_EXCL)
++		return -EBUSY;
++	if (!drm_cpu_valid())
++		return -EINVAL;
++	if (dev->switch_power_state != DRM_SWITCH_POWER_ON &&
++	    dev->switch_power_state != DRM_SWITCH_POWER_DYNAMIC_OFF)
++		return -EINVAL;
++
++	DRM_DEBUG("pid = %d, minor = %d\n", task_pid_nr(current), minor_id);
++
++	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	filp->private_data = priv;
++	priv->filp = filp;
++	priv->uid = current_euid();
++	priv->pid = get_pid(task_pid(current));
++	priv->minor = idr_find(&drm_minors_idr, minor_id);
++	if (!priv->minor) {
++		ret = -ENODEV;
++		goto out_put_pid;
++	}
++
++	priv->always_authenticated = capable(CAP_SYS_ADMIN);
++	priv->authenticated = priv->always_authenticated;
++	priv->lock_count = 0;
++
++	INIT_LIST_HEAD(&priv->lhead);
++	INIT_LIST_HEAD(&priv->fbs);
++	mutex_init(&priv->fbs_lock);
++	INIT_LIST_HEAD(&priv->event_list);
++	init_waitqueue_head(&priv->event_wait);
++	/* set aside 4k for event buffer */
++	priv->event_space = 4096;
++
++	if (dev->driver->driver_features & DRIVER_GEM)
++		drm_gem_open(dev, priv);
++
++	if (drm_core_check_feature(dev, DRIVER_PRIME))
++		drm_prime_init_file_private(&priv->prime);
++
++	if (dev->driver->open) {
++		ret = dev->driver->open(dev, priv);
++		if (ret < 0)
++			goto out_prime_destroy;
++	}
++
++	/*
++	 * Do not hold drm_master because it will cause conflicts
++	 * with xcompositor initialization.
++	 */
++	mutex_lock(&dev->struct_mutex);
++	list_add(&priv->lhead, &dev->filelist);
++	mutex_unlock(&dev->struct_mutex);
++
++#ifdef __alpha__
++	/* Default the hose. */
++	if (!dev->hose) {
++		struct pci_dev *pci_dev;
++
++		pci_dev = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, NULL);
++		if (pci_dev) {
++			dev->hose = pci_dev->sysdata;
++			pci_dev_put(pci_dev);
++		}
++		if (!dev->hose) {
++			struct pci_bus *b = pci_bus_b(pci_root_buses.next);
++
++			if (b)
++				dev->hose = b->sysdata;
++		}
++	}
++#endif
++
++	return 0;
++
++out_prime_destroy:
++	if (drm_core_check_feature(dev, DRIVER_PRIME))
++		drm_prime_destroy_file_private(&priv->prime);
++	if (dev->driver->driver_features & DRIVER_GEM)
++		drm_gem_release(dev, priv);
++out_put_pid:
++	put_pid(priv->pid);
++	kfree(priv);
++	filp->private_data = NULL;
++	return ret;
++}
++
+ static void drm_master_release(struct drm_device *dev, struct file *filp)
+ {
+ 	struct drm_file *file_priv = filp->private_data;
+@@ -589,6 +749,86 @@ int drm_release(struct inode *inode, struct file *filp)
+ }
+ EXPORT_SYMBOL(drm_release);
+ 
++int drm_release_kernel(struct inode *inode, struct file *filp)
++{
++	struct drm_file *file_priv = filp->private_data;
++	struct drm_device *dev = file_priv->minor->dev;
++	int retcode = 0;
++
++	mutex_lock(&drm_global_mutex);
++
++	DRM_DEBUG("open_count = %d\n", dev->open_count);
++
++	if (dev->driver->preclose)
++		dev->driver->preclose(dev, file_priv);
++
++	/*
++	 * Release any auth tokens that might point to this file_priv,
++	 * (do that under the drm_global_mutex).
++	 */
++	if (file_priv->magic)
++		(void)drm_remove_magic(file_priv->master, file_priv->magic);
++
++	if (drm_core_check_feature(dev, DRIVER_HAVE_DMA))
++		drm_core_reclaim_buffers(dev, file_priv);
++
++	drm_events_release(file_priv);
++
++	if (dev->driver->driver_features & DRIVER_MODESET)
++		drm_fb_release(file_priv);
++
++	if (dev->driver->driver_features & DRIVER_GEM)
++		drm_gem_release(dev, file_priv);
++
++	mutex_lock(&dev->ctxlist_mutex);
++	if (!list_empty(&dev->ctxlist)) {
++		struct drm_ctx_list *pos, *n;
++
++		list_for_each_entry_safe(pos, n, &dev->ctxlist, head) {
++			if (pos->tag == file_priv &&
++			    pos->handle != DRM_KERNEL_CONTEXT) {
++				if (dev->driver->context_dtor)
++					dev->driver->context_dtor(dev,
++								  pos->handle);
++
++				drm_ctxbitmap_free(dev, pos->handle);
++
++				list_del(&pos->head);
++				kfree(pos);
++			}
++		}
++	}
++	mutex_unlock(&dev->ctxlist_mutex);
++
++	mutex_lock(&dev->struct_mutex);
++
++	BUG_ON(dev->dev_mapping == NULL);
++
++	/* drop the reference held my the file priv */
++	list_del(&file_priv->lhead);
++	mutex_unlock(&dev->struct_mutex);
++
++	if (dev->driver->postclose)
++		dev->driver->postclose(dev, file_priv);
++
++	if (drm_core_check_feature(dev, DRIVER_PRIME))
++		drm_prime_destroy_file_private(&file_priv->prime);
++
++	put_pid(file_priv->pid);
++	kfree(file_priv);
++
++	/* End inline drm_release. */
++	if (!--dev->open_count) {
++		retcode = drm_lastclose(dev);
++		if (drm_device_is_unplugged(dev))
++			drm_put_dev(dev);
++	}
++	mutex_unlock(&drm_global_mutex);
++
++	return retcode;
++}
++EXPORT_SYMBOL(drm_release_kernel);
++
+ static bool
+ drm_dequeue_event(struct drm_file *file_priv,
+ 		  size_t total, size_t max, struct drm_pending_event **out)
+-- 
+1.8.4.5
+

@@ -1,0 +1,89 @@
+From efe6e6556efc515d1f44710eea01dc4ce2d394e2 Mon Sep 17 00:00:00 2001
+From: "Fang, Neo" <neo.fang@intel.com>
+Date: Fri, 21 Nov 2014 16:30:34 +0000
+Subject: [PATCH 34/45] Export V4L2 APIs to support early camera.
+
+To mmap camera videos to the spriteC plane(Intel i915), early camera
+will bypass DRM_IOCTL to avoid drm_master conflicting issues, and
+call drm APIs directly. Because drm APIs are for user space
+framworks and applications, it is necessary to export them for early
+camera module.
+For the details of early camera feature, please check the wiki page:
+https://wiki.tizen.org/wiki/Early_Camera
+
+Change-Id: I955ca2c73e9c33c5987ac8f36c7c730545ce1333
+Signed-off-by: Fang, Neo <neo.fang@intel.com>
+---
+ drivers/media/usb/uvc/uvc_v4l2.c   |  6 ++++++
+ drivers/media/v4l2-core/v4l2-dev.c | 17 +++++++++++++++++
+ 2 files changed, 23 insertions(+)
+
+diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+index 3afff92..734cde6 100644
+--- a/drivers/media/usb/uvc/uvc_v4l2.c
++++ b/drivers/media/usb/uvc/uvc_v4l2.c
+@@ -1113,6 +1113,12 @@ static long uvc_v4l2_ioctl(struct file *file,
+ 	return video_usercopy(file, cmd, arg, uvc_v4l2_do_ioctl);
+ }
+ 
++long uvc_v4l2_ioctl_kernel(struct file *file, unsigned int cmd, void *arg)
++{
++	return uvc_v4l2_do_ioctl(file, cmd, arg);
++}
++EXPORT_SYMBOL(uvc_v4l2_ioctl_kernel);
++
+ #ifdef CONFIG_COMPAT
+ struct uvc_xu_control_mapping32 {
+ 	__u32 id;
+diff --git a/drivers/media/v4l2-core/v4l2-dev.c b/drivers/media/v4l2-core/v4l2-dev.c
+index 0a30dbf..0f11f70 100644
+--- a/drivers/media/v4l2-core/v4l2-dev.c
++++ b/drivers/media/v4l2-core/v4l2-dev.c
+@@ -26,6 +26,7 @@
+ #include <linux/kmod.h>
+ #include <linux/slab.h>
+ #include <asm/uaccess.h>
++#include <linux/completion.h>
+ 
+ #include <media/v4l2-common.h>
+ #include <media/v4l2-device.h>
+@@ -34,6 +35,8 @@
+ #define VIDEO_NUM_DEVICES	256
+ #define VIDEO_NAME              "video4linux"
+ 
++DECLARE_COMPLETION(video_device_completion);
++
+ /*
+  *	sysfs stuff
+  */
+@@ -482,6 +485,18 @@ static int v4l2_release(struct inode *inode, struct file *filp)
+ 	return ret;
+ }
+ 
++int v4l2_open_kernel(struct inode *inode, struct file *filp)
++{
++	return v4l2_open(inode, filp);
++}
++EXPORT_SYMBOL(v4l2_open_kernel);
++
++int v4l2_release_kernel(struct inode *inode, struct file *filp)
++{
++	return v4l2_release(inode, filp);
++}
++EXPORT_SYMBOL(v4l2_release_kernel);
++
+ static const struct file_operations v4l2_fops = {
+ 	.owner = THIS_MODULE,
+ 	.read = v4l2_read,
+@@ -936,6 +951,8 @@ int __video_register_device(struct video_device *vdev, int type, int nr,
+ 	/* Part 6: Activate this minor. The char device can now be used. */
+ 	set_bit(V4L2_FL_REGISTERED, &vdev->flags);
+ 
++	complete(&video_device_completion);
++
+ 	return 0;
+ 
+ cleanup:
+-- 
+1.8.4.5
+
