@@ -12,6 +12,7 @@ SYSTEMD_SERVICE_${PN} = "tlm.service"
 # For now just disable it and focus on Modello instead.
 PACKAGES_remove = "${PN}-config-ivi-singleseat-ico"
 do_install_append() {
-    rm -rf ${tlm-config-ivi-singleseat-ico_files}
+    for i in ${tlm-config-ivi-singleseat-ico_files}; do
+        rm -rf "${D}/$i"
+    done
 }
-
