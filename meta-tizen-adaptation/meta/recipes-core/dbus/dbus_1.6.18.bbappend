@@ -40,3 +40,6 @@ FILES_${PN} += "/etc/profile.d/dbus.sh"
 
 EXTRA_OECONF += " --enable-smack "
 
+GROUPADD_PARAM_${PN} += "; -g 81 dbus"
+USERADD_PARAM_${PN} += "; -u 81 -d / -m -g dbus --system -s /sbin/nologin dbus"
+inherit useradd
