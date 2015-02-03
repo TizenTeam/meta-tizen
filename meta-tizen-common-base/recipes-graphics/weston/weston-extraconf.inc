@@ -15,6 +15,16 @@ do_configure_prepend() {
 pkg_preinst_${PN}() {
 }
 
+do_install_append() {
+    # Done in the .spec file via permissions in the file list.
+    chmod u+s ${bindir}/weston-launcher
+
+    # Not done in Tizen, but perhaps it should be? Don't do it here either for now.
+    # When we do it, we also need to move the GROUPADD_PARAM from  config-tizen-ivi.bb
+    # into this recipe here.
+    # chgrp weston-launcher ${bindir}/weston-launcher
+}
+
 export libexecdir="${prefix}/libexec"
 
 FILES_${PN} += "${prefix}/lib/weston/cms-static.so"
