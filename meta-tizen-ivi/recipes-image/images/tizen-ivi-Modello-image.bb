@@ -6,6 +6,7 @@ LICENSE = "MIT"
 
 DESCRIPTION = "A Tizen IVI image based on Tizen ivi with Modello ."
 
+TLMCONFIG = "tlm-config-ivi-singleseat-modello"
 
 # Modello packages
 CORE_IMAGE_EXTRA_INSTALL += "packagegroup-tizen-ivi-modello"

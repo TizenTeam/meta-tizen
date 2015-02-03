@@ -14,12 +14,12 @@ LICENSE = "MIT"
 
 DESCRIPTION = "A Tizen IVI image based on Tizen common ."
 
-# weston-init is from OE-core and not used in Tizen IVI. Weston config
-# files are provided by tlm-config-* and weston-ivi-config.
-# weston-ivi-config-modello does not seem to be used.
+# weston-init is from OE-core and not used in Tizen IVI.
 CORE_IMAGE_BASE_INSTALL_remove = "weston-init"
 
-WESTONINI = "weston-ivi-config"
+# Weston config files are provided by tlm-config-* in recent Tizen IVI.
+# weston-ivi-config is not used at all anymore.
+WESTONINI = ""
 
 CORE_IMAGE_EXTRA_INSTALL += "automotive-message-broker"
 CORE_IMAGE_EXTRA_INSTALL += "efl-theme-tizen-hd"
