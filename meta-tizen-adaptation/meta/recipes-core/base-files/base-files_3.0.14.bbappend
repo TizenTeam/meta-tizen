@@ -1,8 +1,5 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/base-files:"
 
-SRC_URI += " file://tizen_fstab \
-           "
-
 volatiles = "tmp"
 dirs1777 = "/tmp"
 
@@ -39,7 +36,7 @@ do_install () {
  		install -m 0644 ${WORKDIR}/rotation ${D}${sysconfdir}/rotation
 	fi
 
-	install -m 0644 ${WORKDIR}/tizen_fstab ${D}${sysconfdir}/fstab
+	install -m 0644 ${WORKDIR}/fstab ${D}${sysconfdir}/fstab
 	install -m 0644 ${WORKDIR}/filesystems ${D}${sysconfdir}/filesystems
 	install -m 0644 ${WORKDIR}/usbd ${D}${sysconfdir}/default/usbd
 	install -m 0644 ${WORKDIR}/profile ${D}${sysconfdir}/profile

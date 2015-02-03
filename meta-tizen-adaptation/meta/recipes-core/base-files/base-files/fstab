@@ -1,6 +1,9 @@
-# stock fstab - you probably want to override this with a machine specific one
+# Tizen fstab
 
-/dev/root            /                    auto       defaults              1  1
+# We have to use "ext4" instead of "auto" because otherwise systemd tries
+# to invoke fsck.auto, which does not exist.
+/dev/root            /                    ext4       defaults              1  1
+
 proc                 /proc                proc       defaults              0  0
 devpts               /dev/pts             devpts     mode=0620,gid=5       0  0
 tmpfs                /dev/shm             tmpfs      defaults              0  0
