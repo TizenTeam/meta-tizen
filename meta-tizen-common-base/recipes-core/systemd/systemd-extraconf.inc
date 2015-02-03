@@ -55,13 +55,13 @@ pkg_preinst_${PN}() {
 
 
 
-systemd-dbg_files += "/lib/systemd/.debug"
-systemd-dbg_files += "/lib/security/.debug"
-systemd-dbg_files += "/lib/systemd/system-generators/.debug"
-systemd-dbg_files += "/lib/udev/.debug"
-
+systemd-dbg_files += " \
+${libdir}/systemd/.debug \
+${libdir}/security/.debug \
+${libdir}/systemd/system-generators/.debug \
+${libdir}/udev/.debug \
+"
 FILES_${PN}-dbg += "${systemd-dbg_files}"
-
 
 FILES_${PN}-locale-fr += "${prefix}/lib/systemd/catalog/systemd.fr.catalog"
 FILES_${PN}-locale-it += "${prefix}/lib/systemd/catalog/systemd.it.catalog"
@@ -69,8 +69,20 @@ FILES_${PN}-locale-ru += "${prefix}/lib/systemd/catalog/systemd.ru.catalog"
 FILES_${PN}-locale    += "${prefix}/lib/systemd/catalog/systemd.catalog"
   
 
-systemd_files += "${prefix}/lib/systemd/network"
 systemd_files += "${sysconfdir}/machine-id"
 systemd_files += "${sysconfdir}/vconsole.conf"
 systemd_files += "${sysconfdir}/locale.conf"
 systemd_files += "${sysconfdir}/machine-info"
+
+# Pretty sweeping file pattern: we don't have to be precise, as
+# long as we don't match dev and dbg files.
+systemd_files += " \
+${bindir} \
+${sbindir} \
+${libdir}/systemd \
+${base_libdir}/systemd \
+${libdir}/security \
+${libdir}/udev \
+${libdir}/libudev*.so.* \
+${libdir}/libsystemd*.so.* \
+"
