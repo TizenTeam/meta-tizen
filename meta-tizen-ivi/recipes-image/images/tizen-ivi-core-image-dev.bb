@@ -1,9 +1,9 @@
 require recipes-image/images/tizen-ivi-core-image.bb
 
 DESCRIPTION = "A Tizen ivi image base on Tizen common and \
-               is suitable for development work."
+               is suitable for debugging the image."
 
-IMAGE_FEATURES += "dev-pkgs tools-debug debug-tweaks ssh-server-openssh"
+IMAGE_FEATURES += "tools-debug debug-tweaks ssh-server-openssh"
 CORE_IMAGE_EXTRA_INSTALL += "attr"
 CORE_IMAGE_EXTRA_INSTALL += "acl"
 CORE_IMAGE_EXTRA_INSTALL += "util-linux-agetty"
