@@ -25,14 +25,24 @@ do_configure_prepend() {
 
 do_install_append() {
     rm -fr ${D}${prefix}/share/factory
-    rm -fr ${D}/lib/systemd/network/80-container-ve.network
-    rm -fr ${D}/lib/systemd/network/80-container-host0.network
-    rm -fr ${D}/lib/systemd/system-preset/90-systemd.preset
+    rm -fr ${D}${libdir}/systemd/network/80-container-ve.network
+    rm -fr ${D}${libdir}/systemd/network/80-container-host0.network
+    rm -fr ${D}${libdir}/systemd/system-preset/90-systemd.preset
     
     rm -fr ${D}${sysconfdir}/hostname
     rm -fr ${D}${sysconfdir}/timezone
     
     install -m 0644 ${WORKDIR}/systemd-user ${D}${sysconfdir}/pam.d
+
+    # systemd also fails to remount the rootfs as rw. Googling for "systemd
+    # root fs read-only" points towards systemd-remount-fs.service as one
+    # source of problems here, but it runs fine. According to Martin Pitt
+    # on the #systemd IRC channel, it is indeed that service which should
+    # mount rw. But I am still unsure: there's also systemd-fsck-root.service.
+    # It would be more logical to remount rw if (and only if) checking succeeds.
+    # But even that does not seem to work either, even when fixing the fsck.auto
+    # problem. As another bad hack, explicitly do the remount ourselves...
+    sed -i -e "s;^ExecStart;ExecStartPost=/bin/mount -o rw,remount /\nExecStart;" ${D}${libdir}/systemd/system/systemd-fsck-root.service
 }
 
 pkg_preinst_${PN}() {
