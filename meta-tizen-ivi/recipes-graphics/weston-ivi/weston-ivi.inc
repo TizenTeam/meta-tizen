@@ -76,10 +76,6 @@ do_install() {
  mkdir -p ${D}
  
  
- install -d ${D}${prefix}/lib/systemd/user/weston.target.wants
- install -m 644 weston.service ${D}${prefix}/lib/systemd/user/weston.service
- ln -sf ../weston.service ${D}${prefix}/lib/systemd/user/weston.target.wants/
- 
  mkdir -p ${D}${sysconfdir}/profile.d/
  install -m 0644 weston.sh ${D}${sysconfdir}/profile.d/
  
@@ -87,20 +83,6 @@ do_install() {
  install -m 0644 weston.ini ${D}${sysconfdir}/xdg/weston
  
  
-}
-
-pkg_postinst_${PN}() {
-    #!/bin/sh -e
-
-    sed -i 's/^\(SESSION_CMD\=.*user-session\)/\1-modello/' /etc/tlm-singleseat.conf
-
-}
-
-pkg_postrm_${PN}() {
-    #!/bin/sh -e
-
-    sed -i 's/-modello//' /etc/tlm-singleseat.conf
-
 }
 
 PACKAGES = "${PN}-dbg ${PN}-doc ${PN}-locale"
