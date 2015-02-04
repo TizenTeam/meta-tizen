@@ -147,7 +147,7 @@ pkg_postinst_${PN}() {
     chgrp -R users $D${prefix}/data/data-media
     chgrp -R users $D${prefix}/data/file-manager-service
     # setup dbupdate in user session
-    mkdir -p $D${prefix}/lib/systemd/user/default.target.requires/
+    mkdir -p $D${prefix}/lib/systemd/user/default.target.wants/
     ln -sf ../media-server-user.service  $D${prefix}/lib/systemd/user/default.target.wants/
 
 }

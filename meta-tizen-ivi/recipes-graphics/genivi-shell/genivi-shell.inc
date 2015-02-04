@@ -2,7 +2,7 @@ DESCRIPTION = "GENIVI Shell Plugin-in"
 HOMEPAGE = "http://git.projects.genivi.org/wayland-ivi-extension.git"
 SECTION = "Graphics & UI Framework/Wayland Window System"
 LICENSE = "Apache-2.0"
-PV = "0.2.3"
+PV = "0.2.5"
 
 SRC_URI = ""
 
@@ -37,19 +37,37 @@ DEPENDS += "weston"
 DEPENDS += "wayland"
 DEPENDS += "libffi"
 
-do_prep() {
+do_compile_prepend() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
  #setup -q
  cp ${S}/packaging/genivi-shell.manifest .
- 
- /usr/bin/wayland-scanner code < protocol/ivi-controller.xml \
+
+ ${STAGING_BINDIR_NATIVE}/wayland-scanner code < protocol/ivi-controller.xml \
      > protocol/ivi-controller-protocol.c
- 
- 
-}
-do_patch_append() {
-    bb.build.exec_func('do_prep', d)
+
+ cat ivi-extension-protocol.pc.in \
+     | sed s\#@libdir@\#${prefix}/lib\#g \
+     | sed s\#@includedir@\#${prefix}/include/genivi-shell\#g \
+     | sed s\#@name@\#genivi-shell\#g \
+     | sed s\#@package_version@\#0.2.5\#g \
+     > ivi-extension-protocol.pc
+
+
+   cmake \
+         -DCMAKE_VERBOSE_MAKEFILE=ON \
+         -DCMAKE_INSTALL_PREFIX:PATH=${prefix} \
+         -DCMAKE_INSTALL_LIBDIR:PATH=${prefix}/lib \
+         -DINCLUDE_INSTALL_DIR:PATH=${prefix}/include \
+         -DLIB_INSTALL_DIR:PATH=${prefix}/lib \
+         -DSYSCONF_INSTALL_DIR:PATH=${sysconfdir} \
+         -DSHARE_INSTALL_PREFIX:PATH=${prefix}/share \
+         -DCMAKE_SKIP_RPATH:BOOL=ON \
+         -DBUILD_SHARED_LIBS:BOOL=ON \
+         -DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain.cmake \
+         ${EXTRA_OECMAKE} .
+
+
 }
 
 do_configure() {
@@ -63,28 +81,7 @@ do_compile() {
  LD_AS_NEEDED=1; export LD_AS_NEEDED ;
  
  
- cat ivi-extension-protocol.pc.in \
-     | sed s\#@libdir@\#${prefix}/lib\#g \
-     | sed s\#@includedir@\#${prefix}/include/genivi-shell\#g \
-     | sed s\#@name@\#genivi-shell\#g \
-     | sed s\#@package_version@\#0.2.3\#g \
-     > ivi-extension-protocol.pc
- 
- 
-   cmake \
-         -DCMAKE_VERBOSE_MAKEFILE=ON \
-         -DCMAKE_INSTALL_PREFIX:PATH=${prefix} \
-         -DCMAKE_INSTALL_LIBDIR:PATH=${prefix}/lib \
-         -DINCLUDE_INSTALL_DIR:PATH=${prefix}/include \
-         -DLIB_INSTALL_DIR:PATH=${prefix}/lib \
-         -DSYSCONF_INSTALL_DIR:PATH=${sysconfdir} \
-         -DSHARE_INSTALL_PREFIX:PATH=${prefix}/share \
-         -DCMAKE_SKIP_RPATH:BOOL=ON \
-         -DBUILD_SHARED_LIBS:BOOL=ON \
-         -DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain.cmake \
-         ${EXTRA_OECMAKE} .
- 
- oe_runmake ${PARALLEL_MAKE} V=1
+ make ${PARALLEL_MAKE} V=1
  
  
  
@@ -167,6 +164,7 @@ genivi-shell_files += "${prefix}/lib/libilmClient.so.*"
 genivi-shell_files += "${prefix}/lib/libilmCommon.so.*"
 genivi-shell_files += "${prefix}/lib/libilmControl.so.*"
 genivi-shell_files += "${prefix}/lib/weston/ivi-controller.so"
+genivi-shell_files += "${prefix}/bin/EGLWLInputEventExample"
 MANIFESTFILES_${PN} = "genivi-shell.manifest"
 
 genivi-shell-dev_files = ""

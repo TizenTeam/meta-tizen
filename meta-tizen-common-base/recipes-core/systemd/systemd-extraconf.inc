@@ -25,14 +25,24 @@ do_configure_prepend() {
 
 do_install_append() {
     rm -fr ${D}${prefix}/share/factory
-    rm -fr ${D}/lib/systemd/network/80-container-ve.network
-    rm -fr ${D}/lib/systemd/network/80-container-host0.network
-    rm -fr ${D}/lib/systemd/system-preset/90-systemd.preset
+    rm -fr ${D}${libdir}/systemd/network/80-container-ve.network
+    rm -fr ${D}${libdir}/systemd/network/80-container-host0.network
+    rm -fr ${D}${libdir}/systemd/system-preset/90-systemd.preset
     
     rm -fr ${D}${sysconfdir}/hostname
     rm -fr ${D}${sysconfdir}/timezone
     
     install -m 0644 ${WORKDIR}/systemd-user ${D}${sysconfdir}/pam.d
+
+    # systemd also fails to remount the rootfs as rw. Googling for "systemd
+    # root fs read-only" points towards systemd-remount-fs.service as one
+    # source of problems here, but it runs fine. According to Martin Pitt
+    # on the #systemd IRC channel, it is indeed that service which should
+    # mount rw. But I am still unsure: there's also systemd-fsck-root.service.
+    # It would be more logical to remount rw if (and only if) checking succeeds.
+    # But even that does not seem to work either, even when fixing the fsck.auto
+    # problem. As another bad hack, explicitly do the remount ourselves...
+    sed -i -e "s;^ExecStart;ExecStartPost=/bin/mount -o rw,remount /\nExecStart;" ${D}${libdir}/systemd/system/systemd-fsck-root.service
 }
 
 pkg_preinst_${PN}() {
@@ -45,13 +55,13 @@ pkg_preinst_${PN}() {
 
 
 
-systemd-dbg_files += "/lib/systemd/.debug"
-systemd-dbg_files += "/lib/security/.debug"
-systemd-dbg_files += "/lib/systemd/system-generators/.debug"
-systemd-dbg_files += "/lib/udev/.debug"
-
+systemd-dbg_files += " \
+${libdir}/systemd/.debug \
+${libdir}/security/.debug \
+${libdir}/systemd/system-generators/.debug \
+${libdir}/udev/.debug \
+"
 FILES_${PN}-dbg += "${systemd-dbg_files}"
-
 
 FILES_${PN}-locale-fr += "${prefix}/lib/systemd/catalog/systemd.fr.catalog"
 FILES_${PN}-locale-it += "${prefix}/lib/systemd/catalog/systemd.it.catalog"
@@ -59,8 +69,20 @@ FILES_${PN}-locale-ru += "${prefix}/lib/systemd/catalog/systemd.ru.catalog"
 FILES_${PN}-locale    += "${prefix}/lib/systemd/catalog/systemd.catalog"
   
 
-systemd_files += "${prefix}/lib/systemd/network"
 systemd_files += "${sysconfdir}/machine-id"
 systemd_files += "${sysconfdir}/vconsole.conf"
 systemd_files += "${sysconfdir}/locale.conf"
 systemd_files += "${sysconfdir}/machine-info"
+
+# Pretty sweeping file pattern: we don't have to be precise, as
+# long as we don't match dev and dbg files.
+systemd_files += " \
+${bindir} \
+${sbindir} \
+${libdir}/systemd \
+${base_libdir}/systemd \
+${libdir}/security \
+${libdir}/udev \
+${libdir}/libudev*.so.* \
+${libdir}/libsystemd*.so.* \
+"

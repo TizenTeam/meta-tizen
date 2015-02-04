@@ -2,7 +2,7 @@ DESCRIPTION = "MMSound Package contains client lib and sound_server binary"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "Multimedia/Media Playback"
 LICENSE = "Apache-2.0"
-PV = "0.7.2g"
+PV = "0.7.2h"
 
 SRC_URI = ""
 

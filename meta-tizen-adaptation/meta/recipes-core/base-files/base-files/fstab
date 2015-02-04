@@ -1,0 +1,14 @@
+# Tizen fstab
+
+# We have to use "ext4" instead of "auto" because otherwise systemd tries
+# to invoke fsck.auto, which does not exist.
+/dev/root            /                    ext4       defaults              1  1
+
+proc                 /proc                proc       defaults              0  0
+devpts               /dev/pts             devpts     mode=0620,gid=5       0  0
+tmpfs                /dev/shm             tmpfs      defaults              0  0
+usbdevfs             /proc/bus/usb        usbdevfs   noauto                0  0
+
+# uncomment this if your device has a SD/MMC/Transflash slot
+#/dev/mmcblk0p1       /media/card          auto       defaults,sync,noauto  0  0
+

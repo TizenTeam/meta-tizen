@@ -1,0 +1,48 @@
+From eb6e4794690a68fa0be5745feb5245fd6dadb319 Mon Sep 17 00:00:00 2001
+From: Quanxian Wang <quanxian.wang@intel.com>
+Date: Mon, 30 Jun 2014 13:32:58 +0800
+Subject: [PATCH 24/45] [PATCH] drm/i915/vlv: DP_SINK_COUNT is not reliable for
+ branch device.
+
+Background:
+Valleyview platform VTC1010 with a branch device DP2HDMI attached by a sink device
+Giantec HDMI display.
+Firstly changing to virtual console termial, after a while(10-20 minutes), connector
+issues a faked dpms signal which cause kernel to power off the monitor. And kernel will
+delete all allocated connecotr and encoder attached to this connector. This will cause
+monitor could not be restored at all even if you press any key or mouse.
+
+The root cause is that intel_dp_detect_dpcd funtion detects DP_SINK_COUNT from dpcd
+to check how many sink devices are attached. If greater than 0, it will
+be fine to keep connector alive. Otherwise the connector will be changed to be
+disconnected. And then all things related with this connector will be deleted.
+
+With testing, when SINK_COUNT is 0, drm_probe_ddc works and connector is still alive.
+
+So this patch will ignore the condition of SINK_COUNT=0, and continue to check if
+connector is really alive without touch others process.
+
+Change-Id: I0c22dcb431dfbf6003326e6abd67198d88a33587
+Signed-off-by: Quanxian Wang <quanxian.wang@intel.com>
+---
+ drivers/gpu/drm/i915/intel_dp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/intel_dp.c b/drivers/gpu/drm/i915/intel_dp.c
+index 2688f6d..aa188c6 100644
+--- a/drivers/gpu/drm/i915/intel_dp.c
++++ b/drivers/gpu/drm/i915/intel_dp.c
+@@ -2959,8 +2959,8 @@ intel_dp_detect_dpcd(struct intel_dp *intel_dp)
+ 		if (!intel_dp_aux_native_read_retry(intel_dp, DP_SINK_COUNT,
+ 						    &reg, 1))
+ 			return connector_status_unknown;
+-		return DP_GET_SINK_COUNT(reg) ? connector_status_connected
+-					      : connector_status_disconnected;
++		if (DP_GET_SINK_COUNT(reg))
++			return connector_status_connected;
+ 	}
+ 
+ 	/* If no HPD, poke DDC gently */
+-- 
+1.8.4.5
+

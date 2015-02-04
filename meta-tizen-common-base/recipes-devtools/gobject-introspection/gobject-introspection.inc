@@ -145,7 +145,6 @@ PACKAGES += " libgirepository "
 PACKAGES += " gobject-introspection-docs "
 
 gobject-introspection_files = ""
-gobject-introspection_files += "LGPL-2.1+ COPYING COPYING.GPL"
 gobject-introspection_files += "${prefix}/bin/g-ir-annotation-tool"
 gobject-introspection_files += "${prefix}/bin/g-ir-compiler"
 gobject-introspection_files += "${prefix}/bin/g-ir-dep-tool"

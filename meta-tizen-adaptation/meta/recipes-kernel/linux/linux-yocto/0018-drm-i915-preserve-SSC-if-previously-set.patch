@@ -1,0 +1,41 @@
+From 463b6cca4f6bc5ed5f2fff01eb7637f2d4b33f1d Mon Sep 17 00:00:00 2001
+From: Jesse Barnes <jbarnes@virtuousgeek.org>
+Date: Thu, 13 Feb 2014 09:49:20 -0800
+Subject: [PATCH 18/45] drm/i915: preserve SSC if previously set
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Some machines may have a broken VBT or no VBT at all, but we still want
+to use SSC there.  So check for it and keep it enabled if we see it
+already on.  Based on an earlier fix from Kristian.
+
+Reported-by: Kristian Høgsberg <hoegsberg@gmail.com>
+Signed-off-by: Jesse Barnes <jbarnes@virtuousgeek.org>
+Signed-off-by: Jin Song <jin.kyu.song@linux.intel.com>
+
+Conflicts:
+        drivers/gpu/drm/i915/intel_display.c
+Change-Id: Ic19cd9332fd7b4280cc43fef54701c666fdfebfd
+---
+ drivers/gpu/drm/i915/intel_display.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
+index f07d366..86af442 100644
+--- a/drivers/gpu/drm/i915/intel_display.c
++++ b/drivers/gpu/drm/i915/intel_display.c
+@@ -5764,6 +5764,10 @@ static void ironlake_init_pch_refclk(struct drm_device *dev)
+ 	 */
+ 	val = I915_READ(PCH_DREF_CONTROL);
+ 
++	/* Preserve SSC if the BIOS set it */
++	if (val & DREF_SSC1_ENABLE)
++		i915_panel_use_ssc = 1;
++
+ 	/* As we must carefully and slowly disable/enable each source in turn,
+ 	 * compute the final state we want first and check if we need to
+ 	 * make any changes at all.
+-- 
+1.8.4.5
+

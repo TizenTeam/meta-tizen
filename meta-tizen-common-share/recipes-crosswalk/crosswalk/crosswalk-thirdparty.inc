@@ -2,7 +2,7 @@ DESCRIPTION = "Chromium-based app runtime"
 HOMEPAGE = "https://github.com/otcshare/crosswalk"
 SECTION = "Web Framework/Web Run Time"
 LICENSE = "(BSD-3-Clause and LGPL-2.1+)"
-PV = "11.39.256.0"
+PV = "11.40.277.0"
 
 SRC_URI = ""
 
@@ -25,6 +25,8 @@ RDEPENDS_${PN} += "ss-server"
 
 DEPENDS = ""
 #DEPENDS of crosswalk-thirdparty
+DEPENDS_append_class-target = " protobuf-native"
+DEPENDS += "protobuf"
 DEPENDS += "cairo"
 DEPENDS += "expat"
 DEPENDS += "udev"
@@ -44,6 +46,7 @@ DEPENDS += "libcap"
 DEPENDS += "flex"
 DEPENDS += "gperf"
 inherit pythonnative
+DEPENDS += "murphy"
 DEPENDS += "python-xml"
 DEPENDS_append_class-native = " ninja-native"
 DEPENDS_append_class-target = " ninja-native"
@@ -95,6 +98,12 @@ do_compile() {
  # does not expect -Wall to be passed to the compiler (see webrtc issue 3307).
  export CXXFLAGS="`echo $CXXFLAGS | sed s,-Wall,,g`"
  
+ # Do not use -finline-functions: it breaks the build because it causes -Wall to
+ # warn about some conditions that cannot really be reached (ie. variables that
+ # may be used uninitialized while in fact thay cannot be uninitialized). See
+ # TC-2299.
+ export CXXFLAGS=`echo $CXXFLAGS | sed s,-finline-functions,,g`
+ 
  # For ffmpeg on ia32. The original CFLAGS set by the gyp and config files in
  # src/third_party/ffmpeg already pass -O2 -fomit-frame-pointer, but Tizen's
  # CFLAGS end up appending -fno-omit-frame-pointer. See http://crbug.com/37246
@@ -137,6 +146,7 @@ do_compile() {
  # So force it.
  
  
+ GYP_EXTRA_FLAGS="${GYP_EXTRA_FLAGS} -Denable_murphy=1"
  
  
  # --no-parallel is added because chroot does not mount a /dev/shm, this will
@@ -159,9 +169,11 @@ do_compile() {
  -Duse_system_bzip2=1 \
  -Duse_system_libexif=1 \
  -Duse_system_libxml=1 \
+ -Duse_system_protobuf=1 \
  -Duse_system_yasm=1 \
- -Dshared_process_mode=1 \
- -Denable_hidpi=1
+ -Denable_hidpi=1 \
+ -Dwerror= \
+ -Dskia_warnings_as_errors=0
  
  ninja ${PARALLEL_MAKE} -C src/out/Release xwalk-thirdparty
  

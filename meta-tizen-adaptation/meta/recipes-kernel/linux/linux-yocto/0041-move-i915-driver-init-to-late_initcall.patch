@@ -1,0 +1,30 @@
+From 0ff0c493e802aeeb9228b55545a6f3f0b8f25ab7 Mon Sep 17 00:00:00 2001
+From: Xing Wei <xing.wei@intel.com>
+Date: Tue, 4 Nov 2014 16:27:29 +0800
+Subject: [PATCH 41/45] move i915 driver init to late_initcall
+
+we can make i915 and sata init run in parallel
+to reduce kernel boot time about 260ms
+
+Change-Id: Iba9cf56a1f5371f734f826f3271383bfb591e6a0
+Signed-off-by: Xing Wei <xing.wei@intel.com>
+---
+ drivers/gpu/drm/i915/i915_drv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/i915/i915_drv.c b/drivers/gpu/drm/i915/i915_drv.c
+index a249495..bd9713c 100644
+--- a/drivers/gpu/drm/i915/i915_drv.c
++++ b/drivers/gpu/drm/i915/i915_drv.c
+@@ -1138,7 +1138,7 @@ static void __exit i915_exit(void)
+ 	drm_pci_exit(&driver, &i915_pci_driver);
+ }
+ 
+-module_init(i915_init);
++late_initcall(i915_init);
+ module_exit(i915_exit);
+ 
+ MODULE_AUTHOR(DRIVER_AUTHOR);
+-- 
+1.8.4.5
+

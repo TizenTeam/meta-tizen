@@ -2,7 +2,7 @@ DESCRIPTION = "Audio Video System"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "System/Libraries"
 LICENSE = "Apache-2.0"
-PV = "0.5.5"
+PV = "0.5.6"
 
 SRC_URI = ""
 
@@ -47,7 +47,7 @@ DEPENDS += "alsa-scenario"
 do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
- #setup -q -n avsystem-0.5.5
+ #setup -q -n avsystem-0.5.6
  cp ${S}/packaging/avsystem.manifest .
  
  

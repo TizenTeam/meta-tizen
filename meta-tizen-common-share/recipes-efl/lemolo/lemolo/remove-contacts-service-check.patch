@@ -1,0 +1,12 @@
+diff --git a/configure.ac b/configure.ac
+index 6a4f680..0309755 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -51,7 +51,6 @@ if test "$want_tizen" != "no"; then
+    PKG_CHECK_MODULES([TIZEN],
+                 [
+                         appcore-efl
+-                        contacts-service2
+                         vconf
+                         capi-system-power
+                         aul

@@ -1,0 +1,60 @@
+From 467b7a842012692a26cdd984bb5369cfbce062c1 Mon Sep 17 00:00:00 2001
+From: Jesse Barnes <jbarnes@virtuousgeek.org>
+Date: Fri, 21 Feb 2014 13:50:53 -0800
+Subject: [PATCH 19/45] drm/i915: don't bother enabling swizzle bits on gen7+
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+As of IVB, the memory controller does internal swizzling already, so we
+shouldn't need to enable these.  Based on an earlier fix from Kristian.
+
+Reported-by: Kristian Høgsberg <hoegsberg@gmail.com>
+Signed-off-by: Jesse Barnes <jbarnes@virtuousgeek.org>
+Change-Id: I134aa8bb22d42b7e39675641df2a5434255a58a9
+---
+ drivers/gpu/drm/i915/i915_gem.c        | 7 +++----
+ drivers/gpu/drm/i915/i915_gem_tiling.c | 2 +-
+ 2 files changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/i915_gem.c b/drivers/gpu/drm/i915/i915_gem.c
+index 00c8361..0a732a1 100644
+--- a/drivers/gpu/drm/i915/i915_gem.c
++++ b/drivers/gpu/drm/i915/i915_gem.c
+@@ -4412,6 +4412,9 @@ void i915_gem_init_swizzling(struct drm_device *dev)
+ 	    dev_priv->mm.bit_6_swizzle_x == I915_BIT_6_SWIZZLE_NONE)
+ 		return;
+ 
++	if (INTEL_INFO(dev)->gen >= 7)
++		return;
++
+ 	I915_WRITE(DISP_ARB_CTL, I915_READ(DISP_ARB_CTL) |
+ 				 DISP_TILE_SURFACE_SWIZZLING);
+ 
+@@ -4421,10 +4424,6 @@ void i915_gem_init_swizzling(struct drm_device *dev)
+ 	I915_WRITE(TILECTL, I915_READ(TILECTL) | TILECTL_SWZCTL);
+ 	if (IS_GEN6(dev))
+ 		I915_WRITE(ARB_MODE, _MASKED_BIT_ENABLE(ARB_MODE_SWIZZLE_SNB));
+-	else if (IS_GEN7(dev))
+-		I915_WRITE(ARB_MODE, _MASKED_BIT_ENABLE(ARB_MODE_SWIZZLE_IVB));
+-	else if (IS_GEN8(dev))
+-		I915_WRITE(GAMTARBMODE, _MASKED_BIT_ENABLE(ARB_MODE_SWIZZLE_BDW));
+ 	else
+ 		BUG();
+ }
+diff --git a/drivers/gpu/drm/i915/i915_gem_tiling.c b/drivers/gpu/drm/i915/i915_gem_tiling.c
+index b139053..5763362 100644
+--- a/drivers/gpu/drm/i915/i915_gem_tiling.c
++++ b/drivers/gpu/drm/i915/i915_gem_tiling.c
+@@ -91,7 +91,7 @@ i915_gem_detect_bit_6_swizzle(struct drm_device *dev)
+ 	uint32_t swizzle_x = I915_BIT_6_SWIZZLE_UNKNOWN;
+ 	uint32_t swizzle_y = I915_BIT_6_SWIZZLE_UNKNOWN;
+ 
+-	if (IS_VALLEYVIEW(dev)) {
++	if (INTEL_INFO(dev)->gen >= 7) {
+ 		swizzle_x = I915_BIT_6_SWIZZLE_NONE;
+ 		swizzle_y = I915_BIT_6_SWIZZLE_NONE;
+ 	} else if (INTEL_INFO(dev)->gen >= 6) {
+-- 
+1.8.4.5
+

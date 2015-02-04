@@ -34,7 +34,7 @@ RDEPENDS_${PN}-modules-extra += "pam"
 
 #RDEPENDS of pam (${PN})
 RDEPENDS_${PN} += "coreutils"
-RDEPENDS_${PN} += "glibc"
+RDEPENDS_${PN}_append_class-target += "glibc"
 
 #RDEPENDS of pam-dev (${PN}-dev)
 RDEPENDS_${PN}-dev += "pam"
@@ -52,7 +52,7 @@ DEPENDS_append_class-target = " automake-native"
 DEPENDS += "smack"
 DEPENDS_append_class-native = " libtool"
 DEPENDS_append_class-target = " libtool-cross"
-DEPENDS += "net-tools"
+DEPENDS_append_class-target = " net-tools"
 DEPENDS_append_class-native = " bison-native"
 DEPENDS_append_class-target = " bison-native"
 DEPENDS_append_class-native = " autoconf-native"

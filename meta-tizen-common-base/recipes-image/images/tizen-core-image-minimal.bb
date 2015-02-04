@@ -8,6 +8,11 @@ inherit core-image distro_features_check
 
 REQUIRED_DISTRO_FEATURES = "wayland pam"
 
+# Because of our symlink hack for /lib /sbin /bin,
+# this package must be installed first and not just
+# randomly based of some dependency.
+IMAGE_INSTALL_prepend = "base-files "
+
 CORE_IMAGE_BASE_INSTALL += "weston weston-init clutter-1.0-examples"
 
 DESCRIPTION = "A weston image with Tizen common."
@@ -40,7 +45,6 @@ CORE_IMAGE_BASE_INSTALL += "pam"
 CORE_IMAGE_BASE_INSTALL += "user-session-units"
 CORE_IMAGE_BASE_INSTALL += "default-ac-domains"
 CORE_IMAGE_BASE_INSTALL += "rpm-security-plugin"
-CORE_IMAGE_BASE_INSTALL += "config-image"
 CORE_IMAGE_BASE_INSTALL += "kernel-modules"
 CORE_IMAGE_BASE_INSTALL += "less"
 CORE_IMAGE_BASE_INSTALL += "bash"

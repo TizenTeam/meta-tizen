@@ -1,4 +1,3 @@
-SRC_URI += "file://add-subdir-objects-option.patch"
 SRC_URI += "file://add-PA_PROP_MEDIA_POLICY-Define.patch"
 
 avsystem-dbg_files += "${prefix}/local/bin/.debug"

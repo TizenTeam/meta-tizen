@@ -252,7 +252,6 @@ PACKAGES += " festival "
 PACKAGES += " festival-dev "
 
 festival_files = ""
-festival_files += "MIT COPYING"
 festival_files += "README INSTALL examples/*.text examples/ex1.* examples/*.scm examples/*.dtd"
 festival_files += "${sysconfdir}/festival.scm"
 festival_files += "${prefix}/bin/festival"

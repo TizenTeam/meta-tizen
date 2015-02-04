@@ -49,8 +49,8 @@ PROVIDES += "pulseaudio-module-raop"
 PROVIDES += "pulseaudio-config"
 
 
-#PROVIDES by pulseaudio-utils
-PROVIDES += "pulseaudio-utils"
+#PROVIDES by pulseaudio-cascaded-setup
+PROVIDES += "pulseaudio-cascaded-setup"
 
 
 #PROVIDES by pulseaudio-module-augment-properties
@@ -62,6 +62,10 @@ PROVIDES += "pulseaudio-module-augment-properties"
 
 #PROVIDES by pulseaudio-docs
 PROVIDES += "pulseaudio-docs "
+
+
+#PROVIDES by pulseaudio-utils
+PROVIDES += "pulseaudio-utils"
 
 
 #PROVIDES by libpulse-dev
@@ -96,11 +100,11 @@ RDEPENDS_${PN} += "udev"
 RDEPENDS_${PN}-realtime-scheduling += "libcap"
 RDEPENDS_${PN}-realtime-scheduling += "pulseaudio"
 
-#RDEPENDS of pulseaudio-utils (${PN}-utils)
-RDEPENDS_${PN}-utils += "pulseaudio"
-
 #RDEPENDS of pulseaudio-module-dev (${PN}-module-dev)
 RDEPENDS_${PN}-module-dev += "pulseaudio"
+
+#RDEPENDS of pulseaudio-utils (${PN}-utils)
+RDEPENDS_${PN}-utils += "pulseaudio"
 
 #RDEPENDS of libpulse-dev (libpulse-dev)
 RDEPENDS_libpulse-dev += "libpulse"
@@ -116,6 +120,7 @@ DEPENDS += "speex"
 DEPENDS += "libsndfile1"
 DEPENDS_append_class-native = " intltool-native"
 DEPENDS_append_class-target = " intltool-native"
+DEPENDS += "sbc"
 DEPENDS += "openssl"
 DEPENDS += "alsa-lib"
 DEPENDS += "dbus"
@@ -123,7 +128,6 @@ inherit pkgconfig
 DEPENDS += "udev"
 DEPENDS += "glib-2.0"
 DEPENDS += "bluez5"
-DEPENDS += "sbc"
 DEPENDS += "systemd"
 DEPENDS_append_class-native = " libtool"
 DEPENDS_append_class-target = " libtool-cross"
@@ -238,6 +242,17 @@ pkg_postinst_libpulse-mainloop-glib() {
     [ "x$D" == "x" ] && ldconfig
 }
 
+pkg_postinst_${PN}() {
+    #!/bin/sh -e
+
+    # TODO: Check if there's a macro in Tizen for doing this.
+    if [ $1 -eq 1 ] ; then
+            # Initial installation
+            systemctl preset pulseaudio.service >/dev/null 2>&1 || :
+    fi
+
+}
+
 pkg_postinst_libpulse() {
     #!/bin/sh -e
 
@@ -261,10 +276,35 @@ pkg_prerm_${PN}() {
 
 }
 
+pkg_prerm_${PN}() {
+    #!/bin/sh -e
+
+    # TODO: Check if there's a macro in Tizen for doing this.
+    if [ $1 -eq 0 ] ; then
+            # Package removal, not upgrade
+            systemctl --no-reload disable pulseaudio.service >/dev/null 2>&1 || :
+            systemctl stop pulseaudio.service >/dev/null 2>&1 || :
+    fi
+
+}
+
 pkg_postrm_libpulse() {
     #!/bin/sh -e
 
     [ "x$D" == "x" ] && ldconfig
+}
+
+pkg_postrm_${PN}() {
+    #!/bin/sh -e
+
+    # TODO: Check if there's a macro in Tizen for doing this.
+    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
+    if [ $1 -ge 1 ] ; then
+            # Package upgrade, not uninstall
+            systemctl try-restart pulseaudio.service >/dev/null 2>&1 || :
+    fi
+    #lang_package
+
 }
 
 pkg_postrm_libpulse-mainloop-glib() {
@@ -283,14 +323,13 @@ pkg_postrm_${PN}() {
     #!/bin/sh -e
 
     setcap -r /usr/bin/pulseaudio
-    #lang_package
 
 }
 
 PACKAGES = "${PN}-dbg ${PN}-doc ${PN}-locale"
 PACKAGES += " pulseaudio-module-filter "
 PACKAGES += " libpulse "
-PACKAGES += " pulseaudio-module-dbus-protocol "
+PACKAGES += " pulseaudio-cascaded-setup "
 PACKAGES += " pulseaudio-realtime-scheduling "
 PACKAGES += " pulseaudio-module-combine-sink "
 PACKAGES += " pulseaudio-module-bluetooth "
@@ -302,6 +341,7 @@ PACKAGES += " pulseaudio-module-augment-properties "
 PACKAGES += " pulseaudio "
 PACKAGES += " pulseaudio-module-dev "
 PACKAGES += " libpulse-dev "
+PACKAGES += " pulseaudio-module-dbus-protocol "
 PACKAGES += " pulseaudio-vala-bindings "
 PACKAGES += " pulseaudio-module-switch-on-connect "
 PACKAGES += " pulseaudio-docs "
@@ -317,9 +357,11 @@ libpulse_files += "${prefix}/lib/libpulse-simple.so.*"
 libpulse_files += "${prefix}/lib/pulseaudio/libpulsecommon-*.so"
 MANIFESTFILES_libpulse = "pulseaudio.manifest"
 
-pulseaudio-module-dbus-protocol_files = ""
-pulseaudio-module-dbus-protocol_files += "${prefix}/lib/pulse-5.0/modules/module-dbus-protocol.so"
-MANIFESTFILES_${PN}-module-dbus-protocol = "pulseaudio.manifest"
+pulseaudio-cascaded-setup_files = ""
+pulseaudio-cascaded-setup_files += "${sysconfdir}/pulse/cascaded.pa"
+pulseaudio-cascaded-setup_files += "${sysconfdir}/pulse/tunnel-manager.conf"
+pulseaudio-cascaded-setup_files += "${prefix}/lib/systemd/system/pulseaudio.service"
+pulseaudio-cascaded-setup_files += "${prefix}/lib/systemd/system/pulseaudio.socket"
 
 pulseaudio-realtime-scheduling_files = ""
 
@@ -373,7 +415,6 @@ pulseaudio-module-augment-properties_files += "${prefix}/lib/pulse-5.0/modules/m
 MANIFESTFILES_${PN}-module-augment-properties = "pulseaudio.manifest"
 
 pulseaudio_files = ""
-pulseaudio_files += "LGPL-2.0+ LICENSE GPL LGPL"
 pulseaudio_files += "${sysconfdir}/pulse/filter/*.dat"
 pulseaudio_files += "${prefix}/bin/esdcompat"
 pulseaudio_files += "${prefix}/bin/pulseaudio"
@@ -383,17 +424,20 @@ pulseaudio_files += "${prefix}/lib/udev/rules.d/90-pulseaudio.rules"
 pulseaudio_files += "/etc/dbus-1/system.d/pulseaudio-system.conf"
 pulseaudio_files += "${prefix}/lib/pulse-5.0/modules/libalsa-util.so"
 pulseaudio_files += "${prefix}/lib/pulse-5.0/modules/libcli.so"
+pulseaudio_files += "${prefix}/lib/pulse-5.0/modules/liblogind.so"
 pulseaudio_files += "${prefix}/lib/pulse-5.0/modules/libprotocol-cli.so"
 pulseaudio_files += "${prefix}/lib/pulse-5.0/modules/libprotocol-http.so"
 pulseaudio_files += "${prefix}/lib/pulse-5.0/modules/libprotocol-native.so"
 pulseaudio_files += "${prefix}/lib/pulse-5.0/modules/libprotocol-simple.so"
 pulseaudio_files += "${prefix}/lib/pulse-5.0/modules/librtp.so"
+pulseaudio_files += "${prefix}/lib/pulse-5.0/modules/libtunnel-manager.so"
 pulseaudio_files += "${prefix}/lib/pulse-5.0/modules/module-alsa-sink.so"
 pulseaudio_files += "${prefix}/lib/pulse-5.0/modules/module-alsa-source.so"
 pulseaudio_files += "${prefix}/lib/pulse-5.0/modules/module-always-sink.so"
 pulseaudio_files += "${prefix}/lib/pulse-5.0/modules/module-console-kit.so"
 pulseaudio_files += "${prefix}/lib/pulse-5.0/modules/module-device-restore.so"
 pulseaudio_files += "${prefix}/lib/pulse-5.0/modules/module-stream-restore.so"
+pulseaudio_files += "${prefix}/lib/pulse-5.0/modules/module-tunnel-manager.so"
 pulseaudio_files += "${prefix}/lib/pulse-5.0/modules/module-cli-protocol-tcp.so"
 pulseaudio_files += "${prefix}/lib/pulse-5.0/modules/module-cli-protocol-unix.so"
 pulseaudio_files += "${prefix}/lib/pulse-5.0/modules/module-cli.so"
@@ -480,6 +524,10 @@ libpulse-dev_files += "${prefix}/lib/cmake/PulseAudio/PulseAudioConfig.cmake"
 libpulse-dev_files += "${prefix}/lib/cmake/PulseAudio/PulseAudioConfigVersion.cmake"
 MANIFESTFILES_libpulse-dev = "pulseaudio.manifest"
 
+pulseaudio-module-dbus-protocol_files = ""
+pulseaudio-module-dbus-protocol_files += "${prefix}/lib/pulse-5.0/modules/module-dbus-protocol.so"
+MANIFESTFILES_${PN}-module-dbus-protocol = "pulseaudio.manifest"
+
 pulseaudio-vala-bindings_files = ""
 pulseaudio-vala-bindings_files += "${prefix}/share/vala/vapi/*"
 MANIFESTFILES_${PN}-vala-bindings = "pulseaudio.manifest"
@@ -496,7 +544,7 @@ MANIFESTFILES_${PN}-module-null-source = "pulseaudio.manifest"
 
 FILES_${PN}-module-filter = "${pulseaudio-module-filter_files}"
 FILES_libpulse = "${libpulse_files}"
-FILES_${PN}-module-dbus-protocol = "${pulseaudio-module-dbus-protocol_files}"
+FILES_${PN}-cascaded-setup = "${pulseaudio-cascaded-setup_files}"
 FILES_${PN}-realtime-scheduling = "${pulseaudio-realtime-scheduling_files}"
 FILES_${PN}-module-combine-sink = "${pulseaudio-module-combine-sink_files}"
 FILES_${PN}-module-bluetooth = "${pulseaudio-module-bluetooth_files}"
@@ -508,6 +556,7 @@ FILES_${PN}-module-augment-properties = "${pulseaudio-module-augment-properties_
 FILES_${PN} = "${pulseaudio_files}"
 FILES_${PN}-module-dev = "${pulseaudio-module-dev_files}"
 FILES_libpulse-dev = "${libpulse-dev_files}"
+FILES_${PN}-module-dbus-protocol = "${pulseaudio-module-dbus-protocol_files}"
 FILES_${PN}-vala-bindings = "${pulseaudio-vala-bindings_files}"
 FILES_${PN}-module-switch-on-connect = "${pulseaudio-module-switch-on-connect_files}"
 FILES_${PN}-docs = "${pulseaudio-docs_files}"
@@ -515,7 +564,7 @@ FILES_${PN}-module-null-source = "${pulseaudio-module-null-source_files}"
 
 PKG_pulseaudio-module-filter= "pulseaudio-module-filter"
 PKG_libpulse= "libpulse"
-PKG_pulseaudio-module-dbus-protocol= "pulseaudio-module-dbus-protocol"
+PKG_pulseaudio-cascaded-setup= "pulseaudio-cascaded-setup"
 PKG_pulseaudio-realtime-scheduling= "pulseaudio-realtime-scheduling"
 PKG_pulseaudio-module-combine-sink= "pulseaudio-module-combine-sink"
 PKG_pulseaudio-module-bluetooth= "pulseaudio-module-bluetooth"
@@ -527,6 +576,7 @@ PKG_pulseaudio-module-augment-properties= "pulseaudio-module-augment-properties"
 PKG_pulseaudio= "pulseaudio"
 PKG_pulseaudio-module-dev= "pulseaudio-module-dev"
 PKG_libpulse-dev= "libpulse-dev"
+PKG_pulseaudio-module-dbus-protocol= "pulseaudio-module-dbus-protocol"
 PKG_pulseaudio-vala-bindings= "pulseaudio-vala-bindings"
 PKG_pulseaudio-module-switch-on-connect= "pulseaudio-module-switch-on-connect"
 PKG_pulseaudio-docs= "pulseaudio-docs"

@@ -2,7 +2,7 @@ DESCRIPTION = "Library for accessing the Secret Service API"
 HOMEPAGE = "http://www.gnome.org/"
 SECTION = "System/Libraries"
 LICENSE = "LGPL-2.1+"
-PV = "0.15"
+PV = "0.18"
 
 SRC_URI = ""
 
@@ -24,19 +24,18 @@ PROVIDES += "libsecret-dev"
 #PROVIDES by libsecret
 
 
+#PROVIDES by libsecret-docs
+PROVIDES += "libsecret-docs "
+
+
 #PROVIDES by libsecret-tools
 PROVIDES += "libsecret-tools"
-
-
-#PROVIDES by typelib-SecretUnstable
-PROVIDES += "typelib-SecretUnstable"
 
 
 RDEPENDS = ""
 #RDEPENDS of libsecret-dev (${PN}-dev)
 RDEPENDS_${PN}-dev += "typelib-Secret"
 RDEPENDS_${PN}-dev += "libsecret"
-RDEPENDS_${PN}-dev += "typelib-SecretUnstable"
 
 
 DEPENDS = ""
@@ -82,7 +81,8 @@ do_compile() {
   
    
   autotools_do_configure
-  make V=1
+  
+  oe_runmake  -j16
   
   
   
@@ -128,16 +128,13 @@ pkg_postrm_${PN}() {
 
 PACKAGES = "${PN}-dbg ${PN}-doc ${PN}-locale"
 PACKAGES += " libsecret-tools "
-PACKAGES += " libsecret "
 PACKAGES += " libsecret-dev "
 PACKAGES += " typelib-Secret "
-PACKAGES += " typelib-SecretUnstable "
+PACKAGES += " libsecret-docs "
+PACKAGES += " libsecret "
 
 libsecret-tools_files = ""
 libsecret-tools_files += "${prefix}/bin/secret-tool"
-
-libsecret_files = ""
-libsecret_files += "${prefix}/lib/libsecret-1.so.*"
 
 libsecret-dev_files = ""
 libsecret-dev_files += "AUTHORS ChangeLog NEWS README"
@@ -146,33 +143,28 @@ libsecret-dev_files += "${prefix}/lib/pkgconfig/libsecret-1.pc"
 libsecret-dev_files += "${prefix}/lib/pkgconfig/libsecret-unstable.pc"
 libsecret-dev_files += "${prefix}/include/libsecret-1/"
 libsecret-dev_files += "${prefix}/share/gir-1.0/Secret-1.gir"
-libsecret-dev_files += "${prefix}/share/gir-1.0/SecretUnstable-0.gir"
-libsecret-dev_files += "${prefix}/share/vala/vapi"
 libsecret-dev_files += "${prefix}/share/vala/vapi/libsecret-1.deps"
 libsecret-dev_files += "${prefix}/share/vala/vapi/libsecret-1.vapi"
-libsecret-dev_files += "${prefix}/share/vala/vapi/libsecret-unstable.deps"
-libsecret-dev_files += "${prefix}/share/vala/vapi/libsecret-unstable.vapi"
-libsecret-dev_files += "${prefix}/share/vala/vapi/mock-service-0.vapi"
-DIRFILES_${PN}-dev = ""
-DIRFILES_${PN}-dev += "${prefix}/share/vala/vapi"
 
 typelib-Secret_files = ""
 typelib-Secret_files += "${prefix}/lib/girepository-1.0/Secret-1.typelib"
 
-typelib-SecretUnstable_files = ""
-typelib-SecretUnstable_files += "${prefix}/lib/girepository-1.0/SecretUnstable-0.typelib"
+libsecret-docs_files = ""
+
+libsecret_files = ""
+libsecret_files += "${prefix}/lib/libsecret-1.so.*"
 
 FILES_${PN}-tools = "${libsecret-tools_files}"
-FILES_${PN} = "${libsecret_files}"
 FILES_${PN}-dev = "${libsecret-dev_files}"
 FILES_typelib-Secret = "${typelib-Secret_files}"
-FILES_typelib-SecretUnstable = "${typelib-SecretUnstable_files}"
+FILES_${PN}-docs = "${libsecret-docs_files}"
+FILES_${PN} = "${libsecret_files}"
 
 PKG_libsecret-tools= "libsecret-tools"
-PKG_libsecret= "libsecret"
 PKG_libsecret-dev= "libsecret-dev"
 PKG_typelib-Secret= "typelib-Secret"
-PKG_typelib-SecretUnstable= "typelib-SecretUnstable"
+PKG_libsecret-docs= "libsecret-docs"
+PKG_libsecret= "libsecret"
 
 require libsecret-extraconf.inc
 

@@ -17,9 +17,6 @@ PROVIDES = ""
 
 
 RDEPENDS = ""
-#RDEPENDS of desktop-skin (${PN})
-RDEPENDS_${PN} += "python-pycairo"
-
 
 DEPENDS = ""
 
@@ -27,7 +24,6 @@ do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
  #setup -q
- cp ${S}/packaging/desktop-skin.manifest .
  
  
 }
@@ -62,7 +58,6 @@ do_install() {
  mkdir -p ${D}${prefix}/bin
  install -m 755 Script/launch_cam.sh ${D}${prefix}/bin
  install -m 755 Script/launch_video.sh ${D}${prefix}/bin
- install -m 755 Script/mark_image.py ${D}${prefix}/bin
  install -m 755 Script/wifi ${D}${prefix}/bin
  
  mkdir -p ${D}${prefix}/share/media/videos
@@ -87,7 +82,7 @@ do_install() {
 pkg_postinst_${PN}() {
     #!/bin/sh -e
 
-    ln -sf tizen_common.png $D${prefix}/share/backgrounds/tizen/current
+    ln -s tizen_common.png $D${prefix}/share/backgrounds/tizen/current
 
 }
 
@@ -101,7 +96,6 @@ desktop-skin_files += "${prefix}/share/media/photos/*"
 desktop-skin_files += "${prefix}/share/icons/tizen/32x32/*"
 desktop-skin_files += "${prefix}/share/applications/tizen/*"
 desktop-skin_files += "${prefix}/share/backgrounds/tizen/*"
-MANIFESTFILES_${PN} = "desktop-skin.manifest"
 
 FILES_${PN} = "${desktop-skin_files}"
 

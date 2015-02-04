@@ -1,12 +1,25 @@
 require recipes-image/images/tizen-core-image-minimal.bb
 
+# meta-common is not used in Tizen IVI 3.0. It is also not clear which
+# purpose it would serve when building with Yocto (it contains package
+# groups for mic, which is not used yet). Remove it.
+CORE_IMAGE_BASE_INSTALL_remove = "meta-common"
+
+# Obsolete, at least in Tizen IVI 3.0.
+CORE_IMAGE_BASE_INSTALL_remove = "user-session-units"
+
 SUMMARY = "Tizen IVI core image"
 
 LICENSE = "MIT"
 
 DESCRIPTION = "A Tizen IVI image based on Tizen common ."
 
-WESTONINI = "weston-ivi-config"
+# weston-init is from OE-core and not used in Tizen IVI.
+CORE_IMAGE_BASE_INSTALL_remove = "weston-init"
+
+# Weston config files are provided by tlm-config-* in recent Tizen IVI.
+# weston-ivi-config is not used at all anymore.
+WESTONINI = ""
 
 CORE_IMAGE_EXTRA_INSTALL += "automotive-message-broker"
 CORE_IMAGE_EXTRA_INSTALL += "efl-theme-tizen-hd"

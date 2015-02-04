@@ -62,10 +62,10 @@ RDEPENDS = ""
 #RDEPENDS of systemd (${PN})
 RDEPENDS_${PN} += "hwdata"
 RDEPENDS_${PN} += "dbus"
-RDEPENDS_${PN} += "gawk"
+RDEPENDS_${PN}_append_class-target = " gawk"
 RDEPENDS_${PN} += "coreutils"
 RDEPENDS_${PN} += "shadow"
-RDEPENDS_${PN} += "glibc"
+RDEPENDS_${PN}_append_class-target = " glibc"
 
 #RDEPENDS of libgudev-dev (libgudev-dev)
 RDEPENDS_libgudev-dev += "libgudev"
@@ -89,13 +89,13 @@ DEPENDS_append_class-target = " intltool-native"
 DEPENDS += "gperf"
 DEPENDS += "hwdata"
 DEPENDS += "dbus"
-DEPENDS += "usbutils"
+DEPENDS_append_class-target += "usbutils"
 inherit pkgconfig
 DEPENDS += "acl"
 DEPENDS += "docbook-xsl-stylesheets"
 DEPENDS += "glib-2.0"
 DEPENDS += "libxslt"
-DEPENDS += "pciutils"
+DEPENDS_append_class-target += "pciutils"
 DEPENDS += "libcap"
 DEPENDS += "util-linux"
 DEPENDS += "libgcrypt"
@@ -142,7 +142,14 @@ do_compile() {
   
   
 }
+
 EXTRA_OECONF += " --disable-kdbus --enable-compat-libs --enable-bootchart --disable-sysusers --disable-firstboot --disable-timesyncd --disable-resolved --disable-networkd --libexecdir=${prefix}/lib --docdir=${prefix}/share/doc/packages/systemd --disable-static --disable-libcurl --with-sysvinit-path= --with-sysvrcnd-path= --with-smack-run-label=System --with-rootprefix=/ --with-rootlibdir=/lib cc_cv_CFLAGS__flto=no"
+
+# Use same file layout as in Tizen, to avoid issues with other recipes
+# which are not prepared for the default /lib vs. /usr/lib split that
+# Yocto normally uses. Relies on systemd_unitdir="${libdir}/systemd" in
+# tizen.conf.
+EXTRA_OECONF += "--with-rootprefix=${prefix} --with-rootlibdir=${libdir} --sysconfdir=${sysconfdir} --enable-split-usr"
 
 do_install() {
  export RPM_BUILD_ROOT=${D}
@@ -177,8 +184,8 @@ EOF
  
  # Create SysV compatibility symlinks. systemctl/systemd are smart
  # enough to detect in which way they are called.
- ln -sf /lib/systemd/systemd ${D}${prefix}/sbin/init
- ln -sf /lib/systemd/systemd ${D}${prefix}/bin/systemd
+ ln -sf ${libdir}/systemd/systemd ${D}${prefix}/sbin/init
+ ln -sf ${libdir}/systemd/systemd ${D}${prefix}/bin/systemd
  ln -sf ../bin/systemctl ${D}${prefix}/sbin/reboot
  ln -sf ../bin/systemctl ${D}${prefix}/sbin/halt
  ln -sf ../bin/systemctl ${D}${prefix}/sbin/poweroff
@@ -207,7 +214,7 @@ EOF
  mkdir -p ${D}${systemd_unitdir}/system/syslog.target.wants
  
  # Make sure the user generators dir exists too
- mkdir -p ${D}/lib/systemd/system-generators
+ mkdir -p ${D}${libdir}/systemd/system-generators
  mkdir -p ${D}${prefix}/lib/systemd/user-generators
  
  # Create new-style configuration files so that we can ghost-own them
@@ -218,12 +225,12 @@ EOF
  touch ${D}${sysconfdir}/machine-info
  touch ${D}${sysconfdir}/timezone
  
- mkdir -p ${D}/lib/systemd/system-preset/
- mkdir -p ${D}/lib/systemd/user-preset/
+ mkdir -p ${D}${libdir}/systemd/system-preset/
+ mkdir -p ${D}${libdir}/systemd/user-preset/
  
  # Make sure the shutdown/sleep drop-in dirs exist
- mkdir -p ${D}/lib/systemd/system-shutdown/
- mkdir -p ${D}/lib/systemd/system-sleep/
+ mkdir -p ${D}${libdir}/systemd/system-shutdown/
+ mkdir -p ${D}${libdir}/systemd/system-sleep/
  
  # Make sure the NTP units dir exists
  mkdir -p ${D}${prefix}/lib/systemd/ntp-units.d/
@@ -238,7 +245,7 @@ EOF
  
  rm -rf ${D}${systemd_unitdir}/system/default.target
  install -m 755 -d ${D}${systemd_unitdir}/system
- install -m 644 ${S}/packaging/default.target ${D}${systemd_unitdir}/system/
+ install -m 644 ${S}/packaging/default.target.ivi ${D}${systemd_unitdir}/system/default.target
  
  rm -rf ${D}${prefix}/share/doc/packages/systemd
  

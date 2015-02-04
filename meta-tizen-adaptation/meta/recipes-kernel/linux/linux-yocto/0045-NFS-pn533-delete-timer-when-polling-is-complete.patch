@@ -1,0 +1,66 @@
+From 24e9c9a7dbc18464999d474690fe91e71c8fb73c Mon Sep 17 00:00:00 2001
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Date: Fri, 9 Jan 2015 19:30:25 -0800
+Subject: [PATCH 45/45] NFS: pn533 : delete timer when polling is complete
+
+When polling is complete, the listen timer is not longer required.
+Thus, we delete it. Otherwise, it might be possible that the
+expiring timer runs its callback with the mod list already reset.
+This would cause a division by zero in pn533_poll_next_mod. A
+warning is issued to make sure that we are informed of the condition.
+
+Also, cancel the timer in dep_link_down as it resets the poll mod
+count.
+
+Change-Id: Ia3590ec536deeaed3abf36d2c9abf065174d7e33
+Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+---
+ drivers/nfc/pn533.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/nfc/pn533.c b/drivers/nfc/pn533.c
+index cf1a87b..9509342 100644
+--- a/drivers/nfc/pn533.c
++++ b/drivers/nfc/pn533.c
+@@ -1505,6 +1505,10 @@ static int pn533_target_found(struct pn533 *dev, u8 tg, u8 *tgdata,
+ 
+ static inline void pn533_poll_next_mod(struct pn533 *dev)
+ {
++	if (!dev->poll_mod_count) {
++		WARN(1, "poll_mod_count is zero!");
++		return;
++	}
+ 	dev->poll_mod_curr = (dev->poll_mod_curr + 1) % dev->poll_mod_count;
+ }
+ 
+@@ -1564,6 +1568,7 @@ static int pn533_start_poll_complete(struct pn533 *dev, struct sk_buff *resp)
+ 
+ 		/* We must stop the poll after a valid target found */
+ 		if (rc == 0) {
++			del_timer(&dev->listen_timer);
+ 			pn533_poll_reset_mod_list(dev);
+ 			return 0;
+ 		}
+@@ -1912,8 +1917,10 @@ static int pn533_poll_dep_complete(struct pn533 *dev, void *arg,
+ 					dev->nfc_dev->targets[0].idx,
+ 					0, NFC_RF_INITIATOR);
+ 
+-		if (!rc)
++		if (!rc) {
++			del_timer(&dev->listen_timer);
+ 			pn533_poll_reset_mod_list(dev);
++		}
+ 	}
+ error:
+ 	dev_kfree_skb(resp);
+@@ -2465,6 +2472,7 @@ static int pn533_dep_link_down(struct nfc_dev *nfc_dev)
+ 
+ 	dev_dbg(&dev->interface->dev, "%s\n", __func__);
+ 
++	del_timer(&dev->listen_timer);
+ 	pn533_poll_reset_mod_list(dev);
+ 
+ 	if (dev->tgt_mode || dev->tgt_active_prot)
+-- 
+1.8.4.5
+

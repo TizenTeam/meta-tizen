@@ -30,8 +30,8 @@ PROVIDES += "weston-clients"
 
 RDEPENDS = ""
 #RDEPENDS of weston (${PN})
-RDEPENDS_${PN} += "weston-startup"
 RDEPENDS_${PN} += "shadow"
+RDEPENDS_${PN} += "tlm"
 
 
 DEPENDS = ""
@@ -96,7 +96,7 @@ do_compile() {
   
   
 }
-EXTRA_OECONF += " --disable-static --disable-setuid-install --enable-simple-clients --enable-clients --disable-libunwind --disable-xwayland --disable-xwayland-test --disable-x11-compositor --disable-rpi-compositor --with-cairo=glesv2 "
+EXTRA_OECONF += " --disable-static --disable-setuid-install --enable-simple-clients --enable-clients --disable-libunwind --disable-xwayland --disable-xwayland-test --disable-x11-compositor --disable-rpi-compositor --with-cairo=glesv2 --disable-default-vkb --enable-transform"
 
 do_install() {
  export RPM_BUILD_ROOT=${D}
@@ -140,17 +140,6 @@ do_install() {
  install -m 755 weston-transformed ${D}${prefix}/bin
  install -m 755 weston-fullscreen ${D}${prefix}/bin
  
- install -d ${D}${prefix}/lib/systemd/user
- install -m 644 ${S}/packaging/weston.target ${D}${prefix}/lib/systemd/user/weston.target
- # The weston.service unit file must be provided by the weston-startup
- # virtual package, i.e. "Provide: weston-startup".  The weston-startup
- # virtual package requirement is intended to force Tizen profile
- # maintainers to add the necessary start-up script or systemd unit
- # file to start weston. Otherwise it becomes possible to install
- # weston without an automated means to start weston at boot, which may
- # lead to confusion.  This approach allows startup related files to be
- # maintained outside of this weston package.
- 
  
 }
 
@@ -182,7 +171,6 @@ weston_files += "${prefix}/lib/weston/headless-backend.so"
 weston_files += "${prefix}/lib/weston/wayland-backend.so"
 weston_files += "${prefix}/lib/weston/gl-renderer.so"
 weston_files += "${prefix}/share/weston"
-weston_files += "${prefix}/lib/systemd/user/weston.target"
 MANIFESTFILES_${PN} = "weston.manifest"
 
 weston-clients_files = ""

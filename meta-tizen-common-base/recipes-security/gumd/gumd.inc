@@ -57,7 +57,6 @@ DEPENDS += "systemd"
 DEPENDS += "dbus"
 inherit pkgconfig
 DEPENDS += "glib-2.0"
-DEPENDS += "gtk-doc-stub"
 
 do_prep() {
  cd ${S}

@@ -39,6 +39,8 @@ GROUPADD_PARAM_${PN} += "; --system -g 6026 db_wrt "
 
 
 
-USERADD_PARAM_${PN} += "   -u 116 -d /home/genivi -m -g users -G users,input,tty,video,weston-launch -r -s /bin/sh genivi  "
-USERADD_PARAM_${PN} += ";  -u 5000 -d /home/app    -m -g users -G users,weston-launch,tty -r -s /bin/sh app  "
+USERADD_PARAM_${PN} += "   -u 116 -d /home/genivi -m -g users -G users,tty,audio,video,weston-launch -r -s /bin/sh genivi  "
+USERADD_PARAM_${PN} += ";  -u 5000 -d /home/app    -m -g users -G users,tty,audio,video,weston-launch -r -s /bin/sh app  "
 USERADD_PARAM_${PN} += ";          -d /usr/apps -m -g root  --system  -s /bin/false tizenglobalapp "
+
+USERADD_PARAM_${PN} += "; -u 9999 -g users -d /home/guest -m -g users -G users,tty,audio,video,weston-launch -r -s /bin/bash guest"

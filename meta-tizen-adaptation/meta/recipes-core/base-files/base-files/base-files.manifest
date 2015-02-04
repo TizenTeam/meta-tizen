@@ -1,0 +1,13 @@
+<!-- from https://review.tizen.org/gerrit/gitweb?p=platform/upstream/filesystem.git;a=blob;f=packaging/filesystem.manifest -->
+
+<manifest>
+  <request>
+     <domain name="_"/>
+  </request>
+  <assign>
+     <filesystem path="/etc" label="System::Shared" type="transmutable" />
+     <filesystem path="/var/log" label="System::Log" type="transmutable" />
+     <filesystem path="/tmp" label="*" />
+     <filesystem path="/var/tmp" label="*" />
+  </assign>
+</manifest>

@@ -148,7 +148,8 @@ pkg_postinst_${PN}() {
     chown tizenglobalapp:root $D${prefix}/dbspace
     chown tizenglobalapp:root $D${prefix}/dbspace
     chown tizenglobalapp:root -R $D${prefix}/share/icons
-    ail_initdb 2>/dev/null
+    ail_createdb 2>/dev/null
+    ail_syncdb 2>/dev/null
     chsmack -a '*' $D${prefix}/dbspace/.app_info.db*
      
 
@@ -169,6 +170,10 @@ PACKAGES += " ail "
 PACKAGES += " ail-dev "
 
 ail_files = ""
+ail_files += "${prefix}/bin/ail_createdb"
+ail_files += "${prefix}/bin/ail_createdb_user"
+ail_files += "${prefix}/bin/ail_syncdb"
+ail_files += "${prefix}/bin/ail_syncdb_user"
 ail_files += "${prefix}/bin/ail_initdb"
 ail_files += "${prefix}/bin/ail_initdb_user"
 ail_files += "${prefix}/bin/ail_fota"

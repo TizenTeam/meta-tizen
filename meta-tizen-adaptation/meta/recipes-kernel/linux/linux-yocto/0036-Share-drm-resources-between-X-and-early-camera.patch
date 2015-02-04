@@ -1,0 +1,66 @@
+From cdf0b65f55e20b4d58732c0b0773f0eea0d3f5df Mon Sep 17 00:00:00 2001
+From: "Fang, Neo" <neo.fang@intel.com>
+Date: Fri, 21 Nov 2014 16:32:20 +0000
+Subject: [PATCH 36/45] Share drm resources between X and early camera
+
+Early camera module will open drm before X, so when X starts up,
+it should share the mapping address with early camera rather than
+reopen it again. Normally, X will call drm_release when system
+shutdown. At that time, early camera has already quitted and
+released the drm resources. So it does not need to do resource
+check in drm_release.
+
+Change-Id: I692e111d76bf76c0a3faaac15f89e9ef8b261114
+Signed-off-by: Fang, Neo <neo.fang@intel.com>
+---
+ drivers/gpu/drm/drm_fops.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpu/drm/drm_fops.c b/drivers/gpu/drm/drm_fops.c
+index 7f2af9a..08ae115 100644
+--- a/drivers/gpu/drm/drm_fops.c
++++ b/drivers/gpu/drm/drm_fops.c
+@@ -85,7 +85,7 @@ int drm_open(struct inode *inode, struct file *filp)
+ 	int retcode = 0;
+ 	int need_setup = 0;
+ 	struct address_space *old_mapping;
+-	struct address_space *old_imapping;
++	static int is1st = 1;
+ 
+ 	minor = idr_find(&drm_minors_idr, minor_id);
+ 	if (!minor)
+@@ -100,12 +100,17 @@ int drm_open(struct inode *inode, struct file *filp)
+ 	if (!dev->open_count++)
+ 		need_setup = 1;
+ 	mutex_lock(&dev->struct_mutex);
+-	old_imapping = inode->i_mapping;
+ 	old_mapping = dev->dev_mapping;
+-	if (old_mapping == NULL)
++
++	if (is1st) {
+ 		dev->dev_mapping = &inode->i_data;
+-	/* ihold ensures nobody can remove inode with our i_data */
++		is1st = 0;
++	} else {
++		if (old_mapping == NULL)
++			dev->dev_mapping = &inode->i_data;
++	}
+ 	ihold(container_of(dev->dev_mapping, struct inode, i_data));
++
+ 	inode->i_mapping = dev->dev_mapping;
+ 	filp->f_mapping = dev->dev_mapping;
+ 	mutex_unlock(&dev->struct_mutex);
+@@ -122,8 +127,8 @@ int drm_open(struct inode *inode, struct file *filp)
+ 
+ err_undo:
+ 	mutex_lock(&dev->struct_mutex);
+-	filp->f_mapping = old_imapping;
+-	inode->i_mapping = old_imapping;
++	filp->f_mapping = old_mapping;
++	inode->i_mapping = old_mapping;
+ 	iput(container_of(dev->dev_mapping, struct inode, i_data));
+ 	dev->dev_mapping = old_mapping;
+ 	mutex_unlock(&dev->struct_mutex);
+-- 
+1.8.4.5
+

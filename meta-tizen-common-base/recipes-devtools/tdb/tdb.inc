@@ -1,8 +1,8 @@
 DESCRIPTION = "Samba Trivial Database"
 HOMEPAGE = "http://tdb.samba.org/"
 SECTION = "System/Libraries"
-LICENSE = "GPLv3.0+"
-PV = "1.2.10"
+LICENSE = "GPL-3.0+"
+PV = "1.3.1"
 
 SRC_URI = ""
 
@@ -52,7 +52,7 @@ inherit pkgconfig
 do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
- #setup -n tdb-1.2.10 -q
+ #setup -n tdb-1.3.1 -q
  cp ${S}/packaging/tdb.manifest .
  
  
@@ -79,8 +79,9 @@ do_compile() {
   
   
   
+  
 }
-EXTRA_OECONF += " "
+EXTRA_OECONF += ""
 
 do_install() {
  export RPM_BUILD_ROOT=${D}
