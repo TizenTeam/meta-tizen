@@ -26,7 +26,7 @@ DEPENDS = ""
 #DEPENDS of Modello-Phone
 DEPENDS += "tizen-platform-config"
 inherit pkgconfig
-DEPENDS += "zip"
+DEPENDS += "zip-native"
 
 do_prep() {
  cd ${S}
