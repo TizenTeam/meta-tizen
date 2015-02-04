@@ -6,6 +6,13 @@ SRC_URI += "${DEFCONFIG}"
 # Created with "git format-patch v3.14.19..24e9c9a7dbc184"
 # in profile/ivi/kernel-x86-ivi
 # and manually filtering out packaging and defconfig changes.
+# 0005-i2c-i801-enable-Intel-BayTrail-SMBUS.patch is already
+# part of the OE kernel.
+#
+# Be careful to not include patches already included in the base
+# kernel! Otherwise the current linux-yocto base recipe will
+# accidentally skip all patches preceeding the redundant,
+# see https://bugzilla.yoctoproject.org/show_bug.cgi?id=7282
 #
 # defconfig files kernel-x86-ivi arch/x86/configs/ivi_x86_defconfig resp.
 # arch/x86/configs/ivi_x86_64_defconfig were also copied and modified:
@@ -14,7 +21,6 @@ SRC_URI += "${DEFCONFIG}"
 
 SRC_URI += " \
 file://0003-Smack-Cgroup-filesystem-access.patch \
-file://0005-i2c-i801-enable-Intel-BayTrail-SMBUS.patch \
 file://0007-drm-export-cmdline-and-preferred-mode-functions-from.patch \
 file://0008-drm-i915-Pass-explicit-mode-into-mode_from_pipe_conf.patch \
 file://0009-drm-i915-allow-re-use-BIOS-connector-config-for-init.patch \
