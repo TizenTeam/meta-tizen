@@ -51,12 +51,6 @@ do_patch_append() {
     bb.build.exec_func('do_prep', d)
 }
 
-do_configure() {
-}
-
-do_compile() {
-}
-
 do_install() {
  export RPM_BUILD_ROOT=${D}
  cd ${S}

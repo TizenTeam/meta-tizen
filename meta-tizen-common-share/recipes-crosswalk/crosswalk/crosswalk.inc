@@ -39,7 +39,7 @@ RDEPENDS_widget-manifest-parser-dev += "widget-manifest-parser"
 
 DEPENDS = ""
 #DEPENDS of crosswalk
-DEPENDS += "pkgconfig(protobuf)"
+DEPENDS += "protobuf"
 DEPENDS += "cairo"
 DEPENDS += "pkgmgr"
 DEPENDS += "expat"
@@ -131,7 +131,9 @@ do_compile() {
  
  
  mkdir -p src/out
+ if [ -f ${prefix}/share/crosswalk-thirdparty/out.tgz ]; then
  tar -zxvf ${prefix}/share/crosswalk-thirdparty/out.tgz
+ fi
  python ./changedate.py
  
  # Stop unconditionally passing -Wall to the compiler. Chromium has its own
@@ -139,12 +141,12 @@ do_compile() {
  # to be left out (since several pieces are built with -Werror). At least in
  # M39, this is preventing the "rtc_base" target from being built because it
  # does not expect -Wall to be passed to the compiler (see webrtc issue 3307).
- export CXXFLAGS=`echo $CXXFLAGS | sed s,-Wall,,g`
+ export CXXFLAGS="`echo $CXXFLAGS | sed s,-Wall,,g`"
  
  # For ffmpeg on ia32. The original CFLAGS set by the gyp and config files in
  # src/third_party/ffmpeg already pass -O2 -fomit-frame-pointer, but Tizen's
  # CFLAGS end up appending -fno-omit-frame-pointer. See http://crbug.com/37246
- export CFLAGS=`echo $CFLAGS | sed s,-fno-omit-frame-pointer,,g`
+ export CFLAGS="`echo $CFLAGS | sed s,-fno-omit-frame-pointer,,g`"
  
  
  # Building the RPM in the GBS chroot fails with errors such as
@@ -168,8 +170,8 @@ do_compile() {
  
  GYP_EXTRA_FLAGS="${GYP_EXTRA_FLAGS} -Duse_ozone=1"
  
- # Force gold binary from chroot ld.gold provided by binutils-gold
- GYP_EXTRA_FLAGS="${GYP_EXTRA_FLAGS} -Ddisable_nacl=1 -Dlinux_use_bundled_binutils=0 -Dlinux_use_bundled_gold=0 "
+ # disable nacl if necessary
+ GYP_EXTRA_FLAGS="${GYP_EXTRA_FLAGS} -Ddisable_nacl=1"
  
  # Linking fails when fatal ld warnings are enabled. See XWALK-1379.
  GYP_EXTRA_FLAGS="${GYP_EXTRA_FLAGS} -Ddisable_fatal_linker_warnings=1"
@@ -194,7 +196,6 @@ do_compile() {
  -Dclang=0 \
  -Dlinux_use_bundled_binutils=0 \
  -Dlinux_use_bundled_gold=0 \
- -Dlinux_use_gold_flags=1 \
  -Dtizen=1 \
  -Dpython_ver=2.7 \
  -Duse_aura=1 \
@@ -208,9 +209,7 @@ do_compile() {
  -Duse_system_nspr=1 \
  -Duse_system_yasm=1 \
  -Dshared_process_mode=1 \
- -Denable_hidpi=1 \
- -Dwerror= \
- -Dskia_warnings_as_errors=0
+ -Denable_hidpi=1
  
  ninja ${PARALLEL_MAKE} -C src/out/Release xwalk xwalk_launcher xwalk_application_tools widget-manifest-parser
  
