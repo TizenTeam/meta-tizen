@@ -2,7 +2,7 @@ DESCRIPTION = "Tethering Framework"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "Connectivity/API"
 LICENSE = "Apache-2.0"
-PV = "0.0.16"
+PV = "0.0.15"
 
 SRC_URI = ""
 
@@ -94,8 +94,6 @@ do_install() {
    rm -f ${D}${infodir}/dir 
    find ${D} -regex ".*\.la$" | xargs rm -f -- 
    find ${D} -regex ".*\.a$" | xargs rm -f --
- mkdir -p ${D}/usr/share/license
- cp LICENSE.APLv2.0 ${D}/usr/share/license/capi-network-tethering
  
  
 }
@@ -124,7 +122,6 @@ MANIFESTFILES_${PN}-dev = "capi-network-tethering.manifest"
 
 capi-network-tethering_files = ""
 capi-network-tethering_files += "${prefix}/lib/*.so.*"
-capi-network-tethering_files += "/usr/share/license/capi-network-tethering"
 capi-network-tethering_files += "/etc/config/connectivity/sysinfo-tethering.xml"
 MANIFESTFILES_${PN} = "capi-network-tethering.manifest"
 
