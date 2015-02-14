@@ -32,7 +32,7 @@ DEPENDS += "capi-system-info"
 DEPENDS += "dbus"
 inherit pkgconfig
 DEPENDS += "dlog"
-DEPENDS += "pkgconfig(deviced)"
+DEPENDS += "system-server"
 DEPENDS += "capi-base-common"
 DEPENDS += "vconf"
 DEPENDS += "dbus-glib"

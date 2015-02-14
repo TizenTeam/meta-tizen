@@ -2,7 +2,7 @@ DESCRIPTION = "A wav player library in Tizen C API"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "Multimedia/API"
 LICENSE = "Apache-2.0"
-PV = "0.1.1"
+PV = "0.1.0"
 
 SRC_URI = ""
 
@@ -56,7 +56,7 @@ do_compile() {
  unset DISPLAY
  LD_AS_NEEDED=1; export LD_AS_NEEDED ;
  
- MAJORVER=`echo 0.1.1 | awk 'BEGIN {FS="."}{print $1}'`
+ MAJORVER=`echo 0.1.0 | awk 'BEGIN {FS="."}{print $1}'`
  
    cmake \
          -DCMAKE_VERBOSE_MAKEFILE=ON \
