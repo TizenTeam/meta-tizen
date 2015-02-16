@@ -16,25 +16,10 @@ PROVIDES = ""
 #PROVIDES by crosswalk
 
 
-#PROVIDES by widget-manifest-parser
-PROVIDES += "widget-manifest-parser"
-
-
-#PROVIDES by widget-manifest-parser-dev
-PROVIDES += "widget-manifest-parser-dev"
-
-
 RDEPENDS = ""
 #RDEPENDS of crosswalk (${PN})
 RDEPENDS_${PN} += "ca-certificates-tizen"
 RDEPENDS_${PN} += "ss-server"
-
-#RDEPENDS of widget-manifest-parser (widget-manifest-parser)
-RDEPENDS_widget-manifest-parser += "crosswalk"
-
-#RDEPENDS of widget-manifest-parser-dev (widget-manifest-parser-dev)
-RDEPENDS_widget-manifest-parser-dev += "crosswalk"
-RDEPENDS_widget-manifest-parser-dev += "widget-manifest-parser"
 
 
 DEPENDS = ""
@@ -102,10 +87,6 @@ do_prep() {
  sed "s/@VERSION@/11.40.277.0/g" crosswalk.xml.in > crosswalk.xml
  sed "s|@LIB_INSTALL_DIR@|${prefix}/lib|g" xwalk.in > xwalk
  sed "s|@LIB_INSTALL_DIR@|${prefix}/lib|g" xwalk.service.in > xwalk.service
- 
- # Widget manifest parser devel
- cp src/xwalk/tizen/widget-manifest-parser/widget-manifest-parser.pc.in .
- sed "s|@VERSION@|11.40.277.0|g" widget-manifest-parser.pc.in > widget-manifest-parser.pc
  
  cp -a src/AUTHORS AUTHORS.chromium
  cp -a src/LICENSE LICENSE.chromium
@@ -248,12 +229,6 @@ do_install() {
  install -m 0644 -p -D crosswalk.xml ${D}${prefix}/share/packages/crosswalk.xml
  install -m 0644 -p -D crosswalk.png ${D}${prefix}/share/icons/default/small/crosswalk.png
  
- # Widget manifest parser devel
- install -m 0664 -p -D src/xwalk/tizen/widget-manifest-parser/widget-manifest-parser.h ${D}${prefix}/include/widget-manifest-parser/widget-manifest-parser.h
- install -m 0664 -p -D widget-manifest-parser.pc ${D}${prefix}/lib/pkgconfig/widget-manifest-parser.pc
- 
- # Widget manifest parser
- install -m 0755 -p -D src/out/Release/lib/libwidget-manifest-parser.so ${D}${prefix}/lib/libwidget-manifest-parser.so
  
  
 }
@@ -285,8 +260,6 @@ pkg_prerm_${PN}() {
 
 PACKAGES = "${PN}-dbg ${PN}-doc ${PN}-locale"
 PACKAGES += " crosswalk "
-PACKAGES += " widget-manifest-parser "
-PACKAGES += " widget-manifest-parser-dev "
 
 crosswalk_files = ""
 crosswalk_files += "${prefix}/bin/xwalkctl"
@@ -304,20 +277,9 @@ crosswalk_files += "/usr/lib/systemd/user/xwalk.service"
 crosswalk_files += "${prefix}/share/xwalk/*"
 MANIFESTFILES_${PN} = "crosswalk.manifest"
 
-widget-manifest-parser_files = ""
-widget-manifest-parser_files += "${prefix}/lib/libwidget-manifest-parser.so"
-
-widget-manifest-parser-dev_files = ""
-widget-manifest-parser-dev_files += "${prefix}/include/widget-manifest-parser/widget-manifest-parser.h"
-widget-manifest-parser-dev_files += "${prefix}/lib/pkgconfig/widget-manifest-parser.pc"
-
 FILES_${PN} = "${crosswalk_files}"
-FILES_widget-manifest-parser = "${widget-manifest-parser_files}"
-FILES_widget-manifest-parser-dev = "${widget-manifest-parser-dev_files}"
 
 PKG_crosswalk= "crosswalk"
-PKG_widget-manifest-parser= "widget-manifest-parser"
-PKG_widget-manifest-parser-dev= "widget-manifest-parser-dev"
 
 require crosswalk-extraconf.inc
 
