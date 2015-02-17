@@ -1,0 +1,105 @@
+From ad0f01ef6e3bb5b29a77e21bae757e620635a470 Mon Sep 17 00:00:00 2001
+From: Xavier Roche <xavrock.os@gmail.com>
+Date: Tue, 17 Feb 2015 15:36:27 +0100
+Subject: [PATCH] Fix libassuan dependency
+
+Signed-off-by: Xavier Roche <xavrock.os@gmail.com>
+---
+ agent/Makefile.am  | 4 ++--
+ common/Makefile.am | 2 +-
+ g10/Makefile.am    | 2 +-
+ scd/Makefile.am    | 2 +-
+ sm/Makefile.am     | 2 +-
+ tools/Makefile.am  | 2 +-
+ 6 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/agent/Makefile.am b/agent/Makefile.am
+index 55c374c..75b46bf 100644
+--- a/agent/Makefile.am
++++ b/agent/Makefile.am
+@@ -58,7 +58,7 @@ gpg_agent_CFLAGS = $(AM_CFLAGS) $(LIBASSUAN_CFLAGS) $(PTH_CFLAGS)
+ gpg_agent_LDADD = $(commonpth_libs) \
+                 $(LIBGCRYPT_LIBS) $(LIBASSUAN_LIBS) $(PTH_LIBS) \
+ 	        $(GPG_ERROR_LIBS) $(LIBINTL) $(NETLIBS) $(LIBICONV) \
+-		$(resource_objs)
++		$(resource_objs) -lassuan
+ 
+ gpg_protect_tool_SOURCES = \
+ 	protect-tool.c \
+@@ -67,7 +67,7 @@ gpg_protect_tool_SOURCES = \
+ 
+ gpg_protect_tool_CFLAGS = $(AM_CFLAGS) $(LIBASSUAN_CFLAGS)
+ gpg_protect_tool_LDADD = $(common_libs) $(LIBGCRYPT_LIBS) $(LIBASSUAN_LIBS) \
+-         $(GPG_ERROR_LIBS) $(LIBINTL) $(NETLIBS) $(LIBICONV)
++         $(GPG_ERROR_LIBS) $(LIBINTL) $(NETLIBS) $(LIBICONV) -lassuan
+ 
+ gpg_preset_passphrase_SOURCES = \
+ 	preset-passphrase.c
+diff --git a/common/Makefile.am b/common/Makefile.am
+index 337e246..a13f8dc 100644
+--- a/common/Makefile.am
++++ b/common/Makefile.am
+@@ -130,7 +130,7 @@ module_tests = t-convert t-percent t-gettime t-sysutils t-sexputil t-exechelp \
+ module_maint_tests = t-helpfile t-b64
+ 
+ t_common_ldadd = libcommon.a ../jnlib/libjnlib.a ../gl/libgnu.a \
+-                 $(LIBGCRYPT_LIBS) $(GPG_ERROR_LIBS) $(LIBINTL) $(LIBICONV)
++                 $(LIBGCRYPT_LIBS) $(GPG_ERROR_LIBS) $(LIBINTL) $(LIBICONV) -lassuan
+ 
+ t_convert_LDADD = $(t_common_ldadd)
+ t_percent_LDADD = $(t_common_ldadd)
+diff --git a/g10/Makefile.am b/g10/Makefile.am
+index efa427d..6f99299 100644
+--- a/g10/Makefile.am
++++ b/g10/Makefile.am
+@@ -123,7 +123,7 @@ LDADD =  $(needed_libs) ../common/libgpgrl.a \
+          $(ZLIBS) $(DNSLIBS) $(LIBREADLINE) \
+          $(LIBINTL) $(CAPLIBS) $(NETLIBS)
+ gpg2_LDADD =  $(LDADD) $(LIBGCRYPT_LIBS) $(LIBASSUAN_LIBS) $(GPG_ERROR_LIBS) \
+-	     $(LIBICONV) $(resource_objs)
++	     $(LIBICONV) $(resource_objs) -lassuan
+ gpgv2_LDADD = $(LDADD) $(LIBGCRYPT_LIBS) $(GPG_ERROR_LIBS) \
+ 	      $(LIBICONV) $(resource_objs)
+ 
+diff --git a/scd/Makefile.am b/scd/Makefile.am
+index e883180..2a2c9b8 100644
+--- a/scd/Makefile.am
++++ b/scd/Makefile.am
+@@ -51,7 +51,7 @@ scdaemon_SOURCES = \
+ scdaemon_LDADD = $(libcommonpth) ../jnlib/libjnlib.a ../gl/libgnu.a \
+ 	$(LIBGCRYPT_LIBS) $(KSBA_LIBS) $(LIBASSUAN_LIBS) $(PTH_LIBS) \
+ 	$(LIBUSB_LIBS) $(GPG_ERROR_LIBS) \
+-        $(LIBINTL) $(DL_LIBS) $(NETLIBS) $(LIBICONV) $(resource_objs)
++        $(LIBINTL) $(DL_LIBS) $(NETLIBS) $(LIBICONV) $(resource_objs) -lassuan
+ 
+ # Removed for now: We need to decide whether it makes sense to
+ # continue it at all, given that gpg has now all required
+diff --git a/sm/Makefile.am b/sm/Makefile.am
+index 8e1dc97..e2a7fc7 100644
+--- a/sm/Makefile.am
++++ b/sm/Makefile.am
+@@ -64,7 +64,7 @@ common_libs = $(libcommon) ../kbx/libkeybox.a ../jnlib/libjnlib.a \
+ gpgsm_LDADD = $(common_libs) ../common/libgpgrl.a  $(NETLIBS) \
+               $(LIBGCRYPT_LIBS) $(KSBA_LIBS) $(LIBASSUAN_LIBS) \
+               $(GPG_ERROR_LIBS) $(LIBREADLINE) $(LIBINTL) $(ZLIBS) \
+-	      $(LIBICONV) $(resource_objs)
++	      $(LIBICONV) $(resource_objs) -lassuan
+ 
+ # Make sure that all libs are build before we use them.  This is
+ # important for things like make -j2.
+diff --git a/tools/Makefile.am b/tools/Makefile.am
+index e5c16a2..62ca18f 100644
+--- a/tools/Makefile.am
++++ b/tools/Makefile.am
+@@ -94,7 +94,7 @@ gpg_connect_agent_SOURCES = gpg-connect-agent.c no-libgcrypt.c
+ gpg_connect_agent_LDADD = ../common/libgpgrl.a $(common_libs) \
+ 	                  $(LIBASSUAN_LIBS) $(PTH_LIBS) $(GPG_ERROR_LIBS) \
+                           $(LIBREADLINE) $(LIBINTL) $(NETLIBS) $(LIBICONV) \
+-	                  $(resource_objs)
++	                  $(resource_objs) -lassuan
+ 
+ gpgkey2ssh_SOURCES = gpgkey2ssh.c
+ gpgkey2ssh_CFLAGS =  $(GPG_ERROR_CFLAGS) $(LIBGCRYPT_CFLAGS)
+-- 
+1.9.1
+

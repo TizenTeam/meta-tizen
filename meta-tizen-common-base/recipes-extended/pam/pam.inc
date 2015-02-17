@@ -35,6 +35,7 @@ RDEPENDS_${PN}-modules-extra += "pam"
 #RDEPENDS of pam (${PN})
 RDEPENDS_${PN} += "coreutils"
 RDEPENDS_${PN} += "glibc"
+RDEPENDS_${PN} += "flex"
 
 #RDEPENDS of pam-dev (${PN}-dev)
 RDEPENDS_${PN}-dev += "pam"
