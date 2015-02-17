@@ -120,6 +120,7 @@ PACKAGES += " capi-network-bluetooth "
 
 capi-network-bluetooth-dev_files = ""
 capi-network-bluetooth-dev_files += "${prefix}/include/network/bluetooth.h"
+capi-network-bluetooth-dev_files += "${prefix}/include/network/bluetooth_type.h"
 capi-network-bluetooth-dev_files += "${prefix}/lib/pkgconfig/capi-network-bluetooth.pc"
 capi-network-bluetooth-dev_files += "${prefix}/lib/libcapi-network-bluetooth.so"
 MANIFESTFILES_${PN}-dev = "capi-network-bluetooth-devel.manifest"
