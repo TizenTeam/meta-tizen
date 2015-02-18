@@ -2,7 +2,7 @@ DESCRIPTION = "Audio Video System"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "System/Libraries"
 LICENSE = "Apache-2.0"
-PV = "0.5.5"
+PV = "0.5.6"
 
 SRC_URI = ""
 
@@ -47,7 +47,7 @@ DEPENDS += "alsa-scenario"
 do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
- #setup -q -n avsystem-0.5.5
+ #setup -q -n avsystem-0.5.6
  cp ${S}/packaging/avsystem.manifest .
  
  
@@ -101,6 +101,10 @@ do_install() {
  install -m 0644 ${S}/packaging/avsystem.service ${D}${systemd_unitdir}/system/avsystem.service
  ln -sf ../avsystem.service ${D}${systemd_unitdir}/system/multi-user.target.wants/avsystem.service
  
+ mkdir -m 755 -p ${D}/etc/rc.d/rc3.d/
+ mkdir -m 755 -p ${D}/etc/rc.d/rc4.d/
+ ln -sf ../init.d/snd_init ${D}/etc/rc.d/rc3.d/S15snd_init
+ ln -sf ../init.d/snd_init ${D}/etc/rc.d/rc4.d/S15snd_init
  
  
 }
@@ -154,6 +158,9 @@ avsystem_files = ""
 avsystem_files += "${prefix}/bin/*"
 avsystem_files += "${systemd_unitdir}/system/avsystem.service"
 avsystem_files += "${systemd_unitdir}/system/multi-user.target.wants/avsystem.service"
+avsystem_files += "/etc/rc.d/init.d/snd_init"
+avsystem_files += "/etc/rc.d/rc3.d/S15snd_init"
+avsystem_files += "/etc/rc.d/rc4.d/S15snd_init"
 MANIFESTFILES_${PN} = "avsystem.manifest"
 
 avsystem-dev_files = ""

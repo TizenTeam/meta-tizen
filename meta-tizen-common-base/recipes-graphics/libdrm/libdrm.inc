@@ -2,7 +2,7 @@ DESCRIPTION = "Userspace interface to kernel DRM services"
 HOMEPAGE = "http://cgit.freedesktop.org/mesa/drm"
 SECTION = "Graphics & UI Framework/Libraries"
 LICENSE = "MIT"
-PV = "2.4.52"
+PV = "2.4.58"
 
 SRC_URI = ""
 
@@ -30,7 +30,7 @@ PROVIDES += "libkms"
 
 #PROVIDES by libdrm-tools
 PROVIDES += "libdrm-tools"
-# the PROVIDES rules is ignore "libdrm = 2.4.52-0"
+# the PROVIDES rules is ignore "libdrm = 2.4.58-0"
 PROVIDES += "libdrm"
 RPROVIDES_libdrm-tools += "libdrm"
 

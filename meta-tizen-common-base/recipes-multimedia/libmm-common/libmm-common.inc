@@ -2,7 +2,7 @@ DESCRIPTION = "Multimedia Framework Common Library"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "Multimedia/Libraries"
 LICENSE = "Apache-2.0"
-PV = "0.2.55"
+PV = "0.2.85"
 
 SRC_URI = ""
 
@@ -35,7 +35,6 @@ do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
  #setup -q
- cp ${S}/packaging/libmm-common.manifest .
  
  
 }
@@ -55,6 +54,7 @@ do_compile() {
   
   
   CFLAGS="$CFLAGS -DEXPORT_API=\"__attribute__((visibility(\\\"default\\\")))\" "
+  CFLAGS="$CFLAGS -Wall -Wcast-align -Wcast-qual -Wextra -Wno-array-bounds -Wno-empty-body -Wno-ignored-qualifiers -Wno-unused-parameter -Wshadow -Wwrite-strings -Wswitch-default -Wno-unused-but-set-parameter -Wno-unused-but-set-variable"
   
   autotools_do_configure
   oe_runmake ${PARALLEL_MAKE}

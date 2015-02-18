@@ -110,7 +110,7 @@ do_install() {
    rm -f ${D}${infodir}/dir 
    find ${D} -regex ".*\.la$" | xargs rm -f -- 
    find ${D} -regex ".*\.a$" | xargs rm -f --
- cp -a ${S}/packaging/gumd-tizen.conf ${D}${sysconfdir}/gumd/gumd.conf
+   cp -a ${S}/data/tizen/etc/gumd/gumd-tizen-common.conf ${D}${sysconfdir}/gumd/gumd.conf
  
  
 }

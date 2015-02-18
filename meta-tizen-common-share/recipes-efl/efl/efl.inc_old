@@ -29,10 +29,6 @@ PROVIDES += "eo"
 PROVIDES += "ephysics-dev"
 
 
-#PROVIDES by eolian-examples
-PROVIDES += "eolian-examples"
-
-
 #PROVIDES by emotion-dev
 PROVIDES += "emotion-dev"
 
@@ -49,10 +45,6 @@ PROVIDES += "eina-examples"
 PROVIDES += "eo-examples"
 
 
-#PROVIDES by eolian
-PROVIDES += "eolian"
-
-
 #PROVIDES by eet-dev
 PROVIDES += "eet-dev"
 
@@ -66,9 +58,6 @@ PROVIDES += "eeze-dev"
 
 
 #PROVIDES by efl
-# the PROVIDES rules is ignore "efl-data  "
-PROVIDES += "efl-data"
-RPROVIDES_efl += "efl-data"
 
 
 #PROVIDES by efreet-dev
@@ -89,6 +78,10 @@ PROVIDES += "ethumb"
 
 #PROVIDES by evas-dev
 PROVIDES += "evas-dev"
+
+
+#PROVIDES by efl-data
+PROVIDES += "efl-data"
 
 
 #PROVIDES by evas
@@ -129,10 +122,6 @@ PROVIDES += "ecore-examples"
 
 #PROVIDES by emotion
 PROVIDES += "emotion"
-
-
-#PROVIDES by efl-dev
-PROVIDES += "efl-dev"
 
 
 #PROVIDES by eldbus-examples
@@ -180,10 +169,6 @@ PROVIDES += "eet"
 PROVIDES += "eina-dev"
 
 
-#PROVIDES by eolian-dev
-PROVIDES += "eolian-dev"
-
-
 #PROVIDES by evas-examples
 PROVIDES += "evas-examples"
 
@@ -207,6 +192,11 @@ PROVIDES += "edje-examples"
 #PROVIDES by eio
 PROVIDES += "eio"
 
+#PROVIDES by eolian
+PROVIDES += "eolian"
+PROVIDES += "eolian-examples"
+PROVIDES += "eolian-dev"
+
 
 RDEPENDS = ""
 #RDEPENDS of edje (edje)
@@ -221,9 +211,6 @@ RDEPENDS_eo += "efl-data"
 #RDEPENDS of ephysics-dev (ephysics-dev)
 RDEPENDS_ephysics-dev += "ephysics"
 
-#RDEPENDS of eolian-examples (eolian-examples)
-RDEPENDS_eolian-examples += "eolian"
-
 #RDEPENDS of emotion-dev (emotion-dev)
 RDEPENDS_emotion-dev += "emotion"
 
@@ -235,9 +222,6 @@ RDEPENDS_eina-examples += "eina"
 
 #RDEPENDS of eo-examples (eo-examples)
 RDEPENDS_eo-examples += "eo"
-
-#RDEPENDS of eolian (eolian)
-RDEPENDS_eolian += "efl-data"
 
 #RDEPENDS of eet-dev (eet-dev)
 RDEPENDS_eet-dev += "eet"
@@ -317,9 +301,6 @@ RDEPENDS_eet += "efl-data"
 #RDEPENDS of eina-dev (eina-dev)
 RDEPENDS_eina-dev += "eina"
 
-#RDEPENDS of eolian-dev (eolian-dev)
-RDEPENDS_eolian-dev += "eolian"
-
 #RDEPENDS of evas-examples (evas-examples)
 RDEPENDS_evas-examples += "evas"
 
@@ -363,6 +344,7 @@ DEPENDS += "libsndfile1"
 DEPENDS += "libcheck"
 DEPENDS += "giflib"
 DEPENDS += "udev"
+DEPENDS += "capi-system-sensor"
 DEPENDS += "gnutls"
 DEPENDS += "util-linux"
 DEPENDS += "vconf"
@@ -376,16 +358,15 @@ DEPENDS += "dbus"
 DEPENDS += "zlib"
 DEPENDS += "pulseaudio"
 DEPENDS += "libexif"
-DEPENDS += "gstreamer1.0"
 DEPENDS_append_class-native = " fdupes-native"
 DEPENDS_append_class-target = " fdupes-native"
+DEPENDS += "gstreamer1.0"
 
 do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
  #setup -q
  cp ${S}/packaging/efl.manifest .
- 
  
  
 }
@@ -412,7 +393,7 @@ do_compile() {
   
   
 }
-EXTRA_OECONF += " --enable-g-main-loop --disable-xim --disable-scim --disable-gesture --with-tests=regular --enable-fb --disable-tslib --enable-wayland --enable-drm --enable-egl --with-opengl=es --enable-tile-rotate --disable-rpath --with-x11=none --enable-tile-rotate --disable-rpath --enable-always-build-examples --enable-systemd --enable-lua-old --enable-i-really-know-what-i-am-doing-and-that-this-will-probably-break-things-and-i-will-fix-them-myself-and-send-patches-aba"
+EXTRA_OECONF += " --enable-tizen --enable-g-main-loop --disable-xim --disable-scim --disable-gesture --with-tests=regular --enable-fb --disable-tslib --enable-wayland --enable-drm --enable-egl --with-opengl=es --enable-tile-rotate --disable-rpath --with-x11=none --enable-tile-rotate --disable-rpath --enable-always-build-examples --enable-systemd --enable-lua-old --enable-i-really-know-what-i-am-doing-and-that-this-will-probably-break-things-and-i-will-fix-them-myself-and-send-patches-aaa"
 
 do_install() {
  export RPM_BUILD_ROOT=${D}
@@ -432,8 +413,11 @@ do_install() {
    rm -f ${D}${infodir}/dir 
    find ${D} -regex ".*\.la$" | xargs rm -f -- 
    find ${D} -regex ".*\.a$" | xargs rm -f --
- make datadir=${D}${prefix}/share install-examples
+ oe_runmake datadir=${D}${prefix}/share install-examples
  rm -rf ${D}${prefix}/lib/ecore/system/upower
+ 
+ #find_lang efl
+ #fdupes ${D}
  
  
  
@@ -615,27 +599,31 @@ pkg_postrm_edje() {
     [ "x$D" == "x" ] && ldconfig
 }
 
+pkg_postinst_eolian() {
+    #!/bin/sh -e
+
+    [ "x$D" == "x" ] && ldconfig
+}
+
 PACKAGES = "${PN}-dbg ${PN}-doc ${PN}-locale"
 PACKAGES += " emotion "
 PACKAGES += " ephysics-examples "
 PACKAGES += " eo "
 PACKAGES += " ephysics-dev "
 PACKAGES += " edje "
-PACKAGES += " eo-examples "
 PACKAGES += " emotion-dev "
 PACKAGES += " eina "
 PACKAGES += " eina-examples "
-PACKAGES += " eolian-examples "
-PACKAGES += " eolian "
+PACKAGES += " eo-examples "
 PACKAGES += " eet-dev "
 PACKAGES += " ephysics "
 PACKAGES += " eeze-dev "
-PACKAGES += " efl "
 PACKAGES += " efreet-dev "
 PACKAGES += " ecore-dev "
 PACKAGES += " eina-dev "
 PACKAGES += " ethumb "
 PACKAGES += " evas-dev "
+PACKAGES += " efl-data "
 PACKAGES += " evas "
 PACKAGES += " eeze "
 PACKAGES += " ethumb-dev "
@@ -647,7 +635,6 @@ PACKAGES += " ethumb-examples "
 PACKAGES += " eio-dev "
 PACKAGES += " ecore-examples "
 PACKAGES += " ecore "
-PACKAGES += " efl-dev "
 PACKAGES += " eldbus-examples "
 PACKAGES += " eo-dev "
 PACKAGES += " embryo "
@@ -656,12 +643,14 @@ PACKAGES += " eet-tools "
 PACKAGES += " edje-dev "
 PACKAGES += " edje-tools "
 PACKAGES += " eet "
-PACKAGES += " eolian-dev "
 PACKAGES += " evas-examples "
 PACKAGES += " emotion-examples "
 PACKAGES += " eldbus "
 PACKAGES += " edje-examples "
 PACKAGES += " eio "
+PACKAGES += " eolian "
+PACKAGES += " eolian-dev "
+PACKAGES += " eolian-examples "
 
 emotion_files = ""
 emotion_files += "${prefix}/lib/libemotion.so.*"
@@ -690,11 +679,6 @@ edje_files += "${prefix}/share/edje/include/edje.inc"
 edje_files += "${prefix}/share/mime/packages/edje.xml"
 MANIFESTFILES_edje = "efl.manifest"
 
-eo-examples_files = ""
-eo-examples_files += "${prefix}/share/eo/examples/*"
-eo-examples_files += "${prefix}/lib/eo/examples/*"
-MANIFESTFILES_eo-examples = "efl.manifest"
-
 emotion-dev_files = ""
 emotion-dev_files += "${prefix}/include/emotion-1/*"
 emotion-dev_files += "${prefix}/lib/libemotion.so"
@@ -708,23 +692,20 @@ eina_files += "${prefix}/bin/eina-bench-cmp"
 MANIFESTFILES_eina = "efl.manifest"
 
 eina-examples_files = ""
-eina-examples_files += "${prefix}/share/eina*/examples/*"
+eina-examples_files += "${prefix}/share/eina/examples/*"
 eina-examples_files += "${prefix}/lib/eina/examples/*"
 MANIFESTFILES_eina-examples = "efl.manifest"
 
-eolian-examples_files = ""
-eolian-examples_files += "${prefix}/share/eolian_*/examples/*"
-
-eolian_files = ""
-eolian_files += "${prefix}/bin/eolian*"
-eolian_files += "${prefix}/lib/libeolian.so.*"
+eo-examples_files = ""
+eo-examples_files += "${prefix}/share/eo/examples/*"
+eo-examples_files += "${prefix}/lib/eo/examples/*"
+MANIFESTFILES_eo-examples = "efl.manifest"
 
 eet-dev_files = ""
-eet-dev_files += "${prefix}/include/eet-*1/*.h*"
-eet-dev_files += "${prefix}/include/eet-*1/*/*.h*"
+eet-dev_files += "${prefix}/include/eet-1/*.h"
 eet-dev_files += "${prefix}/lib/libeet.so"
 eet-dev_files += "${prefix}/lib/pkgconfig/eet*.pc"
-eet-dev_files += "${prefix}/lib/cmake/Eet*/*.cmake"
+eet-dev_files += "${prefix}/lib/cmake/Eet/*.cmake"
 MANIFESTFILES_eet-dev = "efl.manifest"
 
 ephysics_files = ""
@@ -737,11 +718,6 @@ eeze-dev_files += "${prefix}/lib/pkgconfig/eeze*.pc"
 eeze-dev_files += "${prefix}/lib/cmake/Eeze/*.cmake"
 MANIFESTFILES_eeze-dev = "efl.manifest"
 
-efl_files = ""
-efl_files += "${prefix}/share/locale/*/*/*.mo"
-efl_files += "${prefix}/lib/libefl.so.*"
-MANIFESTFILES_${PN} = "efl.manifest"
-
 efreet-dev_files = ""
 efreet-dev_files += "${prefix}/include/efreet-1/*.h"
 efreet-dev_files += "${prefix}/lib/libefreet.so"
@@ -753,7 +729,6 @@ MANIFESTFILES_efreet-dev = "efl.manifest"
 
 ecore-dev_files = ""
 ecore-dev_files += "${prefix}/include/ecore*/*.h"
-ecore-dev_files += "${prefix}/include/ecore*cxx*/*.hh"
 ecore-dev_files += "${prefix}/lib/libecore.so"
 ecore-dev_files += "${prefix}/lib/libecore_audio.so"
 ecore-dev_files += "${prefix}/lib/libecore_avahi.so"
@@ -765,19 +740,17 @@ ecore-dev_files += "${prefix}/lib/libecore_imf_evas.so"
 ecore-dev_files += "${prefix}/lib/libecore_input.so"
 ecore-dev_files += "${prefix}/lib/libecore_input_evas.so"
 ecore-dev_files += "${prefix}/lib/libecore_ipc.so"
-ecore-dev_files += "${prefix}/lib/libecore_fb.so"
 ecore-dev_files += "${prefix}/lib/libecore_wayland.so"
-ecore-dev_files += "${prefix}/lib/libecore_drm.so"
 ecore-dev_files += "${prefix}/lib/pkgconfig/ecore*.pc"
-ecore-dev_files += "${prefix}/lib/cmake/Ecore*/*.cmake"
+ecore-dev_files += "${prefix}/lib/cmake/Ecore/*.cmake"
 MANIFESTFILES_ecore-dev = "efl.manifest"
 
 eina-dev_files = ""
-eina-dev_files += "${prefix}/include/eina-*1/*.h*"
-eina-dev_files += "${prefix}/include/eina-*1/eina*/*"
+eina-dev_files += "${prefix}/include/eina-1/*.h"
+eina-dev_files += "${prefix}/include/eina-1/eina/*"
 eina-dev_files += "${prefix}/lib/libeina.so"
 eina-dev_files += "${prefix}/lib/pkgconfig/eina*.pc"
-eina-dev_files += "${prefix}/lib/cmake/Eina*/*.cmake"
+eina-dev_files += "${prefix}/lib/cmake/Eina/*.cmake"
 MANIFESTFILES_eina-dev = "efl.manifest"
 
 ethumb_files = ""
@@ -795,15 +768,17 @@ ethumb_files += "${prefix}/bin/ethumbd_client"
 MANIFESTFILES_ethumb = "efl.manifest"
 
 evas-dev_files = ""
-evas-dev_files += "${prefix}/include/evas-*1/*.h*"
-evas-dev_files += "${prefix}/include/evas-*1/*/*.h*"
+evas-dev_files += "${prefix}/include/evas-1/*.h"
 evas-dev_files += "${prefix}/lib/libevas.so"
 evas-dev_files += "${prefix}/lib/pkgconfig/evas*.pc"
-evas-dev_files += "${prefix}/lib/cmake/Evas*/*.cmake"
+evas-dev_files += "${prefix}/lib/cmake/Evas/*.cmake"
 MANIFESTFILES_evas-dev = "efl.manifest"
 
+efl-data_files = ""
+efl-data_files += "${prefix}/include/efl-1/Efl_Config.h"
+MANIFESTFILES_${PN}-data = "efl.manifest"
+
 evas_files = ""
-evas_files += "${prefix}/bin/ecore_evas_*"
 evas_files += "${prefix}/bin/evas_cserve2_client"
 evas_files += "${prefix}/bin/evas_cserve2_debug"
 evas_files += "${prefix}/bin/evas_cserve2_shm_debug"
@@ -881,6 +856,7 @@ MANIFESTFILES_ecore-examples = "efl.manifest"
 
 ecore_files = ""
 ecore_files += "${prefix}/lib/libecore.so.*"
+ecore_files += "${prefix}/lib/libecore_avahi.so.*"
 ecore_files += "${prefix}/lib/libecore_audio.so.*"
 ecore_files += "${prefix}/lib/libecore_avahi.so.*"
 ecore_files += "${prefix}/lib/libecore_con.so.*"
@@ -891,24 +867,14 @@ ecore_files += "${prefix}/lib/libecore_imf_evas.so.*"
 ecore_files += "${prefix}/lib/libecore_input.so.*"
 ecore_files += "${prefix}/lib/libecore_input_evas.so.*"
 ecore_files += "${prefix}/lib/libecore_ipc.so.*"
-ecore_files += "${prefix}/lib/libecore_fb.so.*"
 ecore_files += "${prefix}/lib/libecore_wayland.so.*"
-ecore_files += "${prefix}/lib/libecore_drm.so.*"
 ecore_files += "${prefix}/lib/ecore_evas/engines/*/*/module.so"
 ecore_files += "${prefix}/lib/ecore_imf/modules/*/*/module.so"
+ecore_files += "${prefix}/lib/ecore/system/tizen/*/module.so"
 ecore_files += "${prefix}/lib/ecore/system/systemd/v-*/module.so"
 ecore_files += "${prefix}/share/ecore/checkme"
-ecore_files += "${prefix}/share/ecore_*/checkme"
+ecore_files += "${prefix}/share/ecore_imf/checkme"
 MANIFESTFILES_ecore = "efl.manifest"
-
-efl-dev_files = ""
-efl-dev_files += "${prefix}/include/efl-1/Efl*.h"
-efl-dev_files += "${prefix}/include/efl-1/interfaces/efl*.h"
-efl-dev_files += "${prefix}/include/efl-cxx-1/*.hh"
-efl-dev_files += "${prefix}/lib/cmake/Efl*/*.cmake"
-efl-dev_files += "${prefix}/lib/libefl.so"
-efl-dev_files += "${prefix}/lib/pkgconfig/efl*.pc"
-MANIFESTFILES_${PN}-dev = "efl.manifest"
 
 eldbus-examples_files = ""
 eldbus-examples_files += "${prefix}/share/eldbus/examples/*"
@@ -916,13 +882,12 @@ eldbus-examples_files += "${prefix}/lib/eldbus/examples/*"
 MANIFESTFILES_eldbus-examples = "efl.manifest"
 
 eo-dev_files = ""
-eo-dev_files += "${prefix}/include/eo-*1/*.h*"
+eo-dev_files += "${prefix}/include/eo-1/*.h"
 eo-dev_files += "${prefix}/lib/libeo.so"
 eo-dev_files += "${prefix}/lib/pkgconfig/eo*.pc"
 eo-dev_files += "${prefix}/share/eo/gdb/eo_gdb.py"
 eo-dev_files += "${prefix}/share/gdb/auto-load/usr/lib*/*"
 eo-dev_files += "${prefix}/lib/cmake/Eo/*.cmake"
-eo-dev_files += "${prefix}/lib/cmake/EoCxx/*.cmake"
 MANIFESTFILES_eo-dev = "efl.manifest"
 
 embryo_files = ""
@@ -938,11 +903,10 @@ MANIFESTFILES_eio-examples = "efl.manifest"
 
 eet-tools_files = ""
 eet-tools_files += "${prefix}/bin/eet"
-eet-tools_files += "${prefix}/bin/vieet"
 MANIFESTFILES_eet-tools = "efl.manifest"
 
 edje-dev_files = ""
-edje-dev_files += "${prefix}/include/edje*-1/*.h*"
+edje-dev_files += "${prefix}/include/edje-1/*.h"
 edje-dev_files += "${prefix}/lib/libedje.so"
 edje-dev_files += "${prefix}/lib/pkgconfig/edje*.pc"
 edje-dev_files += "${prefix}/lib/cmake/Edje/*.cmake"
@@ -956,13 +920,6 @@ MANIFESTFILES_edje-tools = "efl.manifest"
 eet_files = ""
 eet_files += "${prefix}/lib/libeet*.so.*"
 MANIFESTFILES_eet = "efl.manifest"
-
-eolian-dev_files = ""
-eolian-dev_files += "${prefix}/include/eolian-*1/*.h*"
-eolian-dev_files += "${prefix}/include/eolian-*1/*/*.h*"
-eolian-dev_files += "${prefix}/share/eolian/include/*/*.eo"
-eolian-dev_files += "${prefix}/lib/libeolian.so*"
-eolian-dev_files += "${prefix}/lib/cmake/Eolian*/*.cmake"
 
 evas-examples_files = ""
 evas-examples_files += "${prefix}/share/evas/examples/*"
@@ -993,21 +950,19 @@ FILES_ephysics-examples = "${ephysics-examples_files}"
 FILES_eo = "${eo_files}"
 FILES_ephysics-dev = "${ephysics-dev_files}"
 FILES_edje = "${edje_files}"
-FILES_eo-examples = "${eo-examples_files}"
 FILES_emotion-dev = "${emotion-dev_files}"
 FILES_eina = "${eina_files}"
 FILES_eina-examples = "${eina-examples_files}"
-FILES_eolian-examples = "${eolian-examples_files}"
-FILES_eolian = "${eolian_files}"
+FILES_eo-examples = "${eo-examples_files}"
 FILES_eet-dev = "${eet-dev_files}"
 FILES_ephysics = "${ephysics_files}"
 FILES_eeze-dev = "${eeze-dev_files}"
-FILES_${PN} = "${efl_files}"
 FILES_efreet-dev = "${efreet-dev_files}"
 FILES_ecore-dev = "${ecore-dev_files}"
 FILES_eina-dev = "${eina-dev_files}"
 FILES_ethumb = "${ethumb_files}"
 FILES_evas-dev = "${evas-dev_files}"
+FILES_${PN}-data = "${efl-data_files}"
 FILES_evas = "${evas_files}"
 FILES_eeze = "${eeze_files}"
 FILES_ethumb-dev = "${ethumb-dev_files}"
@@ -1019,7 +974,6 @@ FILES_ethumb-examples = "${ethumb-examples_files}"
 FILES_eio-dev = "${eio-dev_files}"
 FILES_ecore-examples = "${ecore-examples_files}"
 FILES_ecore = "${ecore_files}"
-FILES_${PN}-dev = "${efl-dev_files}"
 FILES_eldbus-examples = "${eldbus-examples_files}"
 FILES_eo-dev = "${eo-dev_files}"
 FILES_embryo = "${embryo_files}"
@@ -1028,7 +982,6 @@ FILES_eet-tools = "${eet-tools_files}"
 FILES_edje-dev = "${edje-dev_files}"
 FILES_edje-tools = "${edje-tools_files}"
 FILES_eet = "${eet_files}"
-FILES_eolian-dev = "${eolian-dev_files}"
 FILES_evas-examples = "${evas-examples_files}"
 FILES_emotion-examples = "${emotion-examples_files}"
 FILES_eldbus = "${eldbus_files}"
@@ -1040,21 +993,19 @@ PKG_ephysics-examples= "ephysics-examples"
 PKG_eo= "eo"
 PKG_ephysics-dev= "ephysics-dev"
 PKG_edje= "edje"
-PKG_eo-examples= "eo-examples"
 PKG_emotion-dev= "emotion-dev"
 PKG_eina= "eina"
 PKG_eina-examples= "eina-examples"
-PKG_eolian-examples= "eolian-examples"
-PKG_eolian= "eolian"
+PKG_eo-examples= "eo-examples"
 PKG_eet-dev= "eet-dev"
 PKG_ephysics= "ephysics"
 PKG_eeze-dev= "eeze-dev"
-PKG_efl= "efl"
 PKG_efreet-dev= "efreet-dev"
 PKG_ecore-dev= "ecore-dev"
 PKG_eina-dev= "eina-dev"
 PKG_ethumb= "ethumb"
 PKG_evas-dev= "evas-dev"
+PKG_efl-data= "efl-data"
 PKG_evas= "evas"
 PKG_eeze= "eeze"
 PKG_ethumb-dev= "ethumb-dev"
@@ -1066,7 +1017,6 @@ PKG_ethumb-examples= "ethumb-examples"
 PKG_eio-dev= "eio-dev"
 PKG_ecore-examples= "ecore-examples"
 PKG_ecore= "ecore"
-PKG_efl-dev= "efl-dev"
 PKG_eldbus-examples= "eldbus-examples"
 PKG_eo-dev= "eo-dev"
 PKG_embryo= "embryo"
@@ -1075,7 +1025,6 @@ PKG_eet-tools= "eet-tools"
 PKG_edje-dev= "edje-dev"
 PKG_edje-tools= "edje-tools"
 PKG_eet= "eet"
-PKG_eolian-dev= "eolian-dev"
 PKG_evas-examples= "evas-examples"
 PKG_emotion-examples= "emotion-examples"
 PKG_eldbus= "eldbus"

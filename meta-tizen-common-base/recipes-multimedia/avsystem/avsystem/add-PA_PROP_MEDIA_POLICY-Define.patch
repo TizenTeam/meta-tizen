@@ -1,3 +1,13 @@
+From a68707ff4af5beaeb84ddc3486f3c02eb6368248 Mon Sep 17 00:00:00 2001
+From: Xavier Roche <xavrock.os@gmail.com>
+Date: Wed, 18 Feb 2015 12:16:31 +0100
+Subject: [PATCH] add-PA_PROP_MEDIA_POLICY-Define
+
+Signed-off-by: Xavier Roche <xavrock.os@gmail.com>
+---
+ avsys-audio-pasimple.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
 diff --git a/avsys-audio-pasimple.c b/avsys-audio-pasimple.c
 index aeeb999..a56d8bc 100644
 --- a/avsys-audio-pasimple.c
@@ -11,3 +21,6 @@ index aeeb999..a56d8bc 100644
  #define MSEC_TO_SAMPLE(samplerate,period_time)		(samplerate*period_time/1000)
  
  #define CHECK_VALID_HANDLE(handle) \
+-- 
+1.9.1
+

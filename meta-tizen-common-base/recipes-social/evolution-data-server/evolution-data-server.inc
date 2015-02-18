@@ -301,19 +301,19 @@ evolution-data-server_files += "${prefix}/libexec/evolution-data-server/"
 MANIFESTFILES_${PN} = "evolution-data-server.manifest"
 
 libedataserver_files = ""
-libedataserver_files += "${prefix}/lib/libedataserver-1.2.so.17*"
+libedataserver_files += "${prefix}/lib/libedataserver-1.2.so.18*"
 MANIFESTFILES_libedataserver = "evolution-data-server.manifest"
 
 libecal_files = ""
-libecal_files += "${prefix}/lib/libecal-1.2.so.15*"
+libecal_files += "${prefix}/lib/libecal-1.2.so.16*"
 MANIFESTFILES_libecal = "evolution-data-server.manifest"
 
 libcamel_files = ""
-libcamel_files += "${prefix}/lib/libcamel-1.2.so.43*"
+libcamel_files += "${prefix}/lib/libcamel-1.2.so.49*"
 MANIFESTFILES_libcamel = "evolution-data-server.manifest"
 
 libedata-cal_files = ""
-libedata-cal_files += "${prefix}/lib/libedata-cal-1.2.so.20*"
+libedata-cal_files += "${prefix}/lib/libedata-cal-1.2.so.23*"
 MANIFESTFILES_libedata-cal = "evolution-data-server.manifest"
 
 libebook-contacts_files = ""
@@ -325,11 +325,11 @@ libebook_files += "${prefix}/lib/libebook-1.2.so.14*"
 MANIFESTFILES_libebook = "evolution-data-server.manifest"
 
 libedata-book_files = ""
-libedata-book_files += "${prefix}/lib/libedata-book-1.2.so.17*"
+libedata-book_files += "${prefix}/lib/libedata-book-1.2.so.20*"
 MANIFESTFILES_libedata-book = "evolution-data-server.manifest"
 
 libebackend_files = ""
-libebackend_files += "${prefix}/lib/libebackend-1.2.so.6*"
+libebackend_files += "${prefix}/lib/libebackend-1.2.so.7*"
 MANIFESTFILES_libebackend = "evolution-data-server.manifest"
 
 evolution-data-server-dev_files = ""
