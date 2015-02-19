@@ -42,7 +42,7 @@ RDEPENDS_${PN}-efl += "glibc"
 
 #RDEPENDS of app-core-common-dev (${PN}-common-dev)
 RDEPENDS_${PN}-common-dev += "elementary"
-RDEPENDS_${PN}-common-dev += "sensor"
+RDEPENDS_${PN}-common-dev += "sensord"
 RDEPENDS_${PN}-common-dev += "app-core-common"
 RDEPENDS_${PN}-common-dev += "vconf"
 RDEPENDS_${PN}-common-dev += "aul"
@@ -66,7 +66,7 @@ inherit pkgconfig
 DEPENDS += "elementary"
 DEPENDS += "ecore"
 DEPENDS += "glib-2.0"
-DEPENDS += "sensor"
+DEPENDS += "sensord"
 DEPENDS += "vconf"
 
 do_prep() {

@@ -3,6 +3,7 @@ HOMEPAGE = "http://nohomepage.org"
 SECTION = "System/Libraries"
 LICENSE = "Apache-2.0"
 PV = "0.2.44"
+PR = "3"
 
 SRC_URI = ""
 

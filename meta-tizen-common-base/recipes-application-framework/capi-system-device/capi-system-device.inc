@@ -8,7 +8,7 @@ SRC_URI = ""
 
 S = "${WORKDIR}/git"
 
-inherit manifest autotools-brokensep
+inherit manifest cmake
 
 BBCLASSEXTEND = ""
 PROVIDES = ""
@@ -32,7 +32,7 @@ DEPENDS += "capi-system-info"
 DEPENDS += "dbus"
 inherit pkgconfig
 DEPENDS += "dlog"
-DEPENDS += "system-server"
+DEPENDS += "deviced"
 DEPENDS += "capi-base-common"
 DEPENDS += "vconf"
 DEPENDS += "dbus-glib"

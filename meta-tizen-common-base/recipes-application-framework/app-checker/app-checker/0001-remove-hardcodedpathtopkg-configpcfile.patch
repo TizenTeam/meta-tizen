@@ -1,0 +1,41 @@
+From 70200243a1e419ff81a30fa8a436571422a33a3d Mon Sep 17 00:00:00 2001
+From: Ronan Le Martret <ronan@fridu.net>
+Date: Tue, 14 Oct 2014 17:52:29 +0200
+Subject: [PATCH] remove hard coded path to pkg-config pc file
+
+ - we need to generate the pc file with cmake macro for yocto native build.
+
+Change-Id: I79f2098e7323c438374b6ff90107689666aa0c1f
+Signed-off-by: Ronan Le Martret <ronan@fridu.net>
+---
+ app-checker-server.pc.in | 2 +-
+ app-checker.pc.in        | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/app-checker-server.pc.in b/app-checker-server.pc.in
+index 9c4f455..15a4d08 100755
+--- a/app-checker-server.pc.in
++++ b/app-checker-server.pc.in
+@@ -1,6 +1,6 @@
+ # Package Information for pkg-config
+ 
+-prefix=/usr
++prefix=@PREFIX@
+ exec_prefix=@EXEC_PREFIX@
+ libdir=@LIB_INSTALL_DIR@
+ includedir=@INCLUDEDIR@
+diff --git a/app-checker.pc.in b/app-checker.pc.in
+index 7393673..a92d64d 100755
+--- a/app-checker.pc.in
++++ b/app-checker.pc.in
+@@ -1,6 +1,6 @@
+ # Package Information for pkg-config
+ 
+-prefix=/usr
++prefix=@PREFIX@
+ exec_prefix=@EXEC_PREFIX@
+ libdir=@LIB_INSTALL_DIR@
+ includedir=@INCLUDEDIR@
+-- 
+1.9.1
+

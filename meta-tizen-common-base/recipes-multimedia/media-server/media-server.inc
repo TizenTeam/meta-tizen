@@ -44,7 +44,7 @@ DEPENDS += "tizen-platform-config"
 DEPENDS += "aul"
 DEPENDS += "dlog"
 inherit pkgconfig
-DEPENDS += "system-server"
+DEPENDS += "deviced"
 DEPENDS += "smack"
 DEPENDS += "libslp-db-util"
 DEPENDS += "sqlite3"

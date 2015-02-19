@@ -56,6 +56,7 @@ DEPENDS += "systemd"
 DEPENDS += "attr"
 DEPENDS += "gdbm"
 
+
 do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
@@ -165,9 +166,9 @@ buxton_files += "${sysconfdir}/buxton.conf"
 buxton_files += "${prefix}/bin/buxtonctl"
 buxton_files += "${prefix}/lib/buxton/*.so"
 buxton_files += "${prefix}/lib/libbuxton.so.*"
-buxton_files += "${prefix}/lib/systemd/system/buxton.service"
-buxton_files += "${prefix}/lib/systemd/system/buxton.socket"
-buxton_files += "${prefix}/lib/systemd/system/sockets.target.wants/buxton.socket"
+buxton_files += "/lib/systemd/system/buxton.service"
+buxton_files += "/lib/systemd/system/buxton.socket"
+buxton_files += "/lib/systemd/system/sockets.target.wants/buxton.socket"
 buxton_files += "${prefix}/sbin/buxtond"
 buxton_files += "%dir ${localstatedir}/lib/buxton"
 MANIFESTFILES_${PN} = "buxton.manifest"

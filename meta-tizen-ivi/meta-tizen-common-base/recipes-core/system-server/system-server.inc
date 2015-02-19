@@ -134,7 +134,7 @@ DEPENDS += "heynoti"
 DEPENDS += "ecore"
 DEPENDS_append_class-native = " fdupes-native"
 DEPENDS_append_class-target = " fdupes-native"
-DEPENDS += "sensor"
+DEPENDS += "sensord"
 DEPENDS += "vconf"
 DEPENDS += "capi-base-common"
 

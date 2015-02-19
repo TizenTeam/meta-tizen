@@ -97,11 +97,14 @@ do_install() {
    find ${D} -regex ".*\.la$" | xargs rm -f -- 
    find ${D} -regex ".*\.a$" | xargs rm -f --
  
- mkdir -m 755 -p ${D}${systemd_unitdir}/system/multi-user.target.wants
- install -m 0644 ${S}/packaging/avsystem.service ${D}${systemd_unitdir}/system/avsystem.service
- ln -sf ../avsystem.service ${D}${systemd_unitdir}/system/multi-user.target.wants/avsystem.service
- 
- 
+ mkdir -m 755 -p ${D}/etc/rc.d/rc3.d/
+ ln -s ../init.d/snd_init ${D}/etc/rc.d/rc3.d/S15snd_init
+ mkdir -m 755 -p ${D}/etc/rc.d/rc4.d/
+ ln -s ../init.d/snd_init ${D}/etc/rc.d/rc4.d/S15snd_init
+
+ mkdir -m 755 -p ${D}/${prefix}/lib/systemd/system/multi-user.target.wants
+ install -m 0644 %SOURCE101 ${D}/${prefix}/lib/systemd/system/avsystem.service
+ ln -s ../avsystem.service ${D}/${prefix}/lib/systemd/system/multi-user.target.wants/avsystem.service
  
 }
 

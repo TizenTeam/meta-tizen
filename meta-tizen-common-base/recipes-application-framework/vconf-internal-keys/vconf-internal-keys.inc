@@ -14,6 +14,7 @@ BBCLASSEXTEND = ""
 PROVIDES = ""
 
 #PROVIDES by vconf-internal-keys
+PROVIDES += "vconf-internal-keys"
 
 
 #PROVIDES by vconf-internal-keys-dev
@@ -92,16 +93,17 @@ do_install() {
 }
 
 PACKAGES = "${PN}-dbg ${PN}-doc ${PN}-locale"
-PACKAGES += " vconf-internal-keys-dev "
+PACKAGES += " ${PN}-dev "
 
-vconf-internal-keys-dev_files = ""
-vconf-internal-keys-dev_files += "${prefix}/include/vconf/*"
-vconf-internal-keys-dev_files += "${prefix}/lib/pkgconfig/*.pc"
+${PN}-dev_files = ""
+${PN}-dev_files += "${prefix}/include/vconf/*"
+${PN}-dev_files += "${prefix}/lib/pkgconfig/*.pc"
 MANIFESTFILES_${PN}-dev = "vconf-internal-keys.manifest"
 
 FILES_${PN}-dev = "${vconf-internal-keys-dev_files}"
 
-PKG_vconf-internal-keys-dev= "vconf-internal-keys-dev"
+PKG_${PN}-dev= "${PN}-dev"
+PKG_${PN}-dev= "${PN}"
 
 require vconf-internal-keys-extraconf.inc
 

@@ -48,7 +48,7 @@ DEPENDS += "tizen-platform-config"
 inherit pkgconfig
 DEPENDS += "bundle"
 DEPENDS += "aul"
-DEPENDS += "system-server"
+DEPENDS += "deviced"
 DEPENDS += "dbus-glib"
 DEPENDS += "security-server"
 DEPENDS += "heynoti"

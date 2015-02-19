@@ -58,7 +58,7 @@ DEPENDS += "audio-session-manager"
 DEPENDS += "libmm-log"
 inherit pkgconfig
 DEPENDS += "glib-2.0"
-DEPENDS += "system-server"
+DEPENDS += "deviced"
 DEPENDS += "vconf"
 DEPENDS += "security-server"
 DEPENDS += "heynoti"
@@ -88,7 +88,7 @@ do_compile() {
   LD_AS_NEEDED=1; export LD_AS_NEEDED ;
   
   ./autogen.sh
-  CFLAGS="$CFLAGS -fvisibility=hidden -DMM_DEBUG_FLAG -DSEPARATE_SPEAKER_AND_WIRED_ACCESSORY -DEXPORT_API=\"__attribute__((visibility(\\\"default\\\")))\""; export CFLAGS
+  CFLAGS="$CFLAGS -fvisibility=hidden -DSEPARATE_SPEAKER_AND_WIRED_ACCESSORY -DEXPORT_API=\"__attribute__((visibility(\\\"default\\\")))\""; export CFLAGS
   CFLAGS="$CFLAGS -DMURPHY"; export CFLAGS
   
   autotools_do_configure

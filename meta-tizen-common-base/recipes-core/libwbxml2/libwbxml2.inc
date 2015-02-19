@@ -3,6 +3,7 @@ HOMEPAGE = "http://libwbxml.opensync.org/"
 SECTION = "System/Libraries"
 LICENSE = "LGPL-2.1+"
 PV = "0.11.2"
+PR = "1"
 
 SRC_URI = ""
 
@@ -67,9 +68,9 @@ do_compile() {
  unset DISPLAY
  LD_AS_NEEDED=1; export LD_AS_NEEDED ;
  
- mkdir build
- CURDIR=$(pwd)
- cd build
+ #mkdir -p build
+ #CURDIR=$(pwd)
+ #cd build
  CFLAGS="$CFLAGS" \
  CXXFLAGS="$CFLAGS" \
  
@@ -86,10 +87,9 @@ do_compile() {
          -DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain.cmake \
          ${EXTRA_OECMAKE} \
          -DCMAKE_BUILD_TYPE=None \
-         -DENABLE_INSTALL_DOC:BOOL=OFF \
-          ${WORKDIR}/libwbxml-0.11.2
- oe_runmake VERBOSE=1
- cd ${CURDIR}
+         -DENABLE_INSTALL_DOC:BOOL=OFF
+ oe_runmake ${PARALLEL_MAKE} VERBOSE=1
+ #cd ${CURDIR}
  
  
  
@@ -104,8 +104,8 @@ do_install() {
  rm -rf ${D}
  mkdir -p ${D}
  
- CURDIR=$(pwd)
- cd build
+ #CURDIR=$(pwd)
+ #cd build
  
    oe_runmake \
          DESTDIR=${D} \
@@ -115,7 +115,8 @@ do_install() {
    rm -f ${D}${infodir}/dir 
    find ${D} -regex ".*\.la$" | xargs rm -f -- 
    find ${D} -regex ".*\.a$" | xargs rm -f --
- cd ${CURDIR}
+   mkdir -p ${prefix}/share/cmake-2.8/Modules/
+ #cd ${CURDIR}
  
  
 }
@@ -150,7 +151,7 @@ libwbxml2-dev_files = ""
 libwbxml2-dev_files += "${prefix}/lib/pkgconfig/libwbxml2.pc"
 libwbxml2-dev_files += "${prefix}/lib/libwbxml2.so"
 libwbxml2-dev_files += "${prefix}/include/libwbxml-1.0/wbxml"
-libwbxml2-dev_files += "${prefix}/share/cmake/Modules/FindLibWbxml2.cmake"
+libwbxml2-dev_files += "${prefix}/share/cmake-2.8/Modules/FindLibWbxml2.cmake"
 libwbxml2-dev_files += "${prefix}/include/wbxml_config.h"
 MANIFESTFILES_${PN}-dev = "libwbxml2.manifest"
 

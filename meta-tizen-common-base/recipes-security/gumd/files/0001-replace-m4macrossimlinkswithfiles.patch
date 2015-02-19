@@ -1,0 +1,72 @@
+From b24c54efb5817af42b966901b03c5c01f104ab06 Mon Sep 17 00:00:00 2001
+From: Xavier Roche <xavrock.os@gmail.com>
+Date: Fri, 13 Mar 2015 10:30:21 +0100
+Subject: [PATCH] replace m4 macros simlinks with files
+
+Signed-off-by: Xavier Roche <xavrock.os@gmail.com>
+---
+ m4/gtk-doc.m4     | 1 -
+ m4/libtool.m4     | 1 -
+ m4/ltoptions.m4   | 1 -
+ m4/ltsugar.m4     | 1 -
+ m4/ltversion.m4   | 1 -
+ m4/lt~obsolete.m4 | 1 -
+ 6 files changed, 6 deletions(-)
+ delete mode 120000 m4/gtk-doc.m4
+ delete mode 120000 m4/libtool.m4
+ delete mode 120000 m4/ltoptions.m4
+ delete mode 120000 m4/ltsugar.m4
+ delete mode 120000 m4/ltversion.m4
+ delete mode 120000 m4/lt~obsolete.m4
+
+diff --git a/m4/gtk-doc.m4 b/m4/gtk-doc.m4
+deleted file mode 120000
+index d214c6a..0000000
+--- a/m4/gtk-doc.m4
++++ /dev/null
+@@ -1 +0,0 @@
+-/usr/share/aclocal/gtk-doc.m4
+\ No newline at end of file
+diff --git a/m4/libtool.m4 b/m4/libtool.m4
+deleted file mode 120000
+index f3504e9..0000000
+--- a/m4/libtool.m4
++++ /dev/null
+@@ -1 +0,0 @@
+-/usr/share/aclocal/libtool.m4
+\ No newline at end of file
+diff --git a/m4/ltoptions.m4 b/m4/ltoptions.m4
+deleted file mode 120000
+index b81279e..0000000
+--- a/m4/ltoptions.m4
++++ /dev/null
+@@ -1 +0,0 @@
+-/usr/share/aclocal/ltoptions.m4
+\ No newline at end of file
+diff --git a/m4/ltsugar.m4 b/m4/ltsugar.m4
+deleted file mode 120000
+index 4d76cc7..0000000
+--- a/m4/ltsugar.m4
++++ /dev/null
+@@ -1 +0,0 @@
+-/usr/share/aclocal/ltsugar.m4
+\ No newline at end of file
+diff --git a/m4/ltversion.m4 b/m4/ltversion.m4
+deleted file mode 120000
+index 5eb474f..0000000
+--- a/m4/ltversion.m4
++++ /dev/null
+@@ -1 +0,0 @@
+-/usr/share/aclocal/ltversion.m4
+\ No newline at end of file
+diff --git a/m4/lt~obsolete.m4 b/m4/lt~obsolete.m4
+deleted file mode 120000
+index de0b9f9..0000000
+--- a/m4/lt~obsolete.m4
++++ /dev/null
+@@ -1 +0,0 @@
+-/usr/share/aclocal/lt~obsolete.m4
+\ No newline at end of file
+-- 
+1.9.1
+

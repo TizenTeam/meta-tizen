@@ -38,7 +38,6 @@ EXTRA_OECONF_class-native = " \
     --disable-audio \
     --with-x11=none \
     --disable-image-loader-bmp \
-    --disable-image-loader-eet \
     --disable-image-loader-generic \
     --disable-image-loader-gif \
     --disable-image-loader-ico \
@@ -53,7 +52,7 @@ EXTRA_OECONF_class-native = " \
     --disable-gstreamer \
     --disable-gstreamer1 \
     --disable-physics \
-    --enable-i-really-know-what-i-am-doing-and-that-this-will-probably-break-things-and-i-will-fix-them-myself-and-send-patches-aaa \
+    --enable-i-really-know-what-i-am-doing-and-that-this-will-probably-break-things-and-i-will-fix-them-myself-and-send-patches-aba \
     --enable-lua-old \
 "
 
@@ -72,6 +71,7 @@ do_install_prepend () {
         sed -i -e 's:-L${STAGING_LIBDIR}:-L\$\{libdir\}:g' -e 's:-I${STAGING_LIBDIR}:-I\$\{libdir\}:g' -e 's:-I${STAGING_INCDIR}:-I\$\{includedir\}:g' $i
     done
 }
+
 
 do_install_class-native() {
     echo export RPM_BUILD_ROOT=${D}
@@ -136,22 +136,38 @@ pkg_postinst_ecore() {
 
 }
 
-FILES_${PN}-dbg += "${prefix}/lib/eeze/modules/sensor/tizen/v-1.9/.debug"
-FILES_${PN}-dbg += "${prefix}/lib/eeze/modules/sensor/udev/v-1.9/.debug"
-FILES_${PN}-dbg += "${prefix}/lib/ecore_evas/engines/extn/v-1.9/.debug"
-FILES_${PN}-dbg += "${prefix}/lib/ecore_evas/engines/wayland/v-1.9/.debug"
-FILES_${PN}-dbg += "${prefix}/lib/ethumb/modules/emotion/v-1.9/.debug"
-FILES_${PN}-dbg += "${prefix}/lib/ethumb_client/utils/v-1.9/.debug"
-FILES_${PN}-dbg += "${prefix}/lib/edje/modules/emotion/v-1.9/.debug"
-FILES_${PN}-dbg += "${prefix}/lib/edje/utils/v-1.9/.debug"
-FILES_${PN}-dbg += "${prefix}/lib/emotion/modules/gstreamer1/v-1.9/.debug"
-FILES_${PN}-dbg += "${prefix}/lib/efreet/v-1.9/.debug"
-FILES_${PN}-dbg += "${prefix}/lib/evas/modules/savers/tiff/v-1.9/.debug"
-FILES_${PN}-dbg += "${prefix}/lib/evas/modules/loaders/tiff/v-1.9/.debug"
-FILES_${PN}-dbg += "${prefix}/lib/evas/modules/loaders/gif/v-1.9/.debug"
-FILES_${PN}-dbg += "${prefix}/lib/evas/modules/engines/wayland_shm/v-1.9/.debug"
-FILES_${PN}-dbg += "${prefix}/lib/evas/modules/engines/wayland_egl/v-1.9/.debug"
-FILES_${PN}-dbg += "${prefix}/lib/ecore_imf/modules/wayland/v-1.9/.debug"
-FILES_${PN}-dbg += "${prefix}/lib/ecore/system/systemd/v-1.9/.debug"
-FILES_${PN}-dbg += "${prefix}/lib/ecore/system/tizen/v-1.9/.debug"
-FILES_${PN}-dbg += "${prefix}/lib/evas/cserve2/bin/v-1.9/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/eeze/modules/sensor/tizen/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/eeze/modules/sensor/udev/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/eeze/modules/sensor/fake/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/eeze/modules/sensor/fake/v-1.12/.debug/module.so"
+FILES_${PN}-dbg += "${prefix}/lib/ecore_evas/engines/extn/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/ecore_evas/engines/wayland/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/ecore_evas/modules/engines/drm/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/ecore_evas/modules/engines/drm/v-1.12/.debug/module.so"
+FILES_${PN}-dbg += "${prefix}/lib/ecore_evas/modules/engines/fb/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/ecore_evas/modules/engines/fb/v-1.12/.debug/module.so"
+FILES_${PN}-dbg += "${prefix}/lib/ecore_evas/engines/drm/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/ecore_evas/engines/drm/v-1.12/.debug/module.so"
+FILES_${PN}-dbg += "${prefix}/lib/ecore_evas/engines/fb/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/ecore_evas/engines/fb/v-1.12/.debug/module.so"
+FILES_${PN}-dbg += "${prefix}/lib/ethumb/modules/emotion/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/ethumb_client/utils/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/edje/modules/emotion/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/edje/utils/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/emotion/modules/gstreamer1/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/efreet/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/evas/modules/savers/tiff/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/evas/modules/loaders/tiff/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/evas/modules/loaders/gif/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/evas/modules/engines/wayland_shm/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/evas/modules/engines/wayland_egl/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/evas/modules/engines/drm/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/evas/modules/engines/drm/v-1.12/.debug/module.so"
+FILES_${PN}-dbg += "${prefix}/lib/evas/modules/engines/fb/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/evas/modules/engines/fb/v-1.12/.debug/module.so"
+FILES_${PN}-dbg += "${prefix}/lib/evas/modules/engines/gl_generic/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/evas/modules/engines/gl_generic/v-1.12/.debug/module.so"
+FILES_${PN}-dbg += "${prefix}/lib/ecore_imf/modules/wayland/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/ecore/system/systemd/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/ecore/system/tizen/v-1.12/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/evas/cserve2/bin/v-1.12/.debug"

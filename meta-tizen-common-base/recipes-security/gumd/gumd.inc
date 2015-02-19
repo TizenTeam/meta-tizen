@@ -2,7 +2,7 @@ DESCRIPTION = "User management daemon and client library"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "Security/Accounts"
 LICENSE = "LGPL-2.1+"
-PV = "1.0.3"
+PV = "1.0.8"
 
 SRC_URI = ""
 
@@ -40,6 +40,7 @@ RDEPENDS_gum-utils += "libgum"
 RDEPENDS_${PN} += "dbus"
 RDEPENDS_${PN} += "libgum"
 RDEPENDS_${PN} += "glibc"
+RDEPENDS_${PN} += "tizen-platform-config"
 
 #RDEPENDS of libgum (libgum)
 RDEPENDS_libgum += "gumd"
@@ -82,14 +83,11 @@ do_compile() {
   unset DISPLAY
   LD_AS_NEEDED=1; export LD_AS_NEEDED ;
   
-  
+  autoreconf -ivf
   autotools_do_configure
   oe_runmake ${PARALLEL_MAKE}
-  
-  
-  
 }
-EXTRA_OECONF += " --enable-dbus-type=system"
+EXTRA_OECONF += " --enable-dbus-type=system --disable-tests"
 
 do_install() {
  export RPM_BUILD_ROOT=${D}
@@ -110,7 +108,7 @@ do_install() {
    rm -f ${D}${infodir}/dir 
    find ${D} -regex ".*\.la$" | xargs rm -f -- 
    find ${D} -regex ".*\.a$" | xargs rm -f --
- cp -a ${S}/packaging/gumd-tizen.conf ${D}${sysconfdir}/gumd/gumd.conf
+   cp -a ${S}/data/tizen/etc/gumd/gumd-tizen-common.conf ${D}${sysconfdir}/gumd/gumd.conf
  
  
 }

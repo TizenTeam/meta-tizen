@@ -2,7 +2,7 @@ DESCRIPTION = "Sound Manager library"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "Multimedia/API"
 LICENSE = "Apache-2.0"
-PV = "0.1.1"
+PV = "0.2.27"
 
 SRC_URI = ""
 
@@ -23,6 +23,7 @@ PROVIDES += "capi-media-sound-manager-dev"
 RDEPENDS = ""
 #RDEPENDS of capi-media-sound-manager-dev (${PN}-dev)
 RDEPENDS_${PN}-dev += "capi-media-sound-manager"
+RDEPENDS_${PN} += "libprivilege-control"
 
 
 DEPENDS = ""
@@ -33,6 +34,7 @@ inherit pkgconfig
 DEPENDS += "dlog"
 DEPENDS += "capi-base-common"
 DEPENDS += "libmm-session"
+DEPENDS += "vconf"
 
 do_prep() {
  cd ${S}
@@ -56,7 +58,7 @@ do_compile() {
  unset DISPLAY
  LD_AS_NEEDED=1; export LD_AS_NEEDED ;
  
- MAJORVER=`echo 0.1.1 | awk 'BEGIN {FS="."}{print $1}'`
+ MAJORVER=`echo 0.2.27 | awk 'BEGIN {FS="."}{print $1}'`
  
    cmake \
          -DCMAKE_VERBOSE_MAKEFILE=ON \
@@ -102,6 +104,7 @@ pkg_postinst_${PN}() {
     #!/bin/sh -e
 
     [ "x$D" == "x" ] && ldconfig
+    /usr/bin/api_feature_loader --verbose --dir=/usr/share/privilege-control
 }
 
 pkg_postrm_${PN}() {
@@ -115,13 +118,15 @@ PACKAGES += " capi-media-sound-manager-dev "
 PACKAGES += " capi-media-sound-manager "
 
 capi-media-sound-manager-dev_files = ""
-capi-media-sound-manager-dev_files += "${prefix}/include/media/sound_manager.h"
+capi-media-sound-manager-dev_files += "${prefix}/include/media/*.h"
 capi-media-sound-manager-dev_files += "${prefix}/lib/pkgconfig/*.pc"
 capi-media-sound-manager-dev_files += "${prefix}/lib/libcapi-media-sound-manager.so"
 MANIFESTFILES_${PN}-dev = "capi-media-sound-manager.manifest"
 
 capi-media-sound-manager_files = ""
 capi-media-sound-manager_files += "${prefix}/lib/libcapi-media-sound-manager.so.*"
+capi-media-sound-manager_files += "${prefix}/share/license/capi-media-sound-manager"
+capi-media-sound-manager_files += "/opt/usr/devel/*"
 MANIFESTFILES_${PN} = "capi-media-sound-manager.manifest"
 
 FILES_${PN}-dev = "${capi-media-sound-manager-dev_files}"

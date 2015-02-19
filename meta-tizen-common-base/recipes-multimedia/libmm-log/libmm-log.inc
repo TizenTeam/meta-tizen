@@ -2,7 +2,8 @@ DESCRIPTION = "Multimedia Framework LOG Lib"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "Multimedia/Multimedia Framework"
 LICENSE = "Apache-2.0"
-PV = "0.1.5"
+PV = "0.1.9"
+PR = "17"
 
 SRC_URI = ""
 
@@ -30,8 +31,8 @@ DEPENDS += "dlog"
 do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
- #setup -q -n libmm-log-0.1.5
- cp ${S}/packaging/libmm-log.manifest .
+ #setup -q -n libmm-log-0.1.9
+ #cp ${S}/packaging/libmm-log.manifest .
  
  
 }
@@ -58,7 +59,7 @@ do_compile() {
   
   
 }
-EXTRA_OECONF += " --disable-static --enable-dlog"
+EXTRA_OECONF += " --disable-static --enable-dlog --enable-engineer_mode"
 
 do_install() {
  export RPM_BUILD_ROOT=${D}
@@ -88,7 +89,7 @@ PACKAGES += " libmm-log-dev "
 libmm-log-dev_files = ""
 libmm-log-dev_files += "${prefix}/include/mm_log/mm_log.h"
 libmm-log-dev_files += "${prefix}/lib/pkgconfig/mm-log.pc"
-MANIFESTFILES_${PN}-dev = "libmm-log.manifest"
+#MANIFESTFILES_${PN}-dev = "libmm-log.manifest"
 
 FILES_${PN}-dev = "${libmm-log-dev_files}"
 

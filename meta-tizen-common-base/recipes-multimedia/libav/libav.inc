@@ -2,7 +2,7 @@ DESCRIPTION = "AV codec lib"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "Multimedia/Codec"
 LICENSE = "LGPL-2.1+"
-PV = "9.8"
+PV = "11"
 
 SRC_URI = ""
 
@@ -61,6 +61,7 @@ PROVIDES += "libavformat-dev"
 
 
 RDEPENDS = ""
+DEPENDS += "libbz2"
 #RDEPENDS of libavfilter-dev (${PN}filter-dev)
 RDEPENDS_${PN}filter-dev += "libavfilter"
 
@@ -83,7 +84,6 @@ do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
  #setup -q
- cp ${S}/packaging/libav.manifest .
  
  
 }
@@ -173,11 +173,11 @@ do_install() {
    find ${D} -regex ".*\.la$" | xargs rm -f -- 
    find ${D} -regex ".*\.a$" | xargs rm -f --
  mkdir -p ${D}${prefix}/share/license
- cp -rf ${WORKDIR}/libav-9.8/COPYING.LGPLv2.1 ${D}${prefix}/share/license/libavcodec
- cp -rf ${WORKDIR}/libav-9.8/COPYING.LGPLv2.1 ${D}${prefix}/share/license/libavformat
- cp -rf ${WORKDIR}/libav-9.8/COPYING.LGPLv2.1 ${D}${prefix}/share/license/libavutil
- cp -rf ${WORKDIR}/libav-9.8/COPYING.LGPLv2.1 ${D}${prefix}/share/license/libavfilter
- cp -rf ${WORKDIR}/libav-9.8/COPYING.LGPLv2.1 ${D}${prefix}/share/license/libswscale
+ cp -rf ${WORKDIR}/libav-11/COPYING.LGPLv2.1 ${D}${prefix}/share/license/libavcodec
+ cp -rf ${WORKDIR}/libav-11/COPYING.LGPLv2.1 ${D}${prefix}/share/license/libavformat
+ cp -rf ${WORKDIR}/libav-11/COPYING.LGPLv2.1 ${D}${prefix}/share/license/libavutil
+ cp -rf ${WORKDIR}/libav-11/COPYING.LGPLv2.1 ${D}${prefix}/share/license/libavfilter
+ cp -rf ${WORKDIR}/libav-11/COPYING.LGPLv2.1 ${D}${prefix}/share/license/libswscale
  
  
 }
@@ -270,62 +270,51 @@ PACKAGES += " libavformat-dev "
 libavutil_files = ""
 libavutil_files += "${prefix}/lib/libavutil.so.*"
 libavutil_files += "${prefix}/share/license/libavutil"
-MANIFESTFILES_${PN}util = "libav.manifest"
 
 libavfilter-dev_files = ""
 libavfilter-dev_files += "${prefix}/include/libavfilter/*"
 libavfilter-dev_files += "${prefix}/lib/libavfilter.so"
 libavfilter-dev_files += "${prefix}/lib/pkgconfig/libavfilter.pc"
-MANIFESTFILES_${PN}filter-dev = "libav.manifest"
 
 libavformat_files = ""
 libavformat_files += "${prefix}/lib/libavformat.so.*"
 libavformat_files += "${prefix}/share/license/libavformat"
-MANIFESTFILES_${PN}format = "libav.manifest"
 
 libavtools_files = ""
 libavtools_files += "${prefix}/bin/av*"
 libavtools_files += "${prefix}/share/avconv/*.avpreset"
-MANIFESTFILES_${PN}tools = "libav.manifest"
 
 libavcodec_files = ""
 libavcodec_files += "${prefix}/lib/libavcodec.so.*"
 libavcodec_files += "${prefix}/share/license/libavcodec"
-MANIFESTFILES_${PN}codec = "libav.manifest"
 
 libavfilter_files = ""
 libavfilter_files += "${prefix}/lib/libavfilter.so.*"
 libavfilter_files += "${prefix}/share/license/libavfilter"
-MANIFESTFILES_${PN}filter = "libav.manifest"
 
 libswscale-dev_files = ""
 libswscale-dev_files += "${prefix}/include/libswscale/*"
 libswscale-dev_files += "${prefix}/lib/libswscale.so"
 libswscale-dev_files += "${prefix}/lib/pkgconfig/libswscale.pc"
-MANIFESTFILES_libswscale-dev = "libav.manifest"
 
 libavcodec-dev_files = ""
 libavcodec-dev_files += "${prefix}/include/libavcodec/*"
 libavcodec-dev_files += "${prefix}/lib/libavcodec.so"
 libavcodec-dev_files += "${prefix}/lib/pkgconfig/libavcodec.pc"
-MANIFESTFILES_${PN}codec-dev = "libav.manifest"
 
 libavutil-dev_files = ""
 libavutil-dev_files += "${prefix}/include/libavutil/*"
 libavutil-dev_files += "${prefix}/lib/libavutil.so"
 libavutil-dev_files += "${prefix}/lib/pkgconfig/libavutil.pc"
-MANIFESTFILES_${PN}util-dev = "libav.manifest"
 
 libswscale_files = ""
 libswscale_files += "${prefix}/lib/libswscale.so.*"
 libswscale_files += "${prefix}/share/license/libswscale"
-MANIFESTFILES_libswscale = "libav.manifest"
 
 libavformat-dev_files = ""
 libavformat-dev_files += "${prefix}/include/libavformat/*"
 libavformat-dev_files += "${prefix}/lib/libavformat.so"
 libavformat-dev_files += "${prefix}/lib/pkgconfig/libavformat.pc"
-MANIFESTFILES_${PN}format-dev = "libav.manifest"
 
 FILES_${PN}util = "${libavutil_files}"
 FILES_${PN}filter-dev = "${libavfilter-dev_files}"

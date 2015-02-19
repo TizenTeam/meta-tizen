@@ -42,7 +42,7 @@ DEPENDS += "avsystem"
 DEPENDS += "libmm-common"
 inherit pkgconfig
 DEPENDS += "glib-2.0"
-DEPENDS += "system-server"
+DEPENDS += "deviced"
 DEPENDS += "security-server"
 DEPENDS += "vconf"
 

@@ -3,6 +3,7 @@ HOMEPAGE = "http://nohomepage.org"
 SECTION = "Social & Contents/Pim"
 LICENSE = "Apache-2.0"
 PV = "0.10.3"
+PR = "1"
 
 SRC_URI = ""
 

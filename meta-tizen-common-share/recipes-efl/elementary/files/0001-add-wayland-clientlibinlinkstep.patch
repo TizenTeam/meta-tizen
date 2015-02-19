@@ -1,0 +1,27 @@
+From 99fe0de5b3afd3fdb074f07bfa9bbb69dfb358f5 Mon Sep 17 00:00:00 2001
+From: Xavier Roche <xavrock.os@gmail.com>
+Date: Thu, 12 Mar 2015 14:02:34 +0100
+Subject: [PATCH] add wayland-client lib in link step
+
+Signed-off-by: Xavier Roche <xavrock.os@gmail.com>
+---
+ src/lib/Makefile.am | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/lib/Makefile.am b/src/lib/Makefile.am
+index 5bbe572..c9d82d3 100644
+--- a/src/lib/Makefile.am
++++ b/src/lib/Makefile.am
+@@ -503,7 +503,8 @@ elu_ews_wm.c
+ libelementary_la_CFLAGS = @ELEMENTARY_CFLAGS@
+ libelementary_la_LIBADD = \
+ @ELEMENTARY_LIBS@ \
+-@LTLIBINTL@
++@LTLIBINTL@ \
++-lwayland-client
+ 
+ libelementary_la_LDFLAGS = @EFL_LTLIBRARY_FLAGS@
+ 
+-- 
+1.9.1
+

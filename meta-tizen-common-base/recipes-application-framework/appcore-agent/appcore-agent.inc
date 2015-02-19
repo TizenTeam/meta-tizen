@@ -31,7 +31,7 @@ inherit tizen_cmake
 inherit pkgconfig
 DEPENDS += "dlog"
 DEPENDS += "capi-appfw-application"
-DEPENDS += "system-server"
+DEPENDS += "deviced"
 DEPENDS += "aul"
 DEPENDS += "glib-2.0"
 DEPENDS += "vconf"

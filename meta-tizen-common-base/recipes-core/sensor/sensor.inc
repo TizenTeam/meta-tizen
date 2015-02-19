@@ -76,6 +76,8 @@ do_compile() {
  
 }
 
+EXTRA_OECMAKE = "-DCMAKE_INSTALL_LIBDIR=${prefix}/lib"
+
 do_install() {
  export RPM_BUILD_ROOT=${D}
  cd ${S}
@@ -90,6 +92,7 @@ do_install() {
          DESTDIR=${D} \
          INSTALL_ROOT=${D} \
          BINDIR=${prefix}/bin \
+         LIBDIR=${prefix}/lib \
    install  
    rm -f ${D}${infodir}/dir 
    find ${D} -regex ".*\.la$" | xargs rm -f -- 

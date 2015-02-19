@@ -49,21 +49,35 @@ DEPENDS += "efl"
 DEPENDS += "evas"
 DEPENDS += "ecore"
 DEPENDS += "emotion"
+DEPENDS += "eolian-dev"
+DEPENDS += "eet-tools"
 
 do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
  #setup -q
  cp ${S}/packaging/elementary.manifest .
- 
+ touch ./ABOUT-NLS
  
 }
 do_patch_append() {
     bb.build.exec_func('do_prep', d)
 }
 
+
 do_configure() {
+  cd ${S}
+  LANG=C
+  export LANG
+  unset DISPLAY
+  LD_AS_NEEDED=1; export LD_AS_NEEDED ;
+  CPPFLAGS="${CPPFLAGS} -I${STAGING_DIR_HOST}${prefix}"
+  CFLAGS="${CFLAGS} -I${STAGING_DIR_HOST}${prefix}"
+  
+  autotools_do_configure sysroot_native=${STAGING_DIR_NATIVE}
+  
 }
+
 
 do_compile() {
  cd ${S}
@@ -71,18 +85,21 @@ do_compile() {
   export LANG
   unset DISPLAY
   LD_AS_NEEDED=1; export LD_AS_NEEDED ;
-  
-  
-  
-   
-  autotools_do_configure
+  CPPFLAGS="${CPPFLAGS} -I${STAGING_DIR_HOST}${prefix}"
+  CFLAGS="${CFLAGS} -I${STAGING_DIR_HOST}${prefix}"
   
   oe_runmake
   
-  
-  
 }
-EXTRA_OECONF += " --disable-static --enable-ecore-wayland --disable-ecore-x --disable-build-examples"
+EXTRA_OECONF += " --disable-static --enable-ecore-wayland --disable-ecore-x --disable-build-examples \
+					--with-edje-cc=${STAGING_BINDIR_NATIVE}/edje_cc \
+					--with-eet-eet=${STAGING_BINDIR_NATIVE}/eet \
+					--with-elementary-codegen=${STAGING_BINDIR_NATIVE}/elementary_codegen \
+					--with-elm-prefs-cc=${STAGING_BINDIR_NATIVE}/elm_prefs_cc \
+					--with-eolian-gen=${STAGING_BINDIR_NATIVE}/eolian_gen \
+					--with-eolian-cxx=${STAGING_BINDIR_NATIVE}/eolian_cxx \
+					--with-sysroot-native=${STAGING_DIR_NATIVE} \
+				"
 
 do_install() {
  export RPM_BUILD_ROOT=${D}
@@ -98,6 +115,7 @@ do_install() {
          DESTDIR=${D} \
          INSTALL_ROOT=${D} \
          BINDIR=${prefix}/bin \
+         SYSROOTDIR=${STAGING_DIR_NATIVE} \
    install  
    rm -f ${D}${infodir}/dir 
    find ${D} -regex ".*\.la$" | xargs rm -f -- 

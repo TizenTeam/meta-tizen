@@ -1,7 +1,22 @@
---- a/CMakeLists.txt	2014-06-11 15:33:14.110487872 +0200
-+++ b/CMakeLists.txt	2014-06-11 15:32:42.708486993 +0200
+From 06603e36814048699fffa04133bd18a49657dfb8 Mon Sep 17 00:00:00 2001
+From: Xavier Roche <xavrock.os@gmail.com>
+Date: Thu, 19 Feb 2015 18:46:30 +0100
+Subject: [PATCH] add version to CmakeLists
+
+Signed-off-by: Xavier Roche <xavrock.os@gmail.com>
+---
+ CMakeLists.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1da5d7e..2e98ca0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
 @@ -1,3 +1,4 @@
-+SET(VERSION "0.1.17")
- 
++SET(VERSION "0.1.0")
  CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
- SET(fw_name "capi-system-sensor")
+ PROJECT(capi-system-sensor)
+ 
+-- 
+1.9.1
+

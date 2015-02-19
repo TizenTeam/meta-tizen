@@ -8,7 +8,7 @@ SRC_URI = ""
 
 S = "${WORKDIR}/git"
 
-inherit manifest autotools-brokensep
+inherit manifest cmake
 
 BBCLASSEXTEND = ""
 PROVIDES = ""
@@ -30,12 +30,11 @@ RDEPENDS_${PN} += "glibc"
 
 DEPENDS = ""
 #DEPENDS of capi-system-sensor
-DEPENDS += "sensor"
+DEPENDS += "sensord"
 inherit tizen_cmake
 inherit pkgconfig
 DEPENDS += "dlog"
 DEPENDS += "capi-base-common"
-DEPENDS += "libsf-common"
 
 do_prep() {
  cd ${S}
@@ -73,7 +72,7 @@ do_compile() {
          -DBUILD_SHARED_LIBS:BOOL=ON \
          -DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain.cmake \
          ${EXTRA_OECMAKE} . -DFULLVER=0.1.0 -DMAJORVER=${MAJORVER}
- oe_runmake -j1
+ oe_runmake
  
  
  
@@ -122,6 +121,7 @@ capi-system-sensor-dev_files = ""
 capi-system-sensor-dev_files += "${prefix}/lib/libcapi-system-sensor.so"
 capi-system-sensor-dev_files += "${prefix}/lib/pkgconfig/*.pc"
 capi-system-sensor-dev_files += "${prefix}/include/sensor/*.h"
+capi-system-sensor-dev_files += "${prefix}/include/system/sensors.h"
 MANIFESTFILES_${PN}-dev = "capi-system-sensor.manifest"
 
 capi-system-sensor_files = ""

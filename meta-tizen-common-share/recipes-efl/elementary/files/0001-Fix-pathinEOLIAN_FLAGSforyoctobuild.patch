@@ -1,0 +1,41 @@
+From e8c91961ada189601ea7ac73397609ba542924f7 Mon Sep 17 00:00:00 2001
+From: Xavier Roche <xavrock.os@gmail.com>
+Date: Thu, 12 Mar 2015 11:27:11 +0100
+Subject: [PATCH] Fix path in eolian sysroot
+
+Signed-off-by: Xavier Roche <xavrock.os@gmail.com>
+---
+ configure.ac | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index 67057a6..df11e49 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -54,6 +54,13 @@ AC_ARG_WITH([elementary-base-dir],
+ AC_MSG_NOTICE([ELEMENTARY_BASE_DIR set to ${elementary_base_dir}])
+ AC_DEFINE_UNQUOTED([ELEMENTARY_BASE_DIR], ["${elementary_base_dir}"], ["subdirectory for all elementary data"])
+ 
++# Yocto : adding sysroot-native dir
++
++AC_ARG_WITH([sysroot-native],
++   [AS_HELP_STRING([--with-sysroot-native=PATH], [specify the sysroot-native dir @<:@default=""@:>@])],
++   [sysroot_native=${withval}],
++   [sysroot_native=""])
++
+ # Build and install examples
+ 
+ EFL_CHECK_BUILD_EXAMPLES(
+@@ -273,7 +280,8 @@ AC_DEFINE_UNQUOTED([MODULE_EDJE], ["$MODULE_EDJE"], ["Edje module architecture"]
+ 
+ # Needs to be moved into a macro, and also, needs a way to automatically fetch
+ # from all the dependencies using the Requires.
+-DEPS_EOLIAN_FLAGS=`${PKG_CONFIG} --variable=eolian_flags eo evas edje ecore efl`
++
++DEPS_EOLIAN_FLAGS="-I${sysroot_native}/usr/share/eolian/include/eo-1 -I${sysroot_native}/usr/share/eolian/include/evas-1 -I${sysroot_native}/usr/share/eolian/include/edje-1 -I${sysroot_native}/usr/share/eolian/include/ecore-1 -I${sysroot_native}/usr/share/eolian/include/efl-1"
+ AC_SUBST([DEPS_EOLIAN_FLAGS])
+ 
+ requirement_elm_libs="-lm"
+-- 
+1.9.1
+

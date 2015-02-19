@@ -1,0 +1,25 @@
+From 28a4d35e905e9e6a11972b03b090e02ec5bacd92 Mon Sep 17 00:00:00 2001
+From: Xavier Roche <xavrock.os@gmail.com>
+Date: Fri, 20 Feb 2015 10:50:18 +0100
+Subject: [PATCH] remove linker flags
+
+Signed-off-by: Xavier Roche <xavrock.os@gmail.com>
+---
+ CMakeLists.txt | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index affaa30..ad539ca 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -12,7 +12,6 @@ SET(VERSION 1.0)
+ # Common Options
+ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O2 -omit-frame-pointer -std=gnu++0x")
+ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdata-sections -ffunction-sections")
+-SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--gc-section -Wl,--print-gc-section")
+ MESSAGE("FLAGS: ${CMAKE_CXX_FLAGS}")
+ MESSAGE("FLAGS: ${CMAKE_EXE_LINKER_FLAGS}")
+ 
+-- 
+1.9.1
+

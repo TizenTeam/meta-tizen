@@ -2,7 +2,7 @@ DESCRIPTION = "A wav player library in Tizen C API"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "Multimedia/API"
 LICENSE = "Apache-2.0"
-PV = "0.1.0"
+PV = "0.1.1"
 
 SRC_URI = ""
 
