@@ -57,6 +57,7 @@ DEPENDS += "media-server"
 DEPENDS += "heynoti"
 DEPENDS += "vconf"
 DEPENDS += "gdk-pixbuf"
+DEPENDS += "smack"
 
 do_prep() {
  cd ${S}

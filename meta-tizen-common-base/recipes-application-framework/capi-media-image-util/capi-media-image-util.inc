@@ -30,8 +30,6 @@ RDEPENDS_${PN}-dev += "capi-base-common"
 
 
 DEPENDS = ""
-#DEPENDS of capi-media-image-util
-DEPENDS += "pkgconfig(capi-media-tool)"
 inherit tizen_cmake
 #Replace "DEPENDS" on gettext by "inherit gettext"
 inherit gettext

@@ -1,0 +1,28 @@
+From a92e5f671cef4b144d423633f2cb62c4d587eb02 Mon Sep 17 00:00:00 2001
+From: Xavier Roche <xavrock.os@gmail.com>
+Date: Thu, 19 Feb 2015 16:33:53 +0100
+Subject: [PATCH] Deactivate out-of-source build
+
+Signed-off-by: Xavier Roche <xavrock.os@gmail.com>
+---
+ CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 96bbf63..aed30e0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -72,8 +72,8 @@ CHECK_INCLUDE_FILES( stdarg.h HAVE_STDARG_H )
+ CHECK_INCLUDE_FILES( assert.h HAVE_ASSERT_H )
+ 
+ # ensure out od source build
+-INCLUDE( MacroEnsureOutOfSourceBuild )
+-MACRO_ENSURE_OUT_OF_SOURCE_BUILD("${CMAKE_PROJECT_NAME} doesn't allow to build within the source directory. Please, create a seperate build directory and run 'cmake ${PROJECT_SOURCE_DIR} [options]'!")
++#INCLUDE( MacroEnsureOutOfSourceBuild )
++#MACRO_ENSURE_OUT_OF_SOURCE_BUILD("${CMAKE_PROJECT_NAME} doesn't allow to build within the source directory. Please, create a seperate build directory and run 'cmake ${PROJECT_SOURCE_DIR} [options]'!")
+ 
+ # FIXME: popt is embedded into the source code
+ # popt is not used
+-- 
+1.9.1
+

@@ -122,6 +122,7 @@ capi-system-sensor-dev_files = ""
 capi-system-sensor-dev_files += "${prefix}/lib/libcapi-system-sensor.so"
 capi-system-sensor-dev_files += "${prefix}/lib/pkgconfig/*.pc"
 capi-system-sensor-dev_files += "${prefix}/include/sensor/*.h"
+capi-system-sensor-dev_files += "${prefix}/include/system/sensors.h"
 MANIFESTFILES_${PN}-dev = "capi-system-sensor.manifest"
 
 capi-system-sensor_files = ""

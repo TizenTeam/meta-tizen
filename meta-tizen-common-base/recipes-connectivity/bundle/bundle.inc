@@ -123,6 +123,7 @@ MANIFESTFILES_${PN}-dev = "bundle.manifest"
 
 bundle_files = ""
 bundle_files += "${prefix}/lib/libbundle.so.*"
+bundle_files += "${prefix}/share/license"
 MANIFESTFILES_${PN} = "bundle.manifest"
 
 FILES_${PN}-dev = "${bundle-dev_files}"

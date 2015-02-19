@@ -1,0 +1,24 @@
+From b378a9fd0710ab23c168f42bb7a576ab32f64fed Mon Sep 17 00:00:00 2001
+From: Xavier Roche <xavrock.os@gmail.com>
+Date: Thu, 19 Feb 2015 16:41:29 +0100
+Subject: [PATCH] Fix Find[PKG].cmake macro install
+
+Signed-off-by: Xavier Roche <xavrock.os@gmail.com>
+---
+ cmake/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index f2c136b..a2c340c 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ 
+ SET( LIBWBXML_CMAKE_MODULE "${CMAKE_CURRENT_SOURCE_DIR}/modules/FindLibWbxml2.cmake" )
+ 
+-INSTALL( FILES ${LIBWBXML_CMAKE_MODULE} DESTINATION ${CMAKE_ROOT}/Modules/ )
++INSTALL( FILES ${LIBWBXML_CMAKE_MODULE} DESTINATION /usr/share/cmake-2.8/Modules/ )
+ 
+-- 
+1.9.1
+

@@ -2,7 +2,7 @@ DESCRIPTION = "Login manager for Tizen"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "System/Service"
 LICENSE = "LGPL-2.1+"
-PV = "1.0.1"
+PV = "1.0.3"
 
 SRC_URI = ""
 
@@ -43,6 +43,7 @@ RDEPENDS_${PN} += "libsystemd"
 RDEPENDS_${PN} += "glibc"
 RDEPENDS_${PN} += "systemd"
 RDEPENDS_${PN} += "gumd"
+RDEPENDS_${PN} += "elementary"
 
 #RDEPENDS of tlm-doc (${PN}-doc)
 RDEPENDS_${PN}-doc += "tlm"
@@ -58,7 +59,7 @@ DEPENDS += "glib-2.0"
 do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
- #setup -q -n tlm-1.0.1
+ #setup -q -n tlm-1.0.3
  cp ${S}/packaging/tlm.manifest .
  
  
@@ -183,6 +184,7 @@ tlm_files += "${prefix}/bin/tlm"
 tlm_files += "${prefix}/bin/tlm-sessiond"
 tlm_files += "${prefix}/bin/tlm-client"
 tlm_files += "${prefix}/bin/tlm-weston-launch"
+tlm_files += "${prefix}/bin/tlm-launcher"
 tlm_files += "${prefix}/lib/libtlm*.so.*"
 tlm_files += "${prefix}/lib/tlm/plugins/*.so*"
 tlm_files += "${systemd_unitdir}/system/tlm.service"

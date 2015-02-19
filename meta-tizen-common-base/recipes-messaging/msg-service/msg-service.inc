@@ -3,6 +3,7 @@ HOMEPAGE = "http://nohomepage.org"
 SECTION = "System/Libraries"
 LICENSE = "Apache-2.0"
 PV = "0.9.4"
+PR = "1"
 
 SRC_URI = ""
 
@@ -255,6 +256,7 @@ msg-service-tools_files += "${prefix}/lib/systemd/user/tizen-middleware.target.w
 msg-service-tools_files += "${prefix}/lib/systemd/user/tizen-middleware.target.wants/msg-service-log.service"
 msg-service-tools_files += "${sysconfdir}/config/sysinfo-message.xml"
 msg-service-tools_files += "/var/log/msgfw"
+msg-service-tools_files += "/var/volatile/log/msgfw"
 MANIFESTFILES_${PN}-tools = "msg-service-tools.manifest"
 
 sms-plugin_files = ""
