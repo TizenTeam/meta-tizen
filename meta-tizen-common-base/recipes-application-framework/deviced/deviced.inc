@@ -8,7 +8,7 @@ SRC_URI = ""
 
 S = "${WORKDIR}/git"
 
-inherit manifest autotools-brokensep
+inherit manifest cmake
 
 BBCLASSEXTEND = ""
 PROVIDES = ""
@@ -131,7 +131,7 @@ DEPENDS += "libdevice-node"
 DEPENDS += "systemd"
 DEPENDS += "dlog"
 DEPENDS += "ecore"
-DEPENDS += "sensor"
+DEPENDS += "sensord"
 DEPENDS += "vconf"
 DEPENDS += "dbus-glib"
 DEPENDS += "capi-base-common"
@@ -154,15 +154,16 @@ do_prep() {
          -DCMAKE_SKIP_RPATH:BOOL=ON \
          -DBUILD_SHARED_LIBS:BOOL=ON \
          -DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain.cmake \
-         ${EXTRA_OECMAKE} . \
- 	-DTZ_SYS_ETC=${sysconfdir} \
- 	-DCMAKE_INSTALL_PREFIX=${prefix} \
- 	-DARCH=emulator \
- 	-DTIZEN_DISPLAY:BOOL=ON \
+ 	     -DTZ_SYS_ETC=${sysconfdir} \
+ 	     -DCMAKE_INSTALL_PREFIX=${prefix} \
+ 	     -DARCH=emulator \
+ 	     -DTIZEN_DISPLAY:BOOL=ON \
+         ${EXTRA_OECMAKE} . 
  	#eol
  
  
 }
+
 do_patch_append() {
     bb.build.exec_func('do_prep', d)
 }
@@ -183,7 +184,7 @@ do_compile() {
  cp ${S}/packaging/libslp-pm.manifest .
  cp ${S}/packaging/haptic.manifest .
  cp ${S}/packaging/devman.manifest .
- make -j16
+ oe_runmake ${PARALLEL_MAKE}
  
  
  
@@ -407,6 +408,14 @@ deviced_files += "${systemd_unitdir}/system/deviced-pre.service"
 deviced_files += "${systemd_unitdir}/system/zbooting-done.service"
 deviced_files += "${systemd_unitdir}/system/devicectl-start@.service"
 deviced_files += "${systemd_unitdir}/system/devicectl-stop@.service"
+
+deviced_files += "${prefix}/lib/systemd/system/deviced-pre.service"
+deviced_files += "${prefix}/lib/systemd/system/zbooting-done.service"
+deviced_files += "${prefix}/lib/systemd/system/devicectl-stop@.service"
+deviced_files += "${prefix}/lib/systemd/system/devicectl-start@.service"
+deviced_files += "${prefix}/lib/systemd/system/deviced.socket"
+deviced_files += "${prefix}/lib/systemd/system/deviced.service"
+
 CONFFILES_${PN} = ""
 CONFFILES_${PN} += "${sysconfdir}/dbus-1/system.d/deviced.conf"
 MANIFESTFILES_${PN} = "deviced.manifest"

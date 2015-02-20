@@ -1,0 +1,32 @@
+From 2cac1aa62f6983f12fc74a29bf72bfb528ceb798 Mon Sep 17 00:00:00 2001
+From: Xavier Roche <xavrock.os@gmail.com>
+Date: Fri, 20 Feb 2015 14:34:42 +0100
+Subject: [PATCH] fix uncatched enum
+
+Signed-off-by: Xavier Roche <xavrock.os@gmail.com>
+---
+ src/power.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/src/power.c b/src/power.c
+index 8fc1831..c5d9390 100644
+--- a/src/power.c
++++ b/src/power.c
+@@ -59,6 +59,14 @@
+ #define STR_LCD_DIM   "lcddim"
+ #define STR_LCD_ON    "lcdon"
+ 
++typedef enum
++{
++    POWER_LOCK_CPU,         /**< CPU lock */
++    POWER_LOCK_DISPLAY,     /**< Display normal lock */
++    POWER_LOCK_DISPLAY_DIM, /**< Display dim lock */
++} power_lock_e;
++
++
+ static char *get_state_str(display_state_e state)
+ {
+ 	switch (state) {
+-- 
+1.9.1
+

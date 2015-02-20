@@ -138,6 +138,8 @@ pkg_postinst_ecore() {
 
 FILES_${PN}-dbg += "${prefix}/lib/eeze/modules/sensor/tizen/v-1.9/.debug"
 FILES_${PN}-dbg += "${prefix}/lib/eeze/modules/sensor/udev/v-1.9/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/eeze/modules/sensor/fake/v-1.9/.debug"
+FILES_${PN}-dbg += "${prefix}/lib/eeze/modules/sensor/fake/v-1.9/.debug/module.so"
 FILES_${PN}-dbg += "${prefix}/lib/ecore_evas/engines/extn/v-1.9/.debug"
 FILES_${PN}-dbg += "${prefix}/lib/ecore_evas/engines/wayland/v-1.9/.debug"
 FILES_${PN}-dbg += "${prefix}/lib/ethumb/modules/emotion/v-1.9/.debug"

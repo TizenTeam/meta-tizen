@@ -8,7 +8,7 @@ SRC_URI = ""
 
 S = "${WORKDIR}/git"
 
-inherit manifest autotools-brokensep
+inherit manifest cmake
 
 BBCLASSEXTEND = ""
 PROVIDES = ""
@@ -90,7 +90,7 @@ do_compile() {
          -DBUILD_SHARED_LIBS:BOOL=ON \
          -DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain.cmake \
          ${EXTRA_OECMAKE} -DLIBNAME:STRING=vconf -DTOOLNAME:STRING=vconftool .
- make ${PARALLEL_MAKE}
+ oe_runmake ${PARALLEL_MAKE}
  
  
  
@@ -114,9 +114,9 @@ do_install() {
    rm -f ${D}${infodir}/dir 
    find ${D} -regex ".*\.la$" | xargs rm -f -- 
    find ${D} -regex ".*\.a$" | xargs rm -f --
- mv ${D}${systemd_unitdir}/system/vconf-buxton-setup.service ${D}${systemd_unitdir}/system/vconf-setup.service
+ mv ${S}/src/vconf-buxton-setup.service ${S}/src/vconf-setup.service
  mkdir -p ${D}${systemd_unitdir}/system/basic.target.wants
- ln -sf ../vconf-setup.service ${D}${systemd_unitdir}/system/basic.target.wants/
+ ln -sf ${S}/src/vconf-setup.service ${D}${systemd_unitdir}/system/basic.target.wants/
  
  
 }
@@ -161,6 +161,8 @@ vconf-buxton_files += "${prefix}/bin/vconf-buxton-backup-mem-layer.sh"
 vconf-buxton_files += "${prefix}/lib/libvconf.so.*"
 vconf-buxton_files += "${systemd_unitdir}/system/basic.target.wants/vconf-setup.service"
 vconf-buxton_files += "${systemd_unitdir}/system/vconf-setup.service"
+vconf-buxton_files += "${systemd_unitdir}/system/vconf-buxton-setup.service"
+vconf-buxton_files += "${prefix}/lib/systemd/system/vconf-buxton-setup.service"
 MANIFESTFILES_${PN} = "vconf-buxton.manifest"
 
 FILES_${PN}-dev = "${vconf-buxton-dev_files}"

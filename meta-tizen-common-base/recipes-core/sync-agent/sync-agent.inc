@@ -48,7 +48,7 @@ DEPENDS += "app-svc"
 inherit pkgconfig
 DEPENDS += "dlog"
 DEPENDS += "glib-2.0"
-DEPENDS += "system-server"
+DEPENDS += "deviced"
 DEPENDS += "msg-service"
 DEPENDS += "alarm-manager"
 DEPENDS += "libaccounts-svc"

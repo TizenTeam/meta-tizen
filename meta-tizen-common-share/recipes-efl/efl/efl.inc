@@ -339,7 +339,7 @@ DEPENDS += "libsndfile1"
 DEPENDS += "libcheck"
 DEPENDS += "giflib"
 DEPENDS += "udev"
-DEPENDS += "capi-system-sensor"
+#DEPENDS += "capi-system-sensor"
 DEPENDS += "gnutls"
 DEPENDS += "util-linux"
 DEPENDS += "vconf"
@@ -389,7 +389,7 @@ do_compile() {
   
   
 }
-EXTRA_OECONF += " --enable-tizen --enable-g-main-loop --disable-xim --disable-scim --disable-gesture --with-tests=regular --enable-wayland --enable-egl --with-opengl=es --enable-tile-rotate --disable-rpath --with-x11=none --enable-tile-rotate --disable-rpath --enable-always-build-examples --enable-systemd --enable-lua-old --enable-i-really-know-what-i-am-doing-and-that-this-will-probably-break-things-and-i-will-fix-them-myself-and-send-patches-aaa"
+EXTRA_OECONF += " --enable-g-main-loop --disable-xim --disable-scim --disable-gesture --with-tests=regular --enable-wayland --enable-egl --with-opengl=es --enable-tile-rotate --disable-rpath --with-x11=none --enable-tile-rotate --disable-rpath --enable-always-build-examples --enable-systemd --enable-lua-old --enable-i-really-know-what-i-am-doing-and-that-this-will-probably-break-things-and-i-will-fix-them-myself-and-send-patches-aaa"
 
 do_install() {
  export RPM_BUILD_ROOT=${D}
@@ -857,7 +857,7 @@ ecore_files += "${prefix}/lib/libecore_ipc.so.*"
 ecore_files += "${prefix}/lib/libecore_wayland.so.*"
 ecore_files += "${prefix}/lib/ecore_evas/engines/*/*/module.so"
 ecore_files += "${prefix}/lib/ecore_imf/modules/*/*/module.so"
-ecore_files += "${prefix}/lib/ecore/system/tizen/*/module.so"
+#ecore_files += "${prefix}/lib/ecore/system/tizen/*/module.so"
 ecore_files += "${prefix}/lib/ecore/system/systemd/v-*/module.so"
 ecore_files += "${prefix}/share/ecore/checkme"
 ecore_files += "${prefix}/share/ecore_imf/checkme"

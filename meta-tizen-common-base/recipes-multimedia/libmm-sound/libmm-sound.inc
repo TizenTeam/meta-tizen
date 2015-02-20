@@ -58,7 +58,7 @@ DEPENDS += "audio-session-manager"
 DEPENDS += "libmm-log"
 inherit pkgconfig
 DEPENDS += "glib-2.0"
-DEPENDS += "system-server"
+DEPENDS += "deviced"
 DEPENDS += "vconf"
 DEPENDS += "security-server"
 DEPENDS += "heynoti"

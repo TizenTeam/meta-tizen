@@ -54,7 +54,7 @@ DEPENDS += "app-svc"
 inherit pkgconfig
 DEPENDS += "capi-media-wav-player"
 DEPENDS += "glib-2.0"
-DEPENDS += "system-server"
+DEPENDS += "deviced"
 inherit pythonnative
 DEPENDS += "libsvi"
 DEPENDS += "tizen-platform-config"
