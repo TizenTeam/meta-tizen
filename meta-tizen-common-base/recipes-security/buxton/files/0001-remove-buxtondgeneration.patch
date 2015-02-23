@@ -1,0 +1,76 @@
+From c3535e6e57ce03c7777955d58b5c227431ccddf6 Mon Sep 17 00:00:00 2001
+From: Xavier Roche <xavrock.os@gmail.com>
+Date: Sun, 22 Feb 2015 21:38:20 +0100
+Subject: [PATCH] remove buxtond generation
+
+Signed-off-by: Xavier Roche <xavrock.os@gmail.com>
+---
+ Makefile.am | 35 -----------------------------------
+ 1 file changed, 35 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index a613e6d..ba3eec0 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -156,24 +156,9 @@ EXTRA_DIST = \
+ dist_sysconf_DATA = \
+ 	data/buxton.conf
+ 
+-sbin_PROGRAMS = \
+-	buxtond
+-
+ bin_PROGRAMS = \
+ 	buxtonctl
+ 
+-buxtond_SOURCES = \
+-	src/core/daemon.c \
+-	src/core/daemon.h \
+-	src/core/main.c
+-
+-buxtond_LDADD = \
+-	$(SYSTEMD_LIBS) \
+-	libbuxton-shared.la
+-
+-buxtond_CFLAGS = \
+-	$(AM_CFLAGS)
+-
+ buxtonctl_SOURCES = \
+ 	src/cli/main.c \
+ 	src/cli/client.c \
+@@ -318,7 +303,6 @@ check_PROGRAMS = \
+ 	check_buxton_array \
+ 	check_buxton_list \
+ 	check_shared_lib \
+-	check_buxtond \
+ 	check_daemon \
+ 	check_smack \
+ 	check_configurator \
+@@ -397,25 +381,6 @@ check_shared_lib_LDADD = \
+ 	libbuxton.la \
+ 	libbuxton-shared.la
+ 
+-check_buxtond_SOURCES = \
+-	test/check_utils.c \
+-	test/check_utils.h \
+-	src/core/daemon.c \
+-	src/core/daemon.h \
+-	src/core/main.c
+-check_buxtond_CFLAGS = \
+-	@CHECK_CFLAGS@ \
+-	$(AM_CFLAGS) \
+-	@INIPARSER_CFLAGS@ \
+-	-DMAKE_CHECK \
+-	-DABS_TOP_SRCDIR=\"$(abs_top_srcdir)\" \
+-	-DABS_TOP_BUILDDIR=\"$(abs_top_builddir)\"
+-check_buxtond_LDADD = \
+-	@CHECK_LIBS@ \
+-	$(SYSTEMD_LIBS) \
+-	libbuxton.la \
+-	libbuxton-shared.la
+-
+ check_daemon_SOURCES = \
+ 	test/check_utils.c \
+ 	test/check_utils.h \
+-- 
+1.9.1
+

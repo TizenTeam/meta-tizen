@@ -106,7 +106,8 @@ pkg_postinst_${PN}() {
     #!/bin/sh -e
 
     [ "x$D" == "x" ] && ldconfig
-    source /etc/tizen-platform.conf
+    echo /etc/tizen-platform.conf
+    . /etc/tizen-platform.conf
     users_gid=$(getent group $TZ_SYS_USER_GROUP | cut -f3 -d':')
     chsmack -a 'User' /opt/usr/dbspace/.browser-history.db*
     chsmack -a 'User' /opt/usr/dbspace/.internet_bookmark.db*
