@@ -56,11 +56,6 @@ DEPENDS += "systemd"
 DEPENDS += "attr"
 DEPENDS += "gdbm"
 
-DEPENDS_class-native = ""
-DEPENDS_class-native += "systemd-native "
-DEPENDS_class-native += "libcheck-native"
-DEPENDS_class-native += "attr-native"
-DEPENDS_class-native += "gdbm-native"
 
 do_prep() {
  cd ${S}

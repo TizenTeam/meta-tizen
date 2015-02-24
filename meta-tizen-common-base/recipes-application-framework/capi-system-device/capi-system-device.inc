@@ -8,7 +8,7 @@ SRC_URI = ""
 
 S = "${WORKDIR}/git"
 
-inherit manifest autotools-brokensep
+inherit manifest cmake
 
 BBCLASSEXTEND = ""
 PROVIDES = ""
@@ -73,7 +73,7 @@ do_compile() {
          -DBUILD_SHARED_LIBS:BOOL=ON \
          -DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain.cmake \
          ${EXTRA_OECMAKE} . -DFULLVER=0.1.0 -DMAJORVER=${MAJORVER}
- oe_runmake -j1 ## ${PARALLEL_MAKE}
+ oe_runmake ${PARALLEL_MAKE}
  
  
  

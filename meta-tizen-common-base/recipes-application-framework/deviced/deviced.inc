@@ -135,14 +135,21 @@ DEPENDS += "sensord"
 DEPENDS += "vconf"
 DEPENDS += "dbus-glib"
 DEPENDS += "capi-base-common"
+DEPENDS += "openssl"
+DEPENDS += "smack"
+DEPENDS += "libprivilege-control"
 
 do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
  #setup -q
  
- 
- 
+}
+
+
+do_configure() {
+
+   cd ${S}
    cmake \
          -DCMAKE_VERBOSE_MAKEFILE=ON \
          -DCMAKE_INSTALL_PREFIX:PATH=${prefix} \
@@ -153,7 +160,6 @@ do_prep() {
          -DSHARE_INSTALL_PREFIX:PATH=${prefix}/share \
          -DCMAKE_SKIP_RPATH:BOOL=ON \
          -DBUILD_SHARED_LIBS:BOOL=ON \
-         -DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain.cmake \
  	     -DTZ_SYS_ETC=${sysconfdir} \
  	     -DCMAKE_INSTALL_PREFIX=${prefix} \
  	     -DARCH=emulator \
@@ -161,14 +167,6 @@ do_prep() {
          ${EXTRA_OECMAKE} . 
  	#eol
  
- 
-}
-
-do_patch_append() {
-    bb.build.exec_func('do_prep', d)
-}
-
-do_configure() {
 }
 
 do_compile() {
