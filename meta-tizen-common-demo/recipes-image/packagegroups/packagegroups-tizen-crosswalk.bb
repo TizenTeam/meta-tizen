@@ -10,4 +10,5 @@ RDEPENDS_packagegroup-tizen-crosswalk = "\
                                         crosswalk \
                                         tizen-extensions-crosswalk \
                                         wrt-widgets \
+                                        user-session-units \
                                         "

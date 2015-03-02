@@ -49,7 +49,7 @@ RDEPENDS_${PN} += "util-linux"
 
 DEPENDS = ""
 #DEPENDS of vconf-buxton
-DEPENDS += "vconf-internal-keys"
+DEPENDS += "vconf-internal-keys-dev"
 DEPENDS += "buxton"
 inherit tizen_cmake
 inherit pkgconfig
@@ -114,9 +114,9 @@ do_install() {
    rm -f ${D}${infodir}/dir 
    find ${D} -regex ".*\.la$" | xargs rm -f -- 
    find ${D} -regex ".*\.a$" | xargs rm -f --
- mv ${S}/src/vconf-buxton-setup.service ${S}/src/vconf-setup.service
- mkdir -p ${D}${systemd_unitdir}/system/basic.target.wants
- ln -sf ${S}/src/vconf-setup.service ${D}${systemd_unitdir}/system/basic.target.wants/
+   cp ${S}/src/vconf-buxton-setup.service ${S}/src/vconf-setup.service
+   mkdir -p ${D}${systemd_unitdir}/system/basic.target.wants
+   cp ${S}/src/vconf-setup.service ${D}${systemd_unitdir}/system/basic.target.wants/
  
  
 }

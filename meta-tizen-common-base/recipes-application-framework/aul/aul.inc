@@ -28,6 +28,7 @@ RDEPENDS = ""
 #RDEPENDS of aul (${PN})
 RDEPENDS_${PN} += "glibc"
 RDEPENDS_${PN} += "systemd"
+RDEPENDS_${PN} += "elfutils"
 
 #RDEPENDS of aul-dev (${PN}-dev)
 RDEPENDS_${PN}-dev += "aul"

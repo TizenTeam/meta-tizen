@@ -26,6 +26,7 @@ PROVIDES += "sensord-sensord"
 
 #PROVIDES by libsensord
 PROVIDES += "libsensord"
+PROVIDES += "sensor"
 
 
 RDEPENDS = ""
@@ -55,6 +56,11 @@ do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
  #setup -q
+ 
+}
+
+do_configure() {
+ cd ${S}
  cp ${S}/packaging/sensord.manifest .
  cp ${S}/packaging/libsensord.manifest .
  
@@ -65,14 +71,6 @@ do_prep() {
  	-DLINEAR_ACCEL=ON -DRV=ON \
  	-DTEST_SUITE=OFF \
  	-DLIBDIR=${prefix}/lib -DINCLUDEDIR=${prefix}/include
- 
- 
-}
-do_patch_append() {
-    bb.build.exec_func('do_prep', d)
-}
-
-do_configure() {
 }
 
 do_compile() {
@@ -103,6 +101,7 @@ do_install() {
          DESTDIR=${D} \
          INSTALL_ROOT=${D} \
          BINDIR=${prefix}/bin \
+         LIBDIR=${prefix}/lib \
    install  
    rm -f ${D}${infodir}/dir 
    find ${D} -regex ".*\.la$" | xargs rm -f -- 

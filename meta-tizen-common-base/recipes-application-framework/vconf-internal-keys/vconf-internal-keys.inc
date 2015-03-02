@@ -14,6 +14,7 @@ BBCLASSEXTEND = ""
 PROVIDES = ""
 
 #PROVIDES by vconf-internal-keys
+PROVIDES += "vconf-internal-keys"
 
 
 #PROVIDES by vconf-internal-keys-dev
@@ -102,6 +103,7 @@ MANIFESTFILES_${PN}-dev = "vconf-internal-keys.manifest"
 FILES_${PN}-dev = "${vconf-internal-keys-dev_files}"
 
 PKG_${PN}-dev= "${PN}-dev"
+PKG_${PN}-dev= "${PN}"
 
 require vconf-internal-keys-extraconf.inc
 

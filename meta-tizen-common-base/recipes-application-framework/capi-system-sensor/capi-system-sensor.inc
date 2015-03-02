@@ -8,7 +8,7 @@ SRC_URI = ""
 
 S = "${WORKDIR}/git"
 
-inherit manifest autotools-brokensep
+inherit manifest cmake
 
 BBCLASSEXTEND = ""
 PROVIDES = ""
