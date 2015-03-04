@@ -179,7 +179,8 @@ do_compile() {
  # -> to unset sysroot value.
  # sysroot variable is automatically set for cross compilation to use arm-sysroot provided by Chromium project
  # sysroot usage is not needed, we need to use arm libraries from the virtualized environment.
- #
+ GYP_EXTRA_FLAGS="${GYP_EXTRA_FLAGS} -Dsysroot= "
+
  # Crosswalk build fails if the fpu selected in the gcc option is different from neon in case of arm7 compilation
  # So force it.
  
