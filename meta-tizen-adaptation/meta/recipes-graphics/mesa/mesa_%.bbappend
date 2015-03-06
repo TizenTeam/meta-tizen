@@ -12,12 +12,12 @@ PACKAGECONFIG_append = " gallium-gbm"
 PACKAGECONFIG_append = " gallium-llvm"
 
 DRIDRIVERSTIZEN = "swrast"
-DRIDRIVERSTIZEN_append_x86 = ",i965,i915"
-DRIDRIVERSTIZEN_append_x86-64 = ",i965,i915"
+DRIDRIVERSTIZEN_append_x86 = ""
+DRIDRIVERSTIZEN_append_x86-64 = ""
 PACKAGECONFIG[dri] = "--enable-dri --with-dri-drivers=${DRIDRIVERSTIZEN}, --disable-dri, dri2proto libdrm"
 
 
-GALLIUMDRIVERSTIZEN_append = ",i915"
+GALLIUMDRIVERSTIZEN_append = ""
 
 GALLIUMDRIVERSTIZEN = "swrast"
 GALLIUMDRIVERSTIZEN_LLVM33 = ""
