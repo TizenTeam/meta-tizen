@@ -1,7 +1,7 @@
 # Install default Smack rules, copied from a running Tizen IVI 3.0.
 # Not sure where these get maintained in Tizen (file not owned by
 # any rpm package).
-do_install_append () {
+do_install_append_smack () {
     mkdir -p ${D}/${sysconfdir}/smack/accesses.d/
     cat >${D}/${sysconfdir}/smack/accesses.d/default-access-domains <<EOF
 System _ -----l
@@ -30,7 +30,7 @@ EOF
 # via postinst. This is much easier to use with bitbake, too:
 # - no need to maintain a patched rpm
 # - works for directories which are not packaged by default when empty
-pkg_postinst_${PN}() {
+pkg_postinst_${PN}_smack() {
     #!/bin/sh -e
 
     # https://review.tizen.org/gerrit/gitweb?p=platform/upstream/filesystem.git;a=blob;f=packaging/filesystem.manifest:
