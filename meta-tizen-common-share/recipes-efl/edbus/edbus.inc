@@ -2,7 +2,7 @@ DESCRIPTION = "EFL Wrapper for DBus"
 HOMEPAGE = "http://www.enlightenment.org/"
 SECTION = "Graphics & UI Framework/EFL"
 LICENSE = "BSD-2-Clause"
-PV = "1.7.8"
+PV = "1.7.9"
 
 SRC_URI = ""
 
@@ -36,7 +36,7 @@ DEPENDS += "eina"
 do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
- #setup -q -n e_dbus-1.7.8
+ #setup -q -n e_dbus-1.7.9
  cp ${S}/packaging/edbus.manifest .
  
  
