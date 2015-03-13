@@ -153,6 +153,7 @@ do_compile() {
  # --no-parallel is added because chroot does not mount a /dev/shm, this will
  # cause python multiprocessing.SemLock error.
  export GYP_GENERATORS='ninja'
+ export GYP_DEFINES="$GYP_DEFINES arm_float_abi=hard"
  ./src/xwalk/gyp_xwalk src/xwalk/xwalk-thirdparty.gyp \
  --no-parallel \
  ${GYP_EXTRA_FLAGS} \
