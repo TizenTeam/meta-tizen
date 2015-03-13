@@ -2,7 +2,7 @@ DESCRIPTION = "Selection of tools for developers working with Smack"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "Security/Access Control"
 LICENSE = "LGPL-2.1"
-PV = "1.0.5"
+PV = "1.1.0"
 
 SRC_URI = ""
 
