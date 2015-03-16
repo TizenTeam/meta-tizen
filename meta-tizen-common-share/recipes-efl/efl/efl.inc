@@ -200,13 +200,13 @@ PROVIDES += "eolian-examples"
 
 RDEPENDS = ""
 #RDEPENDS of edje (edje)
-RDEPENDS_edje += "efl-data"
+DEPENDS_edje += "efl-data"
 
 #RDEPENDS of ephysics-examples (ephysics-examples)
 RDEPENDS_ephysics-examples += "ephysics"
 
 #RDEPENDS of eo (eo)
-RDEPENDS_eo += "efl-data"
+DEPENDS_eo += "efl-data"
 
 #RDEPENDS of ephysics-dev (ephysics-dev)
 RDEPENDS_ephysics-dev += "ephysics"
@@ -215,7 +215,7 @@ RDEPENDS_ephysics-dev += "ephysics"
 RDEPENDS_emotion-dev += "emotion"
 
 #RDEPENDS of eina (eina)
-RDEPENDS_eina += "efl-data"
+DEPENDS_eina += "efl-data"
 
 #RDEPENDS of eina-examples (eina-examples)
 RDEPENDS_eina-examples += "eina"
@@ -239,22 +239,22 @@ RDEPENDS_ecore-dev += "ecore"
 RDEPENDS_ethumb-examples += "ethumb"
 
 #RDEPENDS of ethumb (ethumb)
-RDEPENDS_ethumb += "efl-data"
+DEPENDS_ethumb += "efl-data"
 
 #RDEPENDS of evas-dev (evas-dev)
 RDEPENDS_evas-dev += "evas"
 
 #RDEPENDS of evas (evas)
-RDEPENDS_evas += "efl-data"
+DEPENDS_evas += "efl-data"
 
 #RDEPENDS of eeze (eeze)
-RDEPENDS_eeze += "efl-data"
+DEPENDS_eeze += "efl-data"
 
 #RDEPENDS of ethumb-dev (ethumb-dev)
 RDEPENDS_ethumb-dev += "ethumb"
 
 #RDEPENDS of efreet (efreet)
-RDEPENDS_efreet += "efl-data"
+DEPENDS_efreet += "efl-data"
 
 #RDEPENDS of eldbus-dev (eldbus-dev)
 RDEPENDS_eldbus-dev += "eldbus"
@@ -272,7 +272,7 @@ RDEPENDS_eio-dev += "eio"
 RDEPENDS_ecore-examples += "ecore"
 
 #RDEPENDS of emotion (emotion)
-RDEPENDS_emotion += "efl-data"
+DEPENDS_emotion += "efl-data"
 
 #RDEPENDS of eldbus-examples (eldbus-examples)
 RDEPENDS_eldbus-examples += "eldbus"
@@ -281,7 +281,7 @@ RDEPENDS_eldbus-examples += "eldbus"
 RDEPENDS_eo-dev += "eo"
 
 #RDEPENDS of embryo (embryo)
-RDEPENDS_embryo += "efl-data"
+DEPENDS_embryo += "efl-data"
 
 #RDEPENDS of eio-examples (eio-examples)
 RDEPENDS_eio-examples += "eio"
@@ -296,7 +296,7 @@ RDEPENDS_edje-dev += "edje-tools"
 RDEPENDS_edje-tools += "edje"
 
 #RDEPENDS of eet (eet)
-RDEPENDS_eet += "efl-data"
+DEPENDS_eet += "efl-data"
 
 #RDEPENDS of eina-dev (eina-dev)
 RDEPENDS_eina-dev += "eina"
@@ -308,16 +308,16 @@ RDEPENDS_evas-examples += "evas"
 RDEPENDS_emotion-examples += "emotion"
 
 #RDEPENDS of ecore (ecore)
-RDEPENDS_ecore += "efl-data"
+DEPENDS_ecore += "efl-data"
 
 #RDEPENDS of eldbus (eldbus)
-RDEPENDS_eldbus += "efl-data"
+DEPENDS_eldbus += "efl-data"
 
 #RDEPENDS of edje-examples (edje-examples)
 RDEPENDS_edje-examples += "edje"
 
 #RDEPENDS of eio (eio)
-RDEPENDS_eio += "efl-data"
+DEPENDS_eio += "efl-data"
 
 #RDEPENDS of eolian-dev (eolian-dev)
 RDEPENDS_eolian-dev += "eolian"
@@ -1032,7 +1032,7 @@ FILES_ecore-dev = "${ecore-dev_files}"
 FILES_eina-dev = "${eina-dev_files}"
 FILES_ethumb = "${ethumb_files}"
 FILES_evas-dev = "${evas-dev_files}"
-FILES_${PN}-data = "${efl-data_files}"
+FILES_efl-data = "${efl-data_files}"
 FILES_${PN}-dev = "${efl-dev_files}"
 FILES_${PN} = "${efl_files}"
 FILES_evas = "${evas_files}"
