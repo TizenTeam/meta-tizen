@@ -47,11 +47,12 @@ DEPENDS += "boost"
 DEPENDS += "tizen-platform-config"
 inherit pkgconfig
 DEPENDS += "smack"
-DEPENDS += "pkgconfig(cynara-client)"
+DEPENDS += "libcynara-client"
 DEPENDS += "sqlite3"
 DEPENDS += "libcap"
-DEPENDS += "pkgconfig(cynara-admin)"
+DEPENDS += "libcynara-admin"
 DEPENDS += "libslp-db-util"
+DEPENDS += "libcap"
 
 do_prep() {
  cd ${S}
@@ -77,7 +78,7 @@ do_compile() {
  LD_AS_NEEDED=1; export LD_AS_NEEDED ;
  
  
- export LDFLAGS+="-Wl,--rpath=${prefix}/lib"
+ export LDFLAGS+=" -Wl,--rpath=${prefix}/lib "
  
  
    cmake \
@@ -103,7 +104,7 @@ do_compile() {
  
 }
 
-do_install() {
+do_install() {		
  export RPM_BUILD_ROOT=${D}
  cd ${S}
  LANG=C
