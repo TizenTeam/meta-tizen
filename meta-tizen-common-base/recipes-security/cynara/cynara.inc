@@ -108,6 +108,7 @@ DEPENDS += "dbus"
 inherit pkgconfig
 DEPENDS += "gmock"
 DEPENDS += "gtest"
+
 do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
@@ -148,7 +149,7 @@ do_compile() {
                             -DCYNARA_LIB_PATH=\\\"${prefix}/lib/cynara/\\\" \
                             -DCYNARA_TESTS_DIR=\\\"${prefix}/share/cynara/tests/\\\" \
                             -DCYNARA_CONFIGURATION_DIR=\\\"${sysconfdir}/cynara/\\\""
- export LDFLAGS+=" -Wl,--rpath=${prefix}/lib "
+ export LDFLAGS="${LDFLAGS} -Wl,--rpath=${prefix}/lib "
  
  
    cmake \
@@ -166,7 +167,8 @@ do_compile() {
          -DBUILD_TESTS=OFF \
          -DCMAKE_BUILD_TYPE=RELEASE \
          -DCMAKE_VERBOSE_MAKEFILE=ON
- oe_runmake
+         
+oe_runmake
  
  
  
