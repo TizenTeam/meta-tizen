@@ -10,4 +10,4 @@ DESCRIPTION = "A weston image with Tizen common ."
 CORE_IMAGE_EXTRA_INSTALL += "packagegroup-tizen-crosswalk"
 
 # Time zone
-CORE_IMAGE_EXTRA_INSTALL += "tzdata wgt-backend"
+CORE_IMAGE_EXTRA_INSTALL += "tzdata security-manager"
