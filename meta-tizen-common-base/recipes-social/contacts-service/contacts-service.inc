@@ -31,7 +31,7 @@ RDEPENDS_${PN}2 += "libprivilege-control"
 
 #RDEPENDS of contacts-service (${PN})
 RDEPENDS_${PN} += "sqlite3"
-RDEPENDS_${PN} += "coreutils"
+RDEPENDS_${PN} += "toybox-coreutils"
 RDEPENDS_${PN} += "glibc"
 RDEPENDS_${PN} += "vconf"
 

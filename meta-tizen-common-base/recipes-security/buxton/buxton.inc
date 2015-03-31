@@ -43,7 +43,7 @@ RDEPENDS_${PN}simple += "buxton"
 RDEPENDS_${PN}simple-dev += "buxton"
 
 #RDEPENDS of buxton (${PN})
-RDEPENDS_${PN} += "coreutils"
+RDEPENDS_${PN} += "toybox-coreutils"
 RDEPENDS_${PN} += "smack"
 RDEPENDS_${PN} += "buxton"
 

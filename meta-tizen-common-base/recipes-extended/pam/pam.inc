@@ -33,7 +33,7 @@ RDEPENDS = ""
 RDEPENDS_${PN}-modules-extra += "pam"
 
 #RDEPENDS of pam (${PN})
-RDEPENDS_${PN} += "coreutils"
+RDEPENDS_${PN} += "toybox-coreutils"
 RDEPENDS_${PN} += "glibc"
 RDEPENDS_${PN} += "flex"
 

@@ -63,7 +63,7 @@ RDEPENDS = ""
 RDEPENDS_${PN} += "hwdata"
 RDEPENDS_${PN} += "dbus"
 RDEPENDS_${PN} += "gawk"
-RDEPENDS_${PN} += "coreutils"
+RDEPENDS_${PN} += "toybox-coreutils"
 RDEPENDS_${PN} += "shadow"
 RDEPENDS_${PN} += "glibc"
 

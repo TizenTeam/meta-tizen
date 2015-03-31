@@ -25,6 +25,9 @@ RDEPENDS_${PN}_remove_class-native = "glibc-native"
 DEPENDS_remove_class-native = "net-tools-native"
 DEPENDS_class-target += "glib-2.0"
 
+RDEPENDS_${PN}_remove_class-native = "toybox-coreutils-native"
+RDEPENDS_${PN}_class-native += "coreutils"
+
 inherit pkgconfig
 
 EXTRA_OECONF += " --libdir=${base_libdir} \
