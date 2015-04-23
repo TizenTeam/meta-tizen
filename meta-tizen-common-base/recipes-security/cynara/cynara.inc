@@ -235,9 +235,9 @@ pkg_preinst_${PN}() {
     fi
     if [ $1 -gt 1 ] ; then
         OLDVERSION="$(rpm -q --qf '%{version}' cynara)"
-        $D${prefix}/sbin/cynara/cynara-db-migration.sh upgrade -f 0.0.0 -t ${PV}
+        $D${prefix}/sbin/cynara/cynara-db-migration upgrade -f 0.0.0 -t ${PV}
     else
-        $D${prefix}/sbin/cynara/cynara-db-migration.sh install -t ${PV}
+        $D${prefix}/sbin/cynara/cynara-db-migration install -t ${PV}
     fi
 
 }
@@ -343,7 +343,7 @@ pkg_postrm_${PN}() {
     #!/bin/sh -e
 
     if [ $1 = 0 ]; then
-        $D${prefix}/sbin/cynara/cynara-db-migration.sh uninstall -f ${PV}
+        $D${prefix}/sbin/cynara/cynara-db-migration uninstall -f ${PV}
         userdel -r cynara > /dev/null 2>&1
         groupdel cynara > /dev/null 2>&1
         systemctl daemon-reload
@@ -413,8 +413,8 @@ libcynara-creds-dbus_files += "${prefix}/lib/libcynara-creds-dbus.so.*"
 MANIFESTFILES_lib${PN}-creds-dbus = "libcynara-creds-dbus.manifest"
 
 cynara-db-migration_files = ""
-cynara-db-migration_files += "${prefix}/sbin/cynara/cynara-db-migration.sh"
-cynara-db-migration_files += "${prefix}/sbin/cynara/cynara-db-chsgen.sh"
+cynara-db-migration_files += "${prefix}/sbin/cynara-db-migration"
+cynara-db-migration_files += "${prefix}/sbin/cynara-db-chsgen"
 MANIFESTFILES_${PN}-db-migration = "cynara-db-migration.manifest"
 
 cynara-dev_files = ""
