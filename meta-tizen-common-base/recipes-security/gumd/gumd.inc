@@ -100,7 +100,7 @@ do_install() {
  
  rm -rf ${D}
  
-   oe_runmake \
+   make \
          DESTDIR=${D} \
          INSTALL_ROOT=${D} \
          BINDIR=${prefix}/bin \

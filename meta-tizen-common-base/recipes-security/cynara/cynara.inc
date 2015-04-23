@@ -2,7 +2,7 @@ DESCRIPTION = "Cynara service with client libraries"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "Security/Application Privilege"
 LICENSE = "Apache-2.0"
-PV = "0.5.0"
+PV = "0.6.1"
 
 SRC_URI = ""
 
@@ -12,6 +12,9 @@ inherit manifest autotools-brokensep
 
 BBCLASSEXTEND = ""
 PROVIDES = ""
+
+CXXFLAGS_prepend = " -DCYNARA_STATE_PATH='\"${localstatedir}/cynara/\"' -DCYNARA_LIB_PATH='\"${prefix}/lib/cynara/\"' -DCYNARA_TESTS_DIR='\"${prefix}/share/cynara/tests/\"' -DCYNARA_CONFIGURATION_DIR='\"${sysconfdir}/cynara/\"' -DCYNARA_VERSION='\"0.6.1\"'"
+
 
 #PROVIDES by libcynara-creds-socket
 PROVIDES += "libcynara-creds-socket"
@@ -109,6 +112,9 @@ inherit pkgconfig
 DEPENDS += "gmock"
 DEPENDS += "gtest"
 
+CFLAGS_prepend = "-I ${S}/include "
+
+
 do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
@@ -125,6 +131,7 @@ do_prep() {
  cp -a ${S}/packaging/libcynara-session.manifest .
  cp -a ${S}/packaging/cynara-db-migration.manifest .
  cp -a ${S}/packaging/cyad.manifest .
+ cp -a ${S}/packaging/cynara-db-chsgen.manifest .
  cp -a test/db/db* .
  
  
@@ -148,7 +155,10 @@ do_compile() {
  export CXXFLAGS="$CXXFLAGS -DCYNARA_STATE_PATH=\\\"${localstatedir}/cynara/\\\" \
                             -DCYNARA_LIB_PATH=\\\"${prefix}/lib/cynara/\\\" \
                             -DCYNARA_TESTS_DIR=\\\"${prefix}/share/cynara/tests/\\\" \
-                            -DCYNARA_CONFIGURATION_DIR=\\\"${sysconfdir}/cynara/\\\""
+                            -DCYNARA_CONFIGURATION_DIR=\\\"${sysconfdir}/cynara/\\\" \
+                            -DCYNARA_VERSION=\\\"${PV}\\\""
+
+
  export LDFLAGS="${LDFLAGS} -Wl,--rpath=${prefix}/lib "
  
  
@@ -166,7 +176,8 @@ do_compile() {
          ${EXTRA_OECMAKE} . \
          -DBUILD_TESTS=OFF \
          -DCMAKE_BUILD_TYPE=RELEASE \
-         -DCMAKE_VERBOSE_MAKEFILE=ON
+         -DCMAKE_VERBOSE_MAKEFILE=ON \
+         -DDB_FILES_SMACK_LABEL="System"
          
 oe_runmake
  
@@ -224,9 +235,9 @@ pkg_preinst_${PN}() {
     fi
     if [ $1 -gt 1 ] ; then
         OLDVERSION="$(rpm -q --qf '%{version}' cynara)"
-        $D${prefix}/sbin/cynara/cynara-db-migration.sh upgrade -f ${OLDVERSION} -t 0.5.0
+        $D${prefix}/sbin/cynara/cynara-db-migration.sh upgrade -f 0.0.0 -t ${PV}
     else
-        $D${prefix}/sbin/cynara/cynara-db-migration.sh install -t 0.5.0
+        $D${prefix}/sbin/cynara/cynara-db-migration.sh install -t ${PV}
     fi
 
 }
@@ -332,7 +343,7 @@ pkg_postrm_${PN}() {
     #!/bin/sh -e
 
     if [ $1 = 0 ]; then
-        $D${prefix}/sbin/cynara/cynara-db-migration.sh uninstall -f 0.5.0
+        $D${prefix}/sbin/cynara/cynara-db-migration.sh uninstall -f ${PV}
         userdel -r cynara > /dev/null 2>&1
         groupdel cynara > /dev/null 2>&1
         systemctl daemon-reload
@@ -381,6 +392,7 @@ PACKAGES += " libcynara-session "
 
 cynara-tests_files = ""
 cynara-tests_files += "/usr/bin/cynara-tests"
+cynara-tests_files += "/usr/bin/cynara-db-migration-tests"
 cynara-tests_files += "${prefix}/share/cynara/tests/db*/*"
 cynara-tests_files += "%attr(755,root,root) ${prefix}/share/cynara/tests/empty_db"
 MANIFESTFILES_${PN}-tests = "cynara-tests.manifest"
@@ -402,6 +414,7 @@ MANIFESTFILES_lib${PN}-creds-dbus = "libcynara-creds-dbus.manifest"
 
 cynara-db-migration_files = ""
 cynara-db-migration_files += "${prefix}/sbin/cynara/cynara-db-migration.sh"
+cynara-db-migration_files += "${prefix}/sbin/cynara/cynara-db-chsgen.sh"
 MANIFESTFILES_${PN}-db-migration = "cynara-db-migration.manifest"
 
 cynara-dev_files = ""
