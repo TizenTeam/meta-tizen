@@ -12,6 +12,7 @@ RDEPENDS_${PN}_class-native = ""
 RDEPENDS_${PN}_class-native += "coreutils"
 RDEPENDS_${PN}_class-native += "smack"
 
+inherit useradd
 
 do_prep_class-native() {
  cd ${S}
@@ -39,3 +40,7 @@ do_compile_class-native() {
   
   
 }
+
+USERADD_PACKAGES = "buxton"
+
+USERADD_PARAM_${PN} = " -u 9997  -m buxton"

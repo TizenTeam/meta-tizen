@@ -8,7 +8,7 @@ SRC_URI = ""
 
 S = "${WORKDIR}/git"
 
-inherit manifest autotools-brokensep
+inherit manifest autotools-brokensep useradd
 
 BBCLASSEXTEND = ""
 PROVIDES = ""
@@ -122,7 +122,6 @@ pkg_postinst_${PN}() {
 
     ldconfig
     # Create tizenglobalapp user needed for global installation
-    useradd -d $D${prefix}/apps -m tizenglobalapp -r -c "system user for common applications" -g root
     #mkdir -p %TZ_SYS_RW_APP/.config/xwalk-service/applications
     #cd %TZ_SYS_RW_APP/
     #ln -s .config/xwalk-service/applications/
@@ -143,14 +142,13 @@ pkg_postinst_${PN}() {
     chsmack -a '*' $D${prefix}/share/icons/default/small/
     chmod g+w $D${prefix}/share/applications
     chmod g+w $D${prefix}/share/applications
-    chown tizenglobalapp:root $D${prefix}/share/applications
-    chown tizenglobalapp:root $D${prefix}/share/applications
-    chown tizenglobalapp:root $D${prefix}/apps
-    chown tizenglobalapp:root $D${prefix}/dbspace
-    chown tizenglobalapp:root $D${prefix}/dbspace
-    chown tizenglobalapp:root -R $D${prefix}/share/icons
+    chown 9998:root $D${prefix}/share/applications
+    chown 9998:root $D${prefix}/share/applications
+    chown 9998:root $D${prefix}/apps
+    chown 9998:root $D${prefix}/dbspace
+    chown 9998:root $D${prefix}/dbspace
+    chown 9998:root -R $D${prefix}/share/icons
     ail_createdb 2>/dev/null
-    ail_syncdb 2>/dev/null
     chsmack -a '*' $D${prefix}/dbspace/.app_info.db*
      
 
@@ -206,4 +204,9 @@ PKG_ail-dev= "ail-dev"
 PKG_ail-vconf-dev= "ail-vconf-dev"
 
 require ail-extraconf.inc
+
+USERADD_PACKAGES = "ail"
+
+USERADD_PARAM_${PN} = "   -u 9998  -m  -d ${prefix}/apps -r  -c 'system user for common applications' -g users tizenglobalapp"
+
 

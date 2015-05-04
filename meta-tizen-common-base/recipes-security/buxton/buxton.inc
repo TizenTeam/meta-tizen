@@ -116,8 +116,8 @@ pkg_postinst_${PN}() {
     #!/bin/sh -e
 
     [ "x$D" == "x" ] && ldconfig
+    [ "x$D" != "x" ] && exit 1
     #buxtond runs as user buxton, which much be created
-    useradd buxton
     buxtonctl create-db base
     buxtonctl create-db isp
     if [ "$1" -eq 1 ] ; then
