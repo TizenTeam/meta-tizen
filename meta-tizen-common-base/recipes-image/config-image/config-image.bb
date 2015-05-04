@@ -10,6 +10,7 @@ RDEPENDS_${PN} += "media-server"
 RDEPENDS_${PN} += "wrt-widgets"
 RDEPENDS_${PN} += "avsystem"
 RDEPENDS_${PN} += "download-provider"
+RDEPENDS_${PN} += "run-postinsts"
 
 do_install() {
   mkdir -p ${D}${sysconfdir}
