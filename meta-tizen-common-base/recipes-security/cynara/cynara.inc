@@ -255,7 +255,7 @@ pkg_postinst_${PN}() {
     ### setcap/getcap binary are useful. To use them you must install libcap and libcap-tools packages
     ### In such case uncomment Requires with those packages
     systemctl daemon-reload
-    if [ $1 = 1 ]; then
+    if [ $1 == 1 ]; then
         systemctl enable cynara.service
     fi
     chsmack -a System ${localstatedir}/cynara/
@@ -342,7 +342,7 @@ pkg_postrm_libcynara-admin() {
 pkg_postrm_${PN}() {
     #!/bin/sh -e
 
-    if [ $1 = 0 ]; then
+    if [ $1 == 0 ]; then
         $D${prefix}/sbin/cynara/cynara-db-migration uninstall -f ${PV}
         userdel -r cynara > /dev/null 2>&1
         groupdel cynara > /dev/null 2>&1
