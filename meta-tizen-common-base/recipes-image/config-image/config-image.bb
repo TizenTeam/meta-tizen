@@ -45,6 +45,13 @@ EOF
   
 }
 
+pkg_preinst_${PN}() {
+
+    # fix TIVI-2291
+    sed -ri "s/(^blacklist i8042.*$)/#fix from base-general.post \1/" $D/etc/modprobe.d/blacklist.conf
+
+}
+
 pkg_postinst_${PN} () {
   chsmack -t $D${sysconfdir}
   chsmack -a 'System::Shared' $D${sysconfdir}
