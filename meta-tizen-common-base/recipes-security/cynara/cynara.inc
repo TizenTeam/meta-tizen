@@ -8,13 +8,18 @@ SRC_URI = ""
 
 S = "${WORKDIR}/git"
 
-inherit manifest autotools-brokensep
+inherit manifest autotools-brokensep useradd systemd
 
 BBCLASSEXTEND = ""
 PROVIDES = ""
 
+SYSTEMD_SERVICE_${PN} = "cynara.service"
+
 CXXFLAGS_prepend = " -DCYNARA_STATE_PATH='\"${localstatedir}/cynara/\"' -DCYNARA_LIB_PATH='\"${prefix}/lib/cynara/\"' -DCYNARA_TESTS_DIR='\"${prefix}/share/cynara/tests/\"' -DCYNARA_CONFIGURATION_DIR='\"${sysconfdir}/cynara/\"' -DCYNARA_VERSION='\"0.6.1\"'"
 
+USERADD_PACKAGES = "cynara"
+
+USERADD_PARAM_${PN} = "   -u 9996 -d /var/lib/empty -s /sbin/nologin -r cynara"
 
 #PROVIDES by libcynara-creds-socket
 PROVIDES += "libcynara-creds-socket"
@@ -225,19 +230,13 @@ do_install() {
 pkg_preinst_${PN}() {
     #!/bin/sh -e
 
-    id -g cynara > /dev/null 2>&1
-    if [ $? -eq 1 ]; then
-        groupadd cynara -r > /dev/null 2>&1
-    fi
-    id -u cynara > /dev/null 2>&1
-    if [ $? -eq 1 ]; then
-        useradd -d /var/lib/empty -s /sbin/nologin -r -g cynara cynara > /dev/null 2>&1
-    fi
+    [ "x$D" != "x" ] && exit 1
+
     if [ $1 -gt 1 ] ; then
         OLDVERSION="$(rpm -q --qf '%{version}' cynara)"
-        $D${prefix}/sbin/cynara/cynara-db-migration upgrade -f 0.0.0 -t ${PV}
+        sh $D${prefix}/sbin/cynara-db-migration upgrade -f 0.0.0 -t ${PV}
     else
-        $D${prefix}/sbin/cynara/cynara-db-migration install -t ${PV}
+        sh $D${prefix}/sbin/cynara-db-migration install -t ${PV}
     fi
 
 }
@@ -251,15 +250,8 @@ pkg_postinst_libcynara-agent() {
 pkg_postinst_${PN}() {
     #!/bin/sh -e
 
-    ### Add file capabilities if needed
-    ### setcap/getcap binary are useful. To use them you must install libcap and libcap-tools packages
-    ### In such case uncomment Requires with those packages
-    systemctl daemon-reload
-    if [ $1 == 1 ]; then
-        systemctl enable cynara.service
-    fi
     chsmack -a System ${localstatedir}/cynara/
-    systemctl restart cynara.service
+
 
 }
 
