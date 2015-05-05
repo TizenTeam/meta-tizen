@@ -78,6 +78,32 @@ pkg_postinst_${PN} () {
     ln -s volatile/log  $D${localstatedir}/log
     
  fi
+ 
+  [ "x$D" != "x" ] && exit 1
+   mkdir -p $D/etc/profile.d
+   chsmack -a System $D/var/lib/buxton/*.db
+   chown -R buxton:buxton $D/var/lib/buxton
+   buxtonctl set-label base vconf User
+   vconftool set -t string db/ail/ail_info "0" -f -s User
+   vconftool set -t string db/menuscreen/desktop "0" -f -s User
+   vconftool set -t string db/menu_widget/language "en_US.utf8" -f -s User
+   chown -R alice:users $D/home/alice
+   chown -R bob:users $D/home/bob
+   chown -R carol:users $D/home/carol
+   chown -R guest:users $D/home/guest
+   source $D/etc/tizen-platform.conf
+   chsmack -a '*' $D/var/lib/buxton || true
+   chsmack -a '*' /var/lib/buxton/* || true
+   chmod 0777 $D/var/lib/buxton || true
+   chmod 0666 $D/var/lib/buxton/* || true
+   ail_initdb
+   pkg_initdb
+   chmod 0600 $D/var/lib/buxton/* || true
+   chmod 0700 $D/var/lib/buxton || true
+   chsmack -a System $D/var/lib/buxton/* || true
+   chsmack -a System $D/var/lib/buxton || true
+   chsmack -a User $D/home/*/.applications/*/*
+   chsmack -a User $D/home/*/.applications/*/.*
 }
 
 FILES_${PN} = "${sysconfdir}/tizen \
