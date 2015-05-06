@@ -3,7 +3,6 @@ SRC_URI_class-native += "file://0001-remove-buxtondgeneration.patch"
 
 
 DEPENDS_append_class-native = ""
-DEPENDS_append_class-native += "systemd-native "
 DEPENDS_append_class-native += "libcheck-native"
 DEPENDS_append_class-native += "attr-native"
 DEPENDS_append_class-native += "gdbm-native"
