@@ -8,7 +8,7 @@ SRC_URI = ""
 
 S = "${WORKDIR}/git"
 
-inherit manifest autotools-brokensep
+inherit manifest autotools-brokensep useradd
 
 BBCLASSEXTEND = ""
 PROVIDES = ""
@@ -123,7 +123,6 @@ pkg_postinst_${PN}() {
     #!/bin/sh -e
 
     ldconfig
-    getent group gumd > /dev/null || groupadd -r gumd
     mkdir -p $D${sysconfdir}/gumd/useradd.d
     mkdir -p $D${sysconfdir}/gumd/userdel.d
     mkdir -p $D${sysconfdir}/gumd/groupadd.d
@@ -196,6 +195,7 @@ PKG_libgum-dev= "libgum-dev"
 PKG_libgum= "libgum"
 PKG_gumd-doc= "gumd-doc"
 PKG_gumd= "gumd"
-
+USERADD_PACKAGES = "${PN}" 
+GROUPADD_PARAM_${PN} = "-r gumd"
 require gumd-extraconf.inc
 
