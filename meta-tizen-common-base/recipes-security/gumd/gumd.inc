@@ -195,7 +195,7 @@ PKG_libgum-dev= "libgum-dev"
 PKG_libgum= "libgum"
 PKG_gumd-doc= "gumd-doc"
 PKG_gumd= "gumd"
-USERADD_PACKAGES = "${PN}" 
-GROUPADD_PARAM_${PN} = "-r gumd"
+USERADD_PACKAGES = "gumd" 
+GROUPADD_PARAM_gumd = "-r -o gumd"
 require gumd-extraconf.inc
 

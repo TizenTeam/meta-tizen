@@ -8,7 +8,7 @@ SRC_URI = ""
 
 S = "${WORKDIR}/git"
 
-inherit manifest autotools-brokensep systemd
+inherit manifest autotools-brokensep 
 
 BBCLASSEXTEND = ""
 PROVIDES = ""
@@ -122,7 +122,6 @@ pkg_postrm_libavsysaudio() {
     [ "x$D" == "x" ] && ldconfig
 
 }
-SYSTEMD_SERVICE_${PN} = "avsystem.service"
 
 PACKAGES = "${PN}-dbg ${PN}-doc ${PN}-locale"
 PACKAGES += " avsystem "
