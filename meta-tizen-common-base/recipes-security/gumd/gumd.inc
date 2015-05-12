@@ -196,6 +196,6 @@ PKG_libgum= "libgum"
 PKG_gumd-doc= "gumd-doc"
 PKG_gumd= "gumd"
 USERADD_PACKAGES = "gumd" 
-GROUPADD_PARAM_gumd = "-r -o gumd"
+GROUPADD_PARAM_gumd = "-r gumd"
 require gumd-extraconf.inc
 
