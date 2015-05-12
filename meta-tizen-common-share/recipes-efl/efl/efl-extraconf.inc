@@ -19,7 +19,6 @@ DEPENDS_class-native += "libcheck-native"
 DEPENDS_class-native += "giflib-native"
 DEPENDS_class-native += "gnutls-native"
 DEPENDS_class-native += "util-linux-native"
-DEPENDS_class-native += "vconf-native"
 DEPENDS_class-native += "fribidi-native"
 DEPENDS_class-native += "dbus-native"
 
