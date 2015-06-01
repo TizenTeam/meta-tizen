@@ -71,11 +71,16 @@ EXTRA_OECONF = " --with-rootprefix=${rootprefix} \
                  --disable-kdbus \
                  --enable-split-usr \
                  --without-python \
-                 --with-sysvrcnd-path=${sysconfdir} \
+                 --with-sysvrcnd-path= \
                  --with-firmware-path=/lib/firmware \
                  --enable-compat-libs \
                  ac_cv_path_KILL=${base_bindir}/kill \
                "
+
+EXTRA_OECONF += " --enable-bootchart --disable-sysusers --disable-firstboot --disable-timesyncd --disable-resolved --disable-networkd --libexecdir=${prefix}/lib --docdir=${prefix}/share/doc/packages/systemd --disable-static --disable-libcurl --with-sysvinit-path=  --with-smack-run-label=System cc_cv_CFLAGS__flto=no"
+
+
+
 # uclibc does not have NSS
 EXTRA_OECONF_append_libc-uclibc = " --disable-myhostname "
 
