@@ -146,6 +146,87 @@ do_install() {
 
 	# Enable journal to forward message to syslog daemon
 	sed -i -e 's/.*ForwardToSyslog.*/ForwardToSyslog=yes/' ${D}${sysconfdir}/systemd/journald.conf
+	### TIZEN PART SPECIFIC #####
+	# legacy links
+	ln -sf loginctl ${D}${prefix}/bin/systemd-loginctl
+	
+	# We create all wants links manually at installation time to make sure
+	# they are not owned and hence overriden by rpm after the used deleted
+	# them.
+	rm -rf ${D}${sysconfdir}/systemd/system/*.target.wants
+	
+	# Make sure the ghost-ing below works
+	touch ${D}${sysconfdir}/systemd/system/runlevel2.target
+	touch ${D}${sysconfdir}/systemd/system/runlevel3.target
+	touch ${D}${sysconfdir}/systemd/system/runlevel4.target
+	touch ${D}${sysconfdir}/systemd/system/runlevel5.target
+	
+	# Make sure these directories are properly owned
+	mkdir -p ${D}${systemd_unitdir}/system/basic.target.wants
+	mkdir -p ${D}${systemd_unitdir}/system/default.target.wants
+	mkdir -p ${D}${systemd_unitdir}/system/dbus.target.wants
+	mkdir -p ${D}${systemd_unitdir}/system/syslog.target.wants
+	
+	# Make sure the user generators dir exists too
+	mkdir -p ${D}/lib/systemd/system-generators
+	mkdir -p ${D}${prefix}/lib/systemd/user-generators
+	
+	# Create new-style configuration files so that we can ghost-own them
+	touch ${D}${sysconfdir}/hostname
+	touch ${D}${sysconfdir}/vconsole.conf
+	touch ${D}${sysconfdir}/locale.conf
+	touch ${D}${sysconfdir}/machine-id
+	touch ${D}${sysconfdir}/machine-info
+	touch ${D}${sysconfdir}/timezone
+	
+	mkdir -p ${D}/lib/systemd/system-preset/
+	mkdir -p ${D}/lib/systemd/user-preset/
+	
+	# Make sure the shutdown/sleep drop-in dirs exist
+	mkdir -p ${D}/lib/systemd/system-shutdown/
+	mkdir -p ${D}/lib/systemd/system-sleep/
+	
+	# Make sure the NTP units dir exists
+	mkdir -p ${D}${prefix}/lib/systemd/ntp-units.d/
+	
+	# Install modprobe fragment
+	mkdir -p ${D}${sysconfdir}/modprobe.d/
+	
+	# Fix the dangling /var/lock -> /run/lock symlink
+	install -Dm644 ${S}/tmpfiles.d/legacy.conf ${D}${prefix}/lib/tmpfiles.d/legacy.conf
+	
+	install -m644 ${S}/packaging/pamconsole-tmp.conf ${D}${prefix}/lib/tmpfiles.d/
+	
+	rm -rf ${D}${systemd_unitdir}/system/default.target
+	install -m 755 -d ${D}${systemd_unitdir}/system
+	install -m 644 ${S}/packaging/default.target ${D}${systemd_unitdir}/system/
+	
+	rm -rf ${D}${prefix}/share/doc/packages/systemd
+	
+	# Disable some useless services in Tizen
+	rm -rf ${D}${prefix}/lib/systemd/user/sysinit.target.wants/dev-hugepages.mount
+	rm -rf ${D}${prefix}/lib/systemd/user/sysinit.target.wants/sys-fs-fuse-connections.mount
+	rm -rf ${D}${prefix}/lib/systemd/user/sysinit.target.wants/systemd-binfmt.service
+	rm -rf ${D}${prefix}/lib/systemd/user/sysinit.target.wants/systemd-modules-load.service
+	rm -rf ${D}${prefix}/lib/systemd/user/sysinit.target.wants/systemd-ask-password-console.path
+	rm -rf ${D}${prefix}/lib/systemd/user/multi-user.target.wants/systemd-ask-password-wall.path
+	
+	# Move macros to the proper location for Tizen
+	mkdir -p ${D}${sysconfdir}/rpm
+	install -m644 ${B}/src/core/macros.systemd ${D}${sysconfdir}/rpm/macros.systemd
+	
+	rm -fr ${D}${prefix}/lib/rpm
+	rm -fr ${D}${sysconfdir}/kernel
+	rm -fr ${D}${sysconfdir}/modprobe.d
+	rm -fr ${D}${localstatedir}
+	
+	# Exclude ELF binaries
+	rm -f ${D}/lib/systemd/system-generators/systemd-debug-generator
+	rm -f ${D}${prefix}/lib/systemd/system-generators/systemd-hibernate-resume-generator
+ 
+
+
+
 }
 
 do_install_ptest () {
