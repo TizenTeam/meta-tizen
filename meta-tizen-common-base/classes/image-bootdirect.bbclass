@@ -1,7 +1,8 @@
+NOISO = "1"
+NOHDD = "1"
 
-#NOISO = "1"
-
-SYSLINUX_ROOT ?= "root=/dev/sda2"
+SYSLINUX_ROOT = "root=PARTUUID=${DISK_SIGNATURE}-02"
+APPEND_prepend = " rootwait"
 SYSLINUX_PROMPT ?= "0"
 SYSLINUX_TIMEOUT ?= "10"
 SYSLINUX_LABELS = "boot"
@@ -11,21 +12,78 @@ LABELS_append = " ${SYSLINUX_LABELS} "
 do_bootdirectdisk[depends] += "${PN}:do_rootfs"
 ROOTFS ?= "${DEPLOY_DIR_IMAGE}/${IMAGE_BASENAME}-${MACHINE}.ext3"
 
-# creating VMDK relies on having a live hddimg so ensure we
-# inherit it here.
-#inherit image-live
 inherit boot-directdisk
 
 IMAGE_TYPEDEP_bootdirect = "ext3"
 IMAGE_TYPES_MASKED += "bootdirect"
 
+python build_efi_cfg() {
+    import sys
 
-python do_bootdirectimg() {
-        # bb.build.exec_func('create_vmdk_image', d)
-        return 0
+    workdir = d.getVar('WORKDIR', True)
+    if not workdir:
+        bb.error("WORKDIR not defined, unable to package")
+        return
+
+    gfxserial = d.getVar('GRUB_GFXSERIAL', True) or ""
+
+    cfile = d.getVar('GRUBCFG', True)
+    if not cfile:
+        raise bb.build.FuncFailed('Unable to read GRUBCFG')
+
+    try:
+         cfgfile = file(cfile, 'w')
+    except OSError:
+        raise bb.build.funcFailed('Unable to open %s' % (cfile))
+
+    cfgfile.write('# Automatically created by OE\n')
+
+    opts = d.getVar('GRUB_OPTS', True)
+    if opts:
+        for opt in opts.split(';'):
+            cfgfile.write('%s\n' % opt)
+
+    cfgfile.write('default=boot\n')
+
+    timeout = d.getVar('GRUB_TIMEOUT', True)
+    if timeout:
+        cfgfile.write('timeout=%s\n' % timeout)
+    else:
+        cfgfile.write('timeout=50\n')
+
+    if gfxserial == "1":
+        btypes = [ [ " graphics console", "" ],
+            [ " serial console", d.getVar('GRUB_SERIAL', True) or "" ] ]
+    else:
+        btypes = [ [ "", "" ] ]
+
+    localdata = d.createCopy()
+
+    overrides = localdata.getVar('OVERRIDES', True)
+    if not overrides:
+        raise bb.build.FuncFailed('OVERRIDES not defined')
+
+    disksignature = localdata.getVar('DISK_SIGNATURE', True)
+    if not disksignature:
+        raise bb.build.FuncFailed('DISK_SIGNATURE not defined')
+
+    for btype in btypes:
+        localdata.setVar('OVERRIDES', 'boot:' + overrides)
+        bb.data.update_data(localdata)
+
+        cfgfile.write('\nmenuentry boot\'%s\'{\n' % (btype[0]))
+        cfgfile.write('root=(hd0,2)\n')
+        cfgfile.write('linux /boot/bzImage')
+
+        append = localdata.getVar('APPEND', True)
+
+        if append:
+            cfgfile.write('%s' % (append))
+        cfgfile.write(' %s' % btype[1])
+        cfgfile.write('\n')
+
+        cfgfile.write(' %s' % btype[1])
+        cfgfile.write('\n}\n')
+
+    cfgfile.close()
 }
-
-addtask do_bootdirectimg after do_bootdirectdisk before do_build
-
-##do_vmdkimg[depends] += "qemu-native:do_populate_sysroot" 
-
