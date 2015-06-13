@@ -91,7 +91,7 @@ do_compile() {
          ${EXTRA_OECMAKE} .
  
  
- make -j16
+ oe_runmake
  
  
  

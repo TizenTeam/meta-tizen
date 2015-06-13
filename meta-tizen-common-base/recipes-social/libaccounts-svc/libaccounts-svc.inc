@@ -82,7 +82,7 @@ do_compile() {
          -DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain.cmake \
          ${EXTRA_OECMAKE} .
  
- make -j16
+ oe_runmake
  
  
  

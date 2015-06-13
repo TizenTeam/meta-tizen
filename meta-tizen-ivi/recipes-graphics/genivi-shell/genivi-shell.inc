@@ -84,7 +84,7 @@ do_compile() {
  LD_AS_NEEDED=1; export LD_AS_NEEDED ;
  
  
- make -j16 V=1
+ oe_runmake V=1
  
  
  
