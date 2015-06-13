@@ -1,7 +1,7 @@
 SECTION = "Graphics & UI Framework/Hardware Adaptation"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
-SRC_URI += "file://0001-intel:-FixinitialMakeCurrentfordrawablesofmultiscreens.patch"
+SRC_URI += "file://0001-intel-FixinitialMakeCurrentfordrawablesofmultiscreens.patch"
 
 # Enabling gallium-llvm creates a dependency on llvm.
 # meta-openembedded provides that.
