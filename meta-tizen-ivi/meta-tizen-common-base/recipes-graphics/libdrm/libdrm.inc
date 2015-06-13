@@ -73,8 +73,8 @@ do_compile() {
   
   autotools_do_configure
   
-  oe_runmake -j16
-  oe_runmake -j16 -C tests dristat drmstat
+  oe_runmake
+  oe_runmake -C tests dristat drmstat
   
   
   
