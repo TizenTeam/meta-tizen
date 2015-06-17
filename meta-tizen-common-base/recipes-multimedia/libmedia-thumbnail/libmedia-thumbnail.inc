@@ -2,7 +2,7 @@ DESCRIPTION = "Media thumbnail service Library"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "Multimedia/Libraries"
 LICENSE = "Apache-2.0"
-PV = "0.1.78"
+PV = "0.1.80"
 
 SRC_URI = ""
 
@@ -46,7 +46,6 @@ DEPENDS = ""
 #DEPENDS of libmedia-thumbnail
 DEPENDS += "libmm-fileinfo"
 inherit tizen_cmake
-DEPENDS += "drm-client"
 DEPENDS += "tizen-platform-config"
 inherit pkgconfig
 DEPENDS += "dlog"
