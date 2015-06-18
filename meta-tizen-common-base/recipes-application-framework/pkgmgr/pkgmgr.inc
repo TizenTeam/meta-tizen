@@ -69,21 +69,26 @@ inherit gettext
 DEPENDS += "unzip"
 inherit tizen_cmake
 DEPENDS += "iniparser"
-DEPENDS += "notification"
 DEPENDS += "dbus"
+DEPENDS += "xdgmime"
 inherit pkgconfig
+DEPENDS += "libcynara-client"
+DEPENDS += "libcynara-creds-dbus"
+DEPENDS += "libcynara-session"
+DEPENDS += "libcynara-commons"
+DEPENDS += "libcynara-creds-commons"
+DEPENDS += "security-manager"
 DEPENDS += "dlog"
-DEPENDS += "security-server"
 DEPENDS += "ail"
 DEPENDS += "smack"
 DEPENDS += "libslp-db-util"
 DEPENDS += "bundle"
-DEPENDS += "ecore"
-DEPENDS += "app-core"
 DEPENDS += "tizen-platform-config"
 DEPENDS += "dbus-glib"
+DEPENDS += "glib-2.0"
 DEPENDS_append_class-native = " fdupes-native"
 DEPENDS_append_class-target = " fdupes-native"
+
 
 do_prep() {
  cd ${S}
@@ -152,6 +157,14 @@ do_install() {
  mkdir -p ${D}${sysconfdir}/package-manager/backend
  mkdir -p ${D}${sysconfdir}/package-manager/backendlib
  mkdir -p ${D}${sysconfdir}/opt/upgrade
+
+ touch  ${D}${sysconfdir}/package-manager/backend/pkg
+ chmod 755 ${D}${sysconfdir}/package-manager/backend/pkg
+ touch  ${D}${sysconfdir}/package-manager/backend/getsize
+ chmod 755 ${D}${sysconfdir}/package-manager/backend/getsize
+ touch  ${D}${sysconfdir}/package-manager/backend/clearcache
+ chmod 755 ${D}${sysconfdir}/package-manager/backend/clearcache
+
  
  mkdir -p ${D}${sysconfdir}/package-manager/server
  
@@ -237,9 +250,7 @@ pkgmgr_files += "${prefix}/bin/pkg_initdb_user"
 pkgmgr_files += "${prefix}/bin/pkg_getsize"
 pkgmgr_files += "${prefix}/bin/pkg_clearcache"
 pkgmgr_files += "${prefix}/bin/pkginfo"
-pkgmgr_files += "${prefix}/bin/pkgmgr-install"
-pkgmgr_files += "%dir ${prefix}/share/packages"
-pkgmgr_files += "${prefix}/share/packages/org.tizen.pkgmgr-install.xml"
+pkgmgr_files += "${prefix}/bin/pkg_privilege"
 pkgmgr_files += "${prefix}/share/mime/packages/mime.wac.xml"
 pkgmgr_files += "${prefix}/share/mime/packages/mime.tpk.xml"
 MANIFESTFILES_${PN} = "pkgmgr.manifest"

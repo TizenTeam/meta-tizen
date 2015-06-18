@@ -12,16 +12,6 @@ diff --git a/client/CMakeLists.txt b/client/CMakeLists.txt
 index fe92867..e11c23f 100644
 --- a/client/CMakeLists.txt
 +++ b/client/CMakeLists.txt
-@@ -10,7 +10,8 @@ pkg_check_modules(CLIENT_DEPS REQUIRED
- 		pkgmgr-info
- 		iniparser
- 		libtzplatform-config
--		security-server)
-+		security-server
-+		xdgmime)
- FOREACH(CLIENT_FLAGS ${CLIENT_DEPS_CFLAGS})
- 	SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CLIENT_FLAGS}")
- ENDFOREACH(CLIENT_FLAGS)
 @@ -24,7 +25,7 @@ SET_TARGET_PROPERTIES(${PKGMGR_CLIENT} PROPERTIES SOVERSION ${VERSION_MAJOR})
  SET_TARGET_PROPERTIES(${PKGMGR_CLIENT} PROPERTIES VERSION ${VERSION})
  TARGET_LINK_LIBRARIES(${PKGMGR_CLIENT}
