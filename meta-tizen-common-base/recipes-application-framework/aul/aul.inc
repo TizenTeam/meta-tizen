@@ -41,6 +41,7 @@ DEPENDS = ""
 #DEPENDS of aul
 DEPENDS += "pkgmgr-info"
 DEPENDS += "librua"
+DEPENDS += "systemd"
 inherit tizen_cmake
 DEPENDS += "attr"
 DEPENDS += "tizen-platform-config"
@@ -52,10 +53,11 @@ DEPENDS += "smack"
 DEPENDS += "dlog"
 DEPENDS += "sqlite3"
 DEPENDS += "xdgmime"
-DEPENDS += "libprivilege-control"
 DEPENDS += "app-checker"
 DEPENDS += "vconf"
 DEPENDS += "dbus-glib"
+DEPENDS += "security-manager"
+DEPENDS += "pkgmgr"
 
 do_prep() {
  cd ${S}
@@ -133,19 +135,22 @@ do_install() {
  rm -rf ${D}${prefix}/share/aul/mida_db.sql
  
  mkdir -p ${D}${systemd_unitdir}/system
+ mkdir -p ${D}${systemd_unitdir}/system/default.target.wants
+ mkdir -p ${D}${systemd_unitdir}/system/sockets.target.wants
  mkdir -p ${D}${prefix}/lib/systemd/user
+ mkdir -p ${D}${prefix}/lib/systemd/user/sockets.target.wants
  install -m 0644 ${S}/packaging/ac.service ${D}${systemd_unitdir}/system/ac.service
+ install -m 0644 ${S}/packaging/ac.socket ${D}${systemd_unitdir}/system/ac.socket
  install -m 0644 ${S}/packaging/amd_session_agent.service ${D}${prefix}/lib/systemd/user/amd_session_agent.service
- 
- 
+ install -m 0644 ${S}/packaging/amd_session_agent.socket ${D}${prefix}/lib/systemd/user/amd_session_agent.socket 
+ ln -sf ../ac.socket ${D}${systemd_unitdir}/system/sockets.target.wants/ac.socket
+ ln -sf ../amd_session_agent.socket ${D}${prefix}/lib/systemd/user/sockets.target.wants/amd_session_agent.socket
 }
 
 pkg_postinst_${PN}() {
     #!/bin/sh -e
 
     [ "x$D" == "x" ] && ldconfig
-    systemctl enable ac
-    systemctl --global enable amd_session_agent
     systemctl daemon-reload
     if [ $1 == 1 ]; then
         systemctl restart ac.service
@@ -188,13 +193,18 @@ aul_files += "%attr(0644,root,users) ${prefix}/dbspace/.mida.db-journal"
 aul_files += "${prefix}/bin/aul_mime.sh"
 aul_files += "${prefix}/bin/aul_test"
 aul_files += "${prefix}/bin/app_launcher"
-aul_files += "${prefix}/bin/amd_session_agent"
+aul_files += "%caps(cap_mac_admin,cap_mac_override,cap_setgid=ei) ${prefix}/bin/amd_session_agent"
 aul_files += "${prefix}/share/aul/miregex/*"
 aul_files += "${prefix}/share/aul/service/*"
 aul_files += "${prefix}/share/aul/preload_list.txt"
 aul_files += "${prefix}/share/aul/preexec_list.txt"
 aul_files += "${systemd_unitdir}/system/ac.service"
+aul_files += "${systemd_unitdir}/system/ac.socket"
+aul_files += "${systemd_unitdir}/system/default.target.wants/ac.service"
+aul_files += "${systemd_unitdir}/system/sockets.target.wants/ac.socket"
 aul_files += "${prefix}/lib/systemd/user/amd_session_agent.service"
+aul_files += "${prefix}/lib/systemd/user/amd_session_agent.socket"
+aul_files += "${prefix}/lib/systemd/user/sockets.target.wants/amd_session_agent.socket"
 aul_files += "${prefix}/bin/amd"
 aul_files += "${prefix}/bin/daemon-manager-release-agent"
 aul_files += "${prefix}/bin/daemon-manager-launch-agent"
