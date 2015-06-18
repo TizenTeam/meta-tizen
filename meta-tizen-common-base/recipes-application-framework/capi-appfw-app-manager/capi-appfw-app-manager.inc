@@ -1,8 +1,8 @@
 DESCRIPTION = "Application Manager API"
 HOMEPAGE = "http://nohomepage.org"
-SECTION = "Application Framework/API"
+SECTION = "Application Framework/Libraries"
 LICENSE = "Apache-2.0"
-PV = "0.1.0"
+PV = "0.2.4"
 
 SRC_URI = ""
 
@@ -32,7 +32,6 @@ DEPENDS += "pkgmgr"
 DEPENDS += "aul"
 DEPENDS += "dlog"
 inherit pkgconfig
-DEPENDS += "ail"
 DEPENDS += "pkgmgr-info"
 DEPENDS += "glib-2.0"
 DEPENDS += "vconf"
@@ -42,7 +41,6 @@ do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
  #setup -q
- cp ${S}/packaging/capi-appfw-app-manager.manifest .
  
  
 }
@@ -121,7 +119,7 @@ PACKAGES += " capi-appfw-app-manager-dev "
 
 capi-appfw-app-manager_files = ""
 capi-appfw-app-manager_files += "${prefix}/lib/libcapi-appfw-app-manager.so.*"
-MANIFESTFILES_${PN} = "capi-appfw-app-manager.manifest"
+capi-appfw-app-manager_files += "${prefix}/bin/appmgr_tool"
 
 capi-appfw-app-manager-dev_files = ""
 capi-appfw-app-manager-dev_files += "${prefix}/include/appfw/*.h"
