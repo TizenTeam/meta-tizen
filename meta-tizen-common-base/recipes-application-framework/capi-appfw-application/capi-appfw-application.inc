@@ -29,7 +29,6 @@ DEPENDS = ""
 #DEPENDS of capi-appfw-application
 DEPENDS += "sqlite3"
 inherit tizen_cmake
-DEPENDS += "notification"
 DEPENDS += "tizen-platform-config"
 DEPENDS += "app-svc"
 DEPENDS += "aul"
@@ -41,6 +40,13 @@ DEPENDS += "dlog"
 DEPENDS += "elementary"
 DEPENDS += "app-core"
 DEPENDS += "capi-base-common"
+DEPENDS += "vconf-internal-keys"
+DEPENDS += "eventsystem"
+DEPENDS += "pkgmgr-info"
+DEPENDS += "glib-2.0"
+DEPENDS += "capi-system-info"
+DEPENDS += "capi-system-system-settings"
+
 
 do_prep() {
  cd ${S}
@@ -129,10 +135,20 @@ capi-appfw-application-dev_files = ""
 capi-appfw-application-dev_files += "${prefix}/include/appfw/*.h"
 capi-appfw-application-dev_files += "${prefix}/lib/pkgconfig/*.pc"
 capi-appfw-application-dev_files += "${prefix}/lib/libcapi-appfw-application.so"
+capi-appfw-application-dev_files += "${prefix}/lib/libcapi-appfw-app-control.so"
+capi-appfw-application-dev_files += "${prefix}/lib/libcapi-appfw-app-common.so"
+capi-appfw-application-dev_files += "${prefix}/lib/libcapi-appfw-alarm.so"
+capi-appfw-application-dev_files += "${prefix}/lib/libcapi-appfw-preference.so"
+capi-appfw-application-dev_files += "${prefix}/lib/libcapi-appfw-event.so"
 MANIFESTFILES_${PN}-dev = "capi-appfw-application.manifest"
 
 capi-appfw-application_files = ""
 capi-appfw-application_files += "${prefix}/lib/libcapi-appfw-application.so.*"
+capi-appfw-application_files += "${prefix}/lib/libcapi-appfw-app-control.so.*"
+capi-appfw-application_files += "${prefix}/lib/libcapi-appfw-app-common.so.*"
+capi-appfw-application_files += "${prefix}/lib/libcapi-appfw-alarm.so.*"
+capi-appfw-application_files += "${prefix}/lib/libcapi-appfw-preference.so.*"
+capi-appfw-application_files += "${prefix}/lib/libcapi-appfw-event.so.*"
 capi-appfw-application_files += "${prefix}/share/license/capi-appfw-application"
 MANIFESTFILES_${PN} = "capi-appfw-application.manifest"
 
