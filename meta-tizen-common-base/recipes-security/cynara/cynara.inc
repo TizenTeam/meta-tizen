@@ -2,7 +2,7 @@ DESCRIPTION = "Cynara service with client libraries"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "Security/Application Privilege"
 LICENSE = "Apache-2.0"
-PV = "0.6.1"
+PV = "0.8.0"
 
 SRC_URI = ""
 
@@ -15,7 +15,7 @@ PROVIDES = ""
 
 SYSTEMD_SERVICE_${PN} = "cynara.service"
 
-CXXFLAGS_prepend = " -DCYNARA_STATE_PATH='\"${localstatedir}/cynara/\"' -DCYNARA_LIB_PATH='\"${prefix}/lib/cynara/\"' -DCYNARA_TESTS_DIR='\"${prefix}/share/cynara/tests/\"' -DCYNARA_CONFIGURATION_DIR='\"${sysconfdir}/cynara/\"' -DCYNARA_VERSION='\"0.6.1\"'"
+CXXFLAGS_prepend = " -DCYNARA_STATE_PATH='\"${localstatedir}/cynara/\"' -DCYNARA_LIB_PATH='\"${prefix}/lib/cynara/\"' -DCYNARA_TESTS_DIR='\"${prefix}/share/cynara/tests/\"' -DCYNARA_CONFIGURATION_DIR='\"${sysconfdir}/cynara/\"' -DCYNARA_VERSION='\"0.8.0\"'"
 
 USERADD_PACKAGES = "cynara"
 
@@ -36,6 +36,8 @@ PROVIDES += "libcynara-client"
 #PROVIDES by libcynara-creds-dbus
 PROVIDES += "libcynara-creds-dbus"
 
+#PROVIDES by libcynara-creds-gdbus
+PROVIDES += "libcynara-creds-gdbus"
 
 #PROVIDES by cynara
 
@@ -97,6 +99,7 @@ RDEPENDS_${PN}-dev += "libcynara-admin"
 RDEPENDS_${PN}-dev += "libcynara-creds-socket"
 RDEPENDS_${PN}-dev += "libcynara-agent"
 RDEPENDS_${PN}-dev += "libcynara-session"
+RDEPENDS_${PN}-dev += "libcynara-creds-gdbus"
 
 #RDEPENDS of libcynara-admin (lib${PN}-admin)
 RDEPENDS_lib${PN}-admin += "cynara"
@@ -132,6 +135,7 @@ do_prep() {
  cp -a ${S}/packaging/libcynara-commons.manifest .
  cp -a ${S}/packaging/libcynara-creds-commons.manifest .
  cp -a ${S}/packaging/libcynara-creds-dbus.manifest .
+ cp -a ${S}/packaging/libcynara-creds-gdbus.manifest .
  cp -a ${S}/packaging/libcynara-creds-socket.manifest .
  cp -a ${S}/packaging/libcynara-session.manifest .
  cp -a ${S}/packaging/cynara-db-migration.manifest .
@@ -273,6 +277,12 @@ pkg_postinst_libcynara-creds-dbus() {
     [ "x$D" == "x" ] && ldconfig
 }
 
+pkg_postinst_libcynara-creds-gdbus() {
+    #!/bin/sh -e
+
+    [ "x$D" == "x" ] && ldconfig
+}
+
 pkg_postinst_libcynara-session() {
     #!/bin/sh -e
 
@@ -349,6 +359,12 @@ pkg_postrm_libcynara-creds-dbus() {
     [ "x$D" == "x" ] && ldconfig
 }
 
+pkg_postrm_libcynara-creds-gdbus() {
+    #!/bin/sh -e
+
+    [ "x$D" == "x" ] && ldconfig
+}
+
 pkg_postrm_libcynara-session() {
     #!/bin/sh -e
 
@@ -371,6 +387,7 @@ PACKAGES = "${PN}-dbg ${PN}-doc ${PN}-locale"
 PACKAGES += " cynara-tests "
 PACKAGES += " libcynara-client "
 PACKAGES += " libcynara-creds-dbus "
+PACKAGES += " libcynara-creds-gdbus "
 PACKAGES += " cynara-db-migration "
 PACKAGES += " cynara-dev "
 PACKAGES += " cyad "
@@ -403,6 +420,10 @@ DIRFILES_lib${PN}-client += "%attr(755,cynara,cynara) ${prefix}/lib/cynara/plugi
 libcynara-creds-dbus_files = ""
 libcynara-creds-dbus_files += "${prefix}/lib/libcynara-creds-dbus.so.*"
 MANIFESTFILES_lib${PN}-creds-dbus = "libcynara-creds-dbus.manifest"
+
+libcynara-creds-gdbus_files = ""
+libcynara-creds-gdbus_files += "${prefix}/lib/libcynara-creds-gdbus.so.*"
+MANIFESTFILES_lib${PN}-creds-gdbus = "libcynara-creds-gdbus.manifest"
 
 cynara-db-migration_files = ""
 cynara-db-migration_files += "${prefix}/sbin/cynara-db-migration"
@@ -467,6 +488,7 @@ MANIFESTFILES_lib${PN}-session = "libcynara-session.manifest"
 FILES_${PN}-tests = "${cynara-tests_files}"
 FILES_lib${PN}-client = "${libcynara-client_files}"
 FILES_lib${PN}-creds-dbus = "${libcynara-creds-dbus_files}"
+FILES_lib${PN}-creds-gdbus = "${libcynara-creds-gdbus_files}"
 FILES_${PN}-db-migration = "${cynara-db-migration_files}"
 FILES_${PN}-dev = "${cynara-dev_files}"
 FILES_cyad = "${cyad_files}"
@@ -481,6 +503,7 @@ FILES_lib${PN}-session = "${libcynara-session_files}"
 PKG_cynara-tests= "cynara-tests"
 PKG_libcynara-client= "libcynara-client"
 PKG_libcynara-creds-dbus= "libcynara-creds-dbus"
+PKG_libcynara-creds-gdbus= "libcynara-creds-gdbus"
 PKG_cynara-db-migration= "cynara-db-migration"
 PKG_cynara-dev= "cynara-dev"
 PKG_cyad= "cyad"
