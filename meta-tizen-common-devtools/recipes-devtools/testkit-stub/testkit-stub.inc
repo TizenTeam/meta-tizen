@@ -20,6 +20,8 @@ RDEPENDS = ""
 
 DEPENDS = ""
 
+CFLAGS_append += " -Wno-error=unused-result"
+
 do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
@@ -42,7 +44,7 @@ do_compile() {
  unset DISPLAY
  LD_AS_NEEDED=1; export LD_AS_NEEDED ;
  
- oe_runmake
+ oe_runmake -j1
  
  
  
