@@ -2,7 +2,7 @@ DESCRIPTION = "Enlightenment Foundation Libraries - set of libraries used (not o
 HOMEPAGE = "http://enlightenment.org/"
 SECTION = "Graphics & UI Framework/API"
 LICENSE = "LGPL-2.1"
-PV = "1.12.2"
+PV = "1.13.1"
 
 SRC_URI = ""
 
@@ -197,6 +197,14 @@ PROVIDES += "eolian"
 PROVIDES += "eolian-dev"
 PROVIDES += "eolian-examples"
 
+#PROVIDES by elua
+PROVIDES += "elua"
+PROVIDES += "elua-dev"
+
+#PROVIDES by elocation
+PROVIDES += "elocation"
+PROVIDES += "elocation-dev"
+PROVIDES += "elocation-examples"
 
 RDEPENDS = ""
 #RDEPENDS of edje (edje)
@@ -322,6 +330,11 @@ DEPENDS_eio += "efl-data"
 #RDEPENDS of eolian-dev (eolian-dev)
 RDEPENDS_eolian-dev += "eolian"
 
+#RDEPENDS of elua-dev (elua-dev)
+RDEPENDS_elua-dev += "elua"
+
+#RDEPENDS of elocation-dev (elocation-dev)
+RDEPENDS_elocation-dev += "elocation"
 
 DEPENDS = ""
 #DEPENDS of efl
@@ -351,6 +364,8 @@ DEPENDS += "udev"
 DEPENDS += "gnutls"
 DEPENDS += "util-linux"
 DEPENDS += "vconf"
+DEPENDS += "libinput"
+DEPENDS += "libdrm"
 #Replace "DEPENDS" on gettext by "inherit gettext"
 inherit gettext
 DEPENDS += "virtual/egl"
@@ -397,7 +412,7 @@ do_compile() {
   
   
 }
-EXTRA_OECONF += " --enable-g-main-loop \
+EXTRA_OECONF += " -with-glib=always \
 					--disable-xim \
 					--disable-scim \
 					--disable-gesture \
@@ -406,6 +421,7 @@ EXTRA_OECONF += " --enable-g-main-loop \
 					--disable-tslib \
 					--enable-wayland \
 					--enable-drm \
+					--enable-gl-drm \
 					--enable-egl \
 					--with-opengl=es \
 					--enable-tile-rotate \
@@ -416,6 +432,7 @@ EXTRA_OECONF += " --enable-g-main-loop \
 					--enable-always-build-examples \
 					--enable-systemd \
 					--enable-lua-old \
+					--enable-ecore-buffer \
 					--enable-i-really-know-what-i-am-doing-and-that-this-will-probably-break-things-and-i-will-fix-them-myself-and-send-patches-aba"
 
 do_install() {
@@ -447,6 +464,18 @@ do_install() {
 }
 
 pkg_postinst_eolian() {
+    #!/bin/sh -e
+
+    [ "x$D" == "x" ] && ldconfig
+}
+
+pkg_postinst_elua() {
+    #!/bin/sh -e
+
+    [ "x$D" == "x" ] && ldconfig
+}
+
+pkg_postinst_elocation() {
     #!/bin/sh -e
 
     [ "x$D" == "x" ] && ldconfig
@@ -635,6 +664,11 @@ PACKAGES += " eo "
 PACKAGES += " eolian "
 PACKAGES += " eolian-dev "
 PACKAGES += " eolian-examples "
+PACKAGES += " elua "
+PACKAGES += " elua-dev "
+PACKAGES += " elocation "
+PACKAGES += " elocation-dev "
+PACKAGES += " elocation-examples "
 PACKAGES += " ephysics-dev "
 PACKAGES += " edje "
 PACKAGES += " emotion-dev "
@@ -689,6 +723,29 @@ ephysics-examples_files += "${prefix}/share/ephysics/examples/*"
 eo_files = ""
 eo_files += "${prefix}/lib/libeo.so.*"
 MANIFESTFILES_eo = "efl.manifest"
+
+elua_files = ""
+elua_files += "${prefix}/share/elua*"
+MANIFESTFILES_elua = "efl.manifest"
+
+elua-dev_files = ""
+elua-dev_files += "${prefix}/lib/cmake/Elua*/*.cmake"
+MANIFESTFILES_elua-dev = "efl.manifest"
+
+elocation_files = ""
+elocation_files += "${prefix}/lib/libelocation.so.*"
+MANIFESTFILES_elocation = "efl.manifest"
+
+elocation-dev_files = ""
+elocation-dev_files += "${prefix}/include/elocation-*1/*.h*"
+elocation-dev_files += "${prefix}/include/elocation-*1/*/*.h*"
+elocation-dev_files += "${prefix}/lib/pkgconfig/elocation*.pc"
+elocation-dev_files += "${prefix}/lib/libelocation.so*"
+MANIFESTFILES_elocation-dev = "efl.manifest"
+
+elocation-examples_files = ""
+elocation-examples_files += "${prefix}/share/elocation_*/examples/*"
+MANIFESTFILES_elocation-examples = "efl.manifest"
 
 eolian_files = ""
 eolian_files += "${prefix}/bin/eolian*"
@@ -773,6 +830,7 @@ ecore-dev_files += "${prefix}/include/ecore*/*.h"
 ecore-dev_files += "${prefix}/include/ecore*cxx*/*.hh"
 ecore-dev_files += "${prefix}/lib/libecore.so"
 ecore-dev_files += "${prefix}/lib/libecore_fb.so"
+ecore-dev_files += "${prefix}/lib/libecore_buffer.so"
 ecore-dev_files += "${prefix}/lib/libecore_drm.so"
 ecore-dev_files += "${prefix}/lib/libecore_audio.so"
 ecore-dev_files += "${prefix}/lib/libecore_avahi.so"
@@ -920,6 +978,7 @@ ecore_files = ""
 ecore_files += "${prefix}/lib/libecore.so.*"
 ecore_files += "${prefix}/lib/libecore_avahi.so.*"
 ecore_files += "${prefix}/lib/libecore_fb.so.*"
+ecore_files += "${prefix}/lib/libecore_buffer.so.*"
 ecore_files += "${prefix}/lib/libecore_drm.so.*"
 ecore_files += "${prefix}/lib/libecore_audio.so.*"
 ecore_files += "${prefix}/lib/libecore_avahi.so.*"
@@ -936,6 +995,7 @@ ecore_files += "${prefix}/lib/ecore_evas/engines/*/*/module.so"
 ecore_files += "${prefix}/lib/ecore_imf/modules/*/*/module.so"
 #ecore_files += "${prefix}/lib/ecore/system/tizen/*/module.so"
 ecore_files += "${prefix}/lib/ecore/system/systemd/v-*/module.so"
+ecore_files += "${prefix}/lib/ecore_buffer/modules/*/*/module.so"
 ecore_files += "${prefix}/share/ecore/checkme"
 ecore_files += "${prefix}/share/ecore_imf/checkme"
 ecore_files += "${prefix}/share/ecore_x/checkme"
@@ -970,6 +1030,7 @@ MANIFESTFILES_eio-examples = "efl.manifest"
 eet-tools_files = ""
 eet-tools_files += "${prefix}/bin/eet"
 eet-tools_files += "${prefix}/bin/vieet"
+eet-tools_files += "${prefix}/bin/diffeet"
 MANIFESTFILES_eet-tools = "efl.manifest"
 
 edje-dev_files = ""
@@ -1018,6 +1079,11 @@ FILES_eo = "${eo_files}"
 FILES_eolian = "${eolian_files}"
 FILES_eolian-dev = "${eolian-dev_files}"
 FILES_eolian-examples = "${eolian-examples_files}"
+FILES_elocation = "${elocationfiles}"
+FILES_elocation-dev = "${elocation-dev_files}"
+FILES_elocation-examples = "${elocation-examples_files}"
+FILES_elua = "${elua_files}"
+FILES_elua-dev = "${elua-dev_files}"
 FILES_ephysics-dev = "${ephysics-dev_files}"
 FILES_edje = "${edje_files}"
 FILES_emotion-dev = "${emotion-dev_files}"
@@ -1066,6 +1132,11 @@ PKG_eo= "eo"
 PKG_eolian= "eolian"
 PKG_eolian-dev= "eolian-dev"
 PKG_eolian-examples= "eolian-examples"
+PKG_elocation= "elocation"
+PKG_elocation-dev= "elocation-dev"
+PKG_elocation-examples= "elocation-examples"
+PKG_elua= "elua"
+PKG_elua-dev= "elua-dev"
 PKG_ephysics-dev= "ephysics-dev"
 PKG_edje= "edje"
 PKG_emotion-dev= "emotion-dev"
