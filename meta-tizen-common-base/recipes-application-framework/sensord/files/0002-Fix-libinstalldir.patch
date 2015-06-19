@@ -1,31 +1,33 @@
-From ecdcc3fd5d7da81497b7fd33d74ca1e0fb9dc188 Mon Sep 17 00:00:00 2001
+From 2edb69a28acc0604fa7f5d30793bd81553c7d1a8 Mon Sep 17 00:00:00 2001
 From: Xavier Roche <xavrock.os@gmail.com>
 Date: Tue, 24 Feb 2015 15:48:42 +0100
 Subject: [PATCH] Fix lib install dir
 
 Signed-off-by: Xavier Roche <xavrock.os@gmail.com>
 ---
- CMakeLists.txt                            | 4 ++--
- src/accel/CMakeLists.txt                  | 4 ++--
- src/auto_rotation/CMakeLists.txt          | 2 +-
- src/geo/CMakeLists.txt                    | 4 ++--
- src/gravity/CMakeLists.txt                | 2 +-
- src/gyro/CMakeLists.txt                   | 4 ++--
- src/libsensord/CMakeLists.txt             | 4 ++--
- src/light/CMakeLists.txt                  | 4 ++--
- src/linear_accel/CMakeLists.txt           | 2 +-
- src/orientation/CMakeLists.txt            | 2 +-
- src/pressure/CMakeLists.txt               | 4 ++--
- src/proxi/CMakeLists.txt                  | 4 ++--
- src/rotation_vector/rv/CMakeLists.txt     | 2 +-
- src/rotation_vector/rv_raw/CMakeLists.txt | 4 ++--
- src/sensor_fusion/CMakeLists.txt          | 2 +-
- src/shared/CMakeLists.txt                 | 8 ++++----
- src/temperature/CMakeLists.txt            | 4 ++--
- 17 files changed, 30 insertions(+), 30 deletions(-)
+ CMakeLists.txt                                    | 4 ++--
+ src/accel/CMakeLists.txt                          | 4 ++--
+ src/auto_rotation/CMakeLists.txt                  | 2 +-
+ src/geo/CMakeLists.txt                            | 4 ++--
+ src/gravity/CMakeLists.txt                        | 2 +-
+ src/gyro/CMakeLists.txt                           | 4 ++--
+ src/libsensord/CMakeLists.txt                     | 4 ++--
+ src/light/CMakeLists.txt                          | 4 ++--
+ src/linear_accel/CMakeLists.txt                   | 2 +-
+ src/orientation/CMakeLists.txt                    | 2 +-
+ src/pressure/CMakeLists.txt                       | 4 ++--
+ src/proxi/CMakeLists.txt                          | 4 ++--
+ src/rotation_vector/gaming_rv/CMakeLists.txt      | 2 +-
+ src/rotation_vector/geomagnetic_rv/CMakeLists.txt | 2 +-
+ src/rotation_vector/rv/CMakeLists.txt             | 2 +-
+ src/rotation_vector/rv_raw/CMakeLists.txt         | 4 ++--
+ src/sensor_fusion/CMakeLists.txt                  | 2 +-
+ src/shared/CMakeLists.txt                         | 8 ++++----
+ src/temperature/CMakeLists.txt                    | 4 ++--
+ 19 files changed, 32 insertions(+), 32 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ad539ca..5cd0bea 100755
+index affaa30..b451596 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -5,7 +5,7 @@ include(GNUInstallDirs)
@@ -37,7 +39,7 @@ index ad539ca..5cd0bea 100755
  SET(INCLUDEDIR "${PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}")
  SET(VERSION 1.0)
  
-@@ -16,7 +16,7 @@ MESSAGE("FLAGS: ${CMAKE_CXX_FLAGS}")
+@@ -17,7 +17,7 @@ MESSAGE("FLAGS: ${CMAKE_CXX_FLAGS}")
  MESSAGE("FLAGS: ${CMAKE_EXE_LINKER_FLAGS}")
  
  add_definitions(-DUSE_DLOG_LOG)
@@ -47,10 +49,10 @@ index ad539ca..5cd0bea 100755
  # Internal Debugging Options
  #add_definitions(-Wall -g -D_DEBUG)
 diff --git a/src/accel/CMakeLists.txt b/src/accel/CMakeLists.txt
-index a37c89c..2f98f37 100755
+index 2537c1c..337fb0f 100755
 --- a/src/accel/CMakeLists.txt
 +++ b/src/accel/CMakeLists.txt
-@@ -29,5 +29,5 @@ add_library(${SENSOR_HAL_NAME} SHARED
+@@ -26,5 +26,5 @@ add_library(${SENSOR_HAL_NAME} SHARED
  target_link_libraries(${SENSOR_NAME} ${accel_pkgs_LDFLAGS} "-lm")
  target_link_libraries(${SENSOR_HAL_NAME} ${accel_pkgs_LDFLAGS})
  
@@ -69,10 +71,10 @@ index a0076b2..121c265 100644
 -install(TARGETS ${SENSOR_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR}/sensord)
 +install(TARGETS ${SENSOR_NAME} DESTINATION ${LIBDIR}/sensord)
 diff --git a/src/geo/CMakeLists.txt b/src/geo/CMakeLists.txt
-index c6d4aa1..0c593c5 100755
+index 8a04867..d5f543d 100755
 --- a/src/geo/CMakeLists.txt
 +++ b/src/geo/CMakeLists.txt
-@@ -29,5 +29,5 @@ add_library(${SENSOR_HAL_NAME} SHARED
+@@ -26,5 +26,5 @@ add_library(${SENSOR_HAL_NAME} SHARED
  target_link_libraries(${SENSOR_NAME} ${geo_pkgs_LDFLAGS} "-lm")
  target_link_libraries(${SENSOR_HAL_NAME} ${geo_pkgs_LDFLAGS})
  
@@ -81,20 +83,20 @@ index c6d4aa1..0c593c5 100755
 +install(TARGETS ${SENSOR_NAME} DESTINATION ${LIBDIR}/sensord)
 +install(TARGETS ${SENSOR_HAL_NAME} DESTINATION ${LIBDIR}/sensord)
 diff --git a/src/gravity/CMakeLists.txt b/src/gravity/CMakeLists.txt
-index e66964e..69ae097 100755
+index 910bf2e..28e2e00 100755
 --- a/src/gravity/CMakeLists.txt
 +++ b/src/gravity/CMakeLists.txt
-@@ -23,4 +23,4 @@ add_library(${SENSOR_NAME} SHARED
+@@ -20,4 +20,4 @@ add_library(${SENSOR_NAME} SHARED
  
  target_link_libraries(${SENSOR_NAME} ${gravity_pkgs_LDFLAGS} "-lm")
  
 -install(TARGETS ${SENSOR_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR}/sensord)
 +install(TARGETS ${SENSOR_NAME} DESTINATION ${LIBDIR}/sensord)
 diff --git a/src/gyro/CMakeLists.txt b/src/gyro/CMakeLists.txt
-index 228fac9..f2ce149 100755
+index 1cfef0c..5ef3708 100755
 --- a/src/gyro/CMakeLists.txt
 +++ b/src/gyro/CMakeLists.txt
-@@ -28,5 +28,5 @@ add_library(${SENSOR_HAL_NAME} SHARED
+@@ -25,5 +25,5 @@ add_library(${SENSOR_HAL_NAME} SHARED
  target_link_libraries(${SENSOR_NAME} ${gyro_pkgs_LDFLAGS} "-lm")
  target_link_libraries(${SENSOR_HAL_NAME} ${gyro_pkgs_LDFLAGS})
  
@@ -103,7 +105,7 @@ index 228fac9..f2ce149 100755
 +install(TARGETS ${SENSOR_NAME} DESTINATION ${LIBDIR}/sensord)
 +install(TARGETS ${SENSOR_HAL_NAME} DESTINATION ${LIBDIR}/sensord)
 diff --git a/src/libsensord/CMakeLists.txt b/src/libsensord/CMakeLists.txt
-index 5b57251..f507c93 100755
+index 2a8291f..8914df3 100755
 --- a/src/libsensord/CMakeLists.txt
 +++ b/src/libsensord/CMakeLists.txt
 @@ -34,7 +34,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES SOVERSION ${VERSION_MAJOR})
@@ -112,20 +114,20 @@ index 5b57251..f507c93 100755
  configure_file(${PROJECT_NAME}.pc.in ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.pc @ONLY)
 -install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT RuntimeLibraries)
 +install(TARGETS ${PROJECT_NAME} DESTINATION ${LIBDIR} COMPONENT RuntimeLibraries)
- install(FILES sensor.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/sensor/)
  install(FILES sensor_internal_deprecated.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/sensor/)
  install(FILES sensor_internal.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/sensor/)
-@@ -59,4 +59,4 @@ install(FILES sensor_rv.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/sensor/)
+ install(FILES poller.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/sensor/)
+@@ -60,4 +60,4 @@ install(FILES sensor_gaming_rv.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/sensor/
  install(FILES sensor_temperature.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/sensor/)
  install(FILES sensor_motion.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/sensor/)
  install(FILES sensor_deprecated.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/sensor/)
 -install(FILES ${PROJECT_NAME}.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 +install(FILES ${PROJECT_NAME}.pc DESTINATION ${LIBDIR}/pkgconfig)
 diff --git a/src/light/CMakeLists.txt b/src/light/CMakeLists.txt
-index 099ff82..759cba7 100755
+index 9945df2..d8d0905 100755
 --- a/src/light/CMakeLists.txt
 +++ b/src/light/CMakeLists.txt
-@@ -29,5 +29,5 @@ add_library(${SENSOR_HAL_NAME} SHARED
+@@ -26,5 +26,5 @@ add_library(${SENSOR_HAL_NAME} SHARED
  target_link_libraries(${SENSOR_NAME} ${light_pkgs_LDFLAGS} "-lm")
  target_link_libraries(${SENSOR_HAL_NAME} ${light_pkgs_LDFLAGS})
  
@@ -134,30 +136,30 @@ index 099ff82..759cba7 100755
 +install(TARGETS ${SENSOR_NAME} DESTINATION ${LIBDIR}/sensord)
 +install(TARGETS ${SENSOR_HAL_NAME} DESTINATION ${LIBDIR}/sensord)
 diff --git a/src/linear_accel/CMakeLists.txt b/src/linear_accel/CMakeLists.txt
-index 986fb11..52a573a 100755
+index fbc726f..8451318 100755
 --- a/src/linear_accel/CMakeLists.txt
 +++ b/src/linear_accel/CMakeLists.txt
-@@ -24,4 +24,4 @@ add_library(${SENSOR_NAME} SHARED
+@@ -21,4 +21,4 @@ add_library(${SENSOR_NAME} SHARED
  
  target_link_libraries(${SENSOR_NAME} ${linear_accel_pkgs_LDFLAGS} "-lm")
  
 -install(TARGETS ${SENSOR_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR}/sensord)
 +install(TARGETS ${SENSOR_NAME} DESTINATION ${LIBDIR}/sensord)
 diff --git a/src/orientation/CMakeLists.txt b/src/orientation/CMakeLists.txt
-index 6f02e9a..e7ef28a 100755
+index 5418674..445569d 100755
 --- a/src/orientation/CMakeLists.txt
 +++ b/src/orientation/CMakeLists.txt
-@@ -24,4 +24,4 @@ add_library(${SENSOR_NAME} SHARED
+@@ -21,4 +21,4 @@ add_library(${SENSOR_NAME} SHARED
  
  target_link_libraries(${SENSOR_NAME} ${orientation_pkgs_LDFLAGS} "-lm")
  
 -install(TARGETS ${SENSOR_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR}/sensord)
 +install(TARGETS ${SENSOR_NAME} DESTINATION ${LIBDIR}/sensord)
 diff --git a/src/pressure/CMakeLists.txt b/src/pressure/CMakeLists.txt
-index e61aca4..9eb8df8 100755
+index 85a8e9b..66d38fa 100755
 --- a/src/pressure/CMakeLists.txt
 +++ b/src/pressure/CMakeLists.txt
-@@ -29,5 +29,5 @@ add_library(${SENSOR_HAL_NAME} SHARED
+@@ -26,5 +26,5 @@ add_library(${SENSOR_HAL_NAME} SHARED
  target_link_libraries(${SENSOR_NAME} ${pressure_pkgs_LDFLAGS} "-lm")
  target_link_libraries(${SENSOR_HAL_NAME} ${pressure_pkgs_LDFLAGS})
  
@@ -166,10 +168,10 @@ index e61aca4..9eb8df8 100755
 +install(TARGETS ${SENSOR_NAME} DESTINATION ${LIBDIR}/sensord)
 +install(TARGETS ${SENSOR_HAL_NAME} DESTINATION ${LIBDIR}/sensord)
 diff --git a/src/proxi/CMakeLists.txt b/src/proxi/CMakeLists.txt
-index 7cd4517..e05cc43 100755
+index bed7b2d..54103f7 100755
 --- a/src/proxi/CMakeLists.txt
 +++ b/src/proxi/CMakeLists.txt
-@@ -29,5 +29,5 @@ add_library(${SENSOR_HAL_NAME} SHARED
+@@ -26,5 +26,5 @@ add_library(${SENSOR_HAL_NAME} SHARED
  target_link_libraries(${SENSOR_NAME} ${proxi_pkgs_LDFLAGS} "-lm")
  target_link_libraries(${SENSOR_HAL_NAME} ${proxi_pkgs_LDFLAGS})
  
@@ -177,11 +179,31 @@ index 7cd4517..e05cc43 100755
 -install(TARGETS ${SENSOR_HAL_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR}/sensord)
 +install(TARGETS ${SENSOR_NAME} DESTINATION ${LIBDIR}/sensord)
 +install(TARGETS ${SENSOR_HAL_NAME} DESTINATION ${LIBDIR}/sensord)
+diff --git a/src/rotation_vector/gaming_rv/CMakeLists.txt b/src/rotation_vector/gaming_rv/CMakeLists.txt
+index a56dc73..fbf26d2 100755
+--- a/src/rotation_vector/gaming_rv/CMakeLists.txt
++++ b/src/rotation_vector/gaming_rv/CMakeLists.txt
+@@ -21,4 +21,4 @@ add_library(${SENSOR_NAME} SHARED
+ 
+ target_link_libraries(${SENSOR_NAME} ${gaming_rv_pkgs_LDFLAGS} "-lm")
+ 
+-install(TARGETS ${SENSOR_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR}/sensord)
++install(TARGETS ${SENSOR_NAME} DESTINATION ${LIBDIR}/sensord)
+diff --git a/src/rotation_vector/geomagnetic_rv/CMakeLists.txt b/src/rotation_vector/geomagnetic_rv/CMakeLists.txt
+index 6b44750..cc64884 100755
+--- a/src/rotation_vector/geomagnetic_rv/CMakeLists.txt
++++ b/src/rotation_vector/geomagnetic_rv/CMakeLists.txt
+@@ -21,4 +21,4 @@ add_library(${SENSOR_NAME} SHARED
+ 
+ target_link_libraries(${SENSOR_NAME} ${geomagnetic_rv_pkgs_LDFLAGS} "-lm")
+ 
+-install(TARGETS ${SENSOR_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR}/sensord)
++install(TARGETS ${SENSOR_NAME} DESTINATION ${LIBDIR}/sensord)
 diff --git a/src/rotation_vector/rv/CMakeLists.txt b/src/rotation_vector/rv/CMakeLists.txt
-index d26d4f9..6e0e386 100755
+index 1549c6f..b6dae72 100755
 --- a/src/rotation_vector/rv/CMakeLists.txt
 +++ b/src/rotation_vector/rv/CMakeLists.txt
-@@ -24,4 +24,4 @@ add_library(${SENSOR_NAME} SHARED
+@@ -21,4 +21,4 @@ add_library(${SENSOR_NAME} SHARED
  
  target_link_libraries(${SENSOR_NAME} ${rv_pkgs_LDFLAGS} "-lm")
  
@@ -200,17 +222,17 @@ index 223b8c8..e83a639 100755
 +install(TARGETS ${SENSOR_NAME} DESTINATION ${LIBDIR}/sensord)
 +install(TARGETS ${SENSOR_HAL_NAME} DESTINATION ${LIBDIR}/sensord)
 diff --git a/src/sensor_fusion/CMakeLists.txt b/src/sensor_fusion/CMakeLists.txt
-index c38f410..526b396 100755
+index 627d6ec..de2308a 100755
 --- a/src/sensor_fusion/CMakeLists.txt
 +++ b/src/sensor_fusion/CMakeLists.txt
-@@ -35,4 +35,4 @@ add_library(${SENSOR_FUSION_NAME} SHARED
+@@ -32,4 +32,4 @@ add_library(${SENSOR_FUSION_NAME} SHARED
  
  target_link_libraries(${SENSOR_FUSION_NAME} ${rpkgs_LDFLAGS} ${GLES_LDFLAGS} "-lm")
  
 -install(TARGETS ${SENSOR_FUSION_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR}/sensord)
 +install(TARGETS ${SENSOR_FUSION_NAME} DESTINATION ${LIBDIR}/sensord)
 diff --git a/src/shared/CMakeLists.txt b/src/shared/CMakeLists.txt
-index f400944..3b37bb6 100755
+index 2cadc1a..5a989a5 100755
 --- a/src/shared/CMakeLists.txt
 +++ b/src/shared/CMakeLists.txt
 @@ -51,10 +51,10 @@ target_link_libraries(sensord-share ${shared_pkgs_LDFLAGS} "-lrt -ldl -pthread")
@@ -241,5 +263,5 @@ index 87dab53..26e03c9 100755
 +install(TARGETS ${SENSOR_NAME} DESTINATION ${LIBDIR}/sensord)
 +install(TARGETS ${SENSOR_HAL_NAME} DESTINATION ${LIBDIR}/sensord)
 -- 
-1.9.1
+1.8.4.5
 
