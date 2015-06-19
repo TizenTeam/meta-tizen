@@ -2,7 +2,7 @@ DESCRIPTION = "Common header files of Tizen Native API"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "API/C API"
 LICENSE = "Apache-2.0"
-PV = "0.1.6"
+PV = "0.2.0"
 
 SRC_URI = ""
 
