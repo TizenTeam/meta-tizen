@@ -116,6 +116,7 @@ MANIFESTFILES_${PN} = "libdevice-node.manifest"
 
 libdevice-node-dev_files = ""
 libdevice-node-dev_files += "${prefix}/include/device-node/*.h"
+libdevice-node-dev_files += "${prefix}/include/hw/*.h"
 libdevice-node-dev_files += "${prefix}/lib/*.so"
 libdevice-node-dev_files += "${prefix}/lib/pkgconfig/*.pc"
 
