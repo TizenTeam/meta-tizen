@@ -2,7 +2,7 @@ DESCRIPTION = "Wayland Compositor Infrastructure"
 HOMEPAGE = "http://weston.freedesktop.org/"
 SECTION = "Graphics & UI Framework/Wayland Window System"
 LICENSE = "MIT"
-PV = "1.6.0"
+PV = "1.7.0"
 
 SRC_URI = ""
 
@@ -123,8 +123,10 @@ do_install() {
  install -m 755 weston-simple-shm ${D}${prefix}/bin
  install -m 755 weston-simple-egl ${D}${prefix}/bin
  install -m 755 weston-simple-damage ${D}${prefix}/bin
+ install -m 755 weston-presentation-shm ${D}${prefix}/bin
  install -m 755 weston-nested-client ${D}${prefix}/bin
  install -m 755 weston-nested ${D}${prefix}/bin
+ install -m 755 weston-multi-resource ${D}${prefix}/bin
  install -m 755 weston-flower ${D}${prefix}/bin
  install -m 755 weston-image ${D}${prefix}/bin
  install -m 755 weston-cliptest ${D}${prefix}/bin
@@ -140,7 +142,7 @@ do_install() {
  install -m 755 weston-transformed ${D}${prefix}/bin
  install -m 755 weston-fullscreen ${D}${prefix}/bin
  
- 
+ #rm -rf %{buildroot}%{_datadir}/wayland-sessions
 }
 
 pkg_preinst_${PN}() {
@@ -178,8 +180,10 @@ weston-clients_files += "${prefix}/bin/weston-simple-touch"
 weston-clients_files += "${prefix}/bin/weston-simple-shm"
 weston-clients_files += "${prefix}/bin/weston-simple-egl"
 weston-clients_files += "${prefix}/bin/weston-simple-damage"
+weston-clients_files += "${prefix}/bin/weston-presentation-shm"
 weston-clients_files += "${prefix}/bin/weston-nested-client"
 weston-clients_files += "${prefix}/bin/weston-nested"
+weston-clients_files += "${prefix}/bin/weston-multi-resource"
 weston-clients_files += "${prefix}/bin/weston-flower"
 weston-clients_files += "${prefix}/bin/weston-image"
 weston-clients_files += "${prefix}/bin/weston-cliptest"
