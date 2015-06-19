@@ -2,7 +2,7 @@ DESCRIPTION = "Bluetooth framework for BlueZ and Obexd"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "Network & Connectivity/Bluetooth"
 LICENSE = "Apache-2.0"
-PV = "0.2.55"
+PV = "0.2.146"
 
 SRC_URI = ""
 
@@ -44,7 +44,7 @@ RDEPENDS_${PN} += "dbus"
 RDEPENDS_${PN} += "bluetooth-tools"
 RDEPENDS_${PN} += "vconf"
 RDEPENDS_${PN} += "glibc"
-
+RDEPENDS_${PN} += "psmisc"
 
 DEPENDS = ""
 #DEPENDS of bluetooth-frwk
@@ -56,7 +56,7 @@ DEPENDS += "tizen-platform-config"
 inherit pkgconfig
 DEPENDS += "dlog"
 DEPENDS += "glib-2.0"
-DEPENDS += "capi-network-tethering"
+DEPENDS += "capi-network-connection"
 DEPENDS += "aul"
 DEPENDS += "security-server"
 DEPENDS += "notification"
@@ -64,6 +64,13 @@ DEPENDS += "alarm-manager"
 DEPENDS += "libprivilege-control"
 DEPENDS += "vconf"
 DEPENDS += "dbus-glib"
+DEPENDS += "capi-content-mime-type"
+DEPENDS += "app-core-efl"
+DEPENDS += "pkgmgr"
+DEPENDS += "libcynara-client"
+DEPENDS += "libcynara-creds-dbus"
+
+CFLAGS_prepend = " -Wall -g -fvisibility=hidden -fPIC -DRFCOMM_DIRECT"
 
 do_prep() {
  cd ${S}
@@ -89,8 +96,8 @@ do_compile() {
  LD_AS_NEEDED=1; export LD_AS_NEEDED ;
  
  
- export CFLAGS="${CFLAGS}   -Wall -g -fvisibility=hidden -fPIC"
- export LDFLAGS="${LDFLAGS} -Wl,--rpath=${prefix}/lib -Wl,--as-needed -Wl,--unresolved-symbols=ignore-in-shared-libs"
+ export CFLAGS="${CFLAGS}   -Wall -g -fvisibility=hidden -fPIC -DRFCOMM_DIRECT "
+ export LDFLAGS="${LDFLAGS} -Wl,--rpath=${prefix}/lib -Wl,--as-needed -Wl,--unresolved-symbols=ignore-in-shared-libs "
  
  
    cmake \
@@ -108,9 +115,10 @@ do_compile() {
  -DTZ_SYS_USER_GROUP=users \
  -DTZ_SYS_DEFAULT_USER=app \
   -DLIBNOTIFY_SUPPORT=Off \
-  -DLIBNOTIFICATION_SUPPORT=On
+  -DLIBNOTIFICATION_SUPPORT=Off \
+  -DTIZEN_WEARABLE=NO
  
- oe_runmake
+ oe_runmake -j 1
  
  
  
@@ -141,6 +149,11 @@ do_install() {
  
  mkdir -p ${D}${prefix}/share/icons/default
  install -m 0644 ${S}/packaging/bt-icon.png ${D}${prefix}/share/icons/default/bt-icon.png
+ 
+ install -D -m 0644 LICENSE ${D}${prefix}/share/license/bluetooth-frwk
+ install -D -m 0644 LICENSE ${D}${prefix}/share/license/bluetooth-frwk-service
+ install -D -m 0644 LICENSE ${D}${prefix}/share/license/bluetooth-frwk-devel
+
  
  # On IVI bt-service needs to be run as 'app' even if there is a 'guest' user.
  
@@ -183,8 +196,10 @@ bluetooth-frwk-dev_files += "${prefix}/include/bt-service/bluetooth-hid-api.h"
 bluetooth-frwk-dev_files += "${prefix}/include/bt-service/bluetooth-audio-api.h"
 bluetooth-frwk-dev_files += "${prefix}/include/bt-service/bluetooth-telephony-api.h"
 bluetooth-frwk-dev_files += "${prefix}/include/bt-service/bluetooth-media-control.h"
+bluetooth-frwk-dev_files += "${prefix}/include/bt-service/bluetooth-scmst-api.h"
 bluetooth-frwk-dev_files += "${prefix}/lib/pkgconfig/bluetooth-api.pc"
 bluetooth-frwk-dev_files += "${prefix}/lib/libbluetooth-api.so"
+bluetooth-frwk-dev_files += "${prefix}/share/license/bluetooth-frwk-devel"
 MANIFESTFILES_${PN}-dev = "bluetooth-frwk.manifest"
 
 bluetooth-frwk-core_files = ""
@@ -196,14 +211,19 @@ MANIFESTFILES_${PN}-core = "bluetooth-frwk.manifest"
 bluetooth-frwk-service_files = ""
 bluetooth-frwk-service_files += "${prefix}/share/dbus-1/system-services/org.projectx.bt.service"
 bluetooth-frwk-service_files += "${prefix}/bin/bt-service"
-bluetooth-frwk-service_files += "${prefix}/lib/systemd/user/bluetooth-frwk-service.service"
+bluetooth-frwk-service_files += "${prefix}/bin/bluetooth-frwk-test"
 bluetooth-frwk-service_files += "/opt/var/lib/bluetooth/auto-pair-blacklist"
+bluetooth-frwk-service_files += "/var/lib/bluetooth"
+bluetooth-frwk-service_files += "${prefix}/etc/bluetooth"
+bluetooth-frwk-service_files += "${prefix}/lib/systemd/user/bluetooth-frwk-service.service"
 bluetooth-frwk-service_files += "${sysconfdir}/dbus-1/system.d/bluetooth-frwk-service.conf"
 bluetooth-frwk-service_files += "${prefix}/share/icons/default/bt-icon.png"
+bluetooth-frwk-service_files += "${prefix}/share/license/bluetooth-frwk-service"
 MANIFESTFILES_${PN}-service = "bluetooth-frwk.manifest"
 
 bluetooth-frwk_files = ""
 bluetooth-frwk_files += "${prefix}/lib/libbluetooth-api.so.*"
+bluetooth-frwk_files += "${prefix}/share/license/bluetooth-frwk"
 MANIFESTFILES_${PN} = "bluetooth-frwk.manifest"
 
 FILES_${PN}-dev = "${bluetooth-frwk-dev_files}"
