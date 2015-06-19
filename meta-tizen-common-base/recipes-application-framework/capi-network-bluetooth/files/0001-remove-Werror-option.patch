@@ -1,0 +1,36 @@
+From 4f172b85dc2d40ff98b160dc429fac8b8dafe7b0 Mon Sep 17 00:00:00 2001
+From: Jean-Benoit MARTIN <jean-benoit.martin@open.eurogiciel.org>
+Date: Fri, 19 Jun 2015 15:13:05 +0200
+Subject: [PATCH] remove -Werror option
+
+Change-Id: I6ca28c6b52c93ec7eda28e9cf67774ff7510e13c
+Signed-off-by: Jean-Benoit MARTIN <jean-benoit.martin@open.eurogiciel.org>
+---
+ CMakeLists.txt | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 57156d0..ed24ecf 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -22,7 +22,7 @@ FOREACH(flag ${${fw_name}_CFLAGS})
+     SET(EXTRA_CFLAGS "${EXTRA_CFLAGS} ${flag}")
+ ENDFOREACH(flag)
+ 
+-SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${EXTRA_CFLAGS} -fPIC -Wall -Werror")
++SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${EXTRA_CFLAGS} -fPIC -Wall ")
+ SET(CMAKE_C_FLAGS_DEBUG "-O0 -g")
+ 
+ IF("${ARCH}" STREQUAL "arm")
+@@ -79,8 +79,6 @@ CONFIGURE_FILE(
+ )
+ INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/${fw_name}.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
+ 
+-ADD_SUBDIRECTORY(test)
+-
+ IF(UNIX)
+ 
+ ADD_CUSTOM_TARGET (distclean @echo cleaning for source distribution)
+-- 
+1.8.4.5
+

@@ -2,7 +2,7 @@ DESCRIPTION = "Network Bluetooth Framework"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "Connectivity/API"
 LICENSE = "Apache-2.0"
-PV = "0.1.39"
+PV = "0.1.52"
 
 SRC_URI = ""
 
@@ -36,6 +36,9 @@ DEPENDS += "vconf"
 DEPENDS += "dbus-glib"
 DEPENDS += "bluetooth-frwk"
 
+CFLAGS_prepend = " -Wall -g -fvisibility=hidden -fPIC -DTIZEN_ENGINEER_MODE  -DTIZEN_DEBUG_ENABLE -DARCH64"
+
+LDFLAGS_append = " -fuse-ld=bfd"
 do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
@@ -58,7 +61,7 @@ do_compile() {
  unset DISPLAY
  LD_AS_NEEDED=1; export LD_AS_NEEDED ;
  
- MAJORVER=`echo 0.1.39 | awk 'BEGIN {FS="."}{print $1}'`
+ MAJORVER=`echo 0.1.52 | awk 'BEGIN {FS="."}{print $1}'`
  
    cmake \
          -DCMAKE_VERBOSE_MAKEFILE=ON \
@@ -71,7 +74,7 @@ do_compile() {
          -DCMAKE_SKIP_RPATH:BOOL=ON \
          -DBUILD_SHARED_LIBS:BOOL=ON \
          -DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain.cmake \
-         ${EXTRA_OECMAKE} . -DFULLVER=0.1.39 -DMAJORVER=${MAJORVER}
+         ${EXTRA_OECMAKE} . -DFULLVER=${PV} -DMAJORVER=${MAJORVER}
  
  oe_runmake
  
@@ -121,6 +124,10 @@ PACKAGES += " capi-network-bluetooth "
 capi-network-bluetooth-dev_files = ""
 capi-network-bluetooth-dev_files += "${prefix}/include/network/bluetooth.h"
 capi-network-bluetooth-dev_files += "${prefix}/include/network/bluetooth_type.h"
+capi-network-bluetooth-dev_files += "${prefix}/include/network/bluetooth_internal.h"
+capi-network-bluetooth-dev_files += "${prefix}/include/network/bluetooth_type_internal.h"
+capi-network-bluetooth-dev_files += "${prefix}/include/network/bluetooth_type_extention.h"
+capi-network-bluetooth-dev_files += "${prefix}/include/network/bluetooth_extention.h"
 capi-network-bluetooth-dev_files += "${prefix}/lib/pkgconfig/capi-network-bluetooth.pc"
 capi-network-bluetooth-dev_files += "${prefix}/lib/libcapi-network-bluetooth.so"
 MANIFESTFILES_${PN}-dev = "capi-network-bluetooth-devel.manifest"
