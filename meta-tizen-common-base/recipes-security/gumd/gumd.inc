@@ -127,6 +127,7 @@ pkg_postinst_${PN}() {
     mkdir -p $D${sysconfdir}/gumd/userdel.d
     mkdir -p $D${sysconfdir}/gumd/groupadd.d
     mkdir -p $D${sysconfdir}/gumd/groupdel.d
+    mkdir -p $D${localstatedir}/lib/gumd/user
 
 }
 

@@ -138,6 +138,12 @@ pkg_postinst_${PN}() {
 
 }
 
+pkg_postinst_${PN}-config-common-singleseat() {
+    if [ ! -e /etc/tlm.conf ] || [ -h /etc/tlm.conf ]; then
+       ln -s -f /etc/tlm-singleseat.conf /etc/tlm.conf
+    fi
+}
+
 pkg_prerm_${PN}() {
     #!/bin/sh -e
 
@@ -169,7 +175,7 @@ PACKAGES += " tlm-dev "
 PACKAGES += " tlm "
 
 tlm-config-common_files = ""
-tlm-config-common_files += "${sysconfdir}/tlm.conf"
+tlm-config-common_files += "${sysconfdir}/tlm-default.conf"
 tlm-config-common_files += "${sysconfdir}/session.d/*"
 MANIFESTFILES_${PN}-config-common = "tlm.manifest"
 

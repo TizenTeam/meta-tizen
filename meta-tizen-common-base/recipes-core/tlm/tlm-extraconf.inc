@@ -39,19 +39,21 @@ do_install() {
   install -m 755 -d ${D}${sysconfdir}/udev/rules.d
   install -m 644 data/tizen-ivi/10-multiseat-vtc1010.rules ${D}${sysconfdir}/udev/rules.d/
  elif ${@bb.utils.contains('DISTRO_FEATURES','tizen-common','true','false',d)}; then
-  install -m 644 data/tizen-common/etc/tlm.conf ${D}${sysconfdir}
+  install -m 644 data/tizen-common/etc/tlm*.conf ${D}${sysconfdir}
   install -m 755 data/tizen-common/etc/session.d/* ${D}${sysconfdir}/session.d/
  fi
  
 }
 
 PACKAGES += " ${PN}-conf"
+PACKAGES += " ${PN}-config-common-singleseat "
 PACKAGES += " ${PN}-config-ivi"
 PACKAGES += " ${PN}-config-ivi-singleseat "
 PACKAGES += " ${PN}-config-ivi-multiseat "
 PACKAGES += " ${PN}-config-ivi-vtc1010 "
 
 RDEPENDS_${PN}-config-common += "${PN}-conf"
+RDEPENDS_${PN}-config-common-singleseat += "${PN}-config-common"
 RDEPENDS_${PN}-config-ivi += "${PN}-conf"
 RDEPENDS_${PN}-config-ivi-singleseat += "${PN}-config-ivi"
 RDEPENDS_${PN}-config-ivi-multiseat += "${PN}-config-ivi"
@@ -59,6 +61,8 @@ RDEPENDS_${PN}-config-ivi-vtc1010 += "${PN}-config-ivi"
 
 FILES_${PN}-conf += "${sysconfdir}/session.d/user-session"
 FILES_${PN}-config-common_remove = "${sysconfdir}/session.d/*"
+
+FILES_${PN}-config-common-singleseat += "${sysconfdir}/tlm-singleseat.conf"
 
 FILES_${PN}-config-ivi += "${sysconfdir}/session.d/user-session-ico"
 FILES_${PN}-config-ivi += "${sysconfdir}/session.d/user-session-modello"
@@ -81,6 +85,10 @@ PKG_tlm-config-ivi-singleseat= "tlm-config-ivi-singleseat"
 PKG_tlm-config-ivi-multiseat = "tlm-config-ivi-multiseat"
 PKG_tlm-config-ivi-vtc1010   = "tlm-config-ivi-vtc1010"
 
+
+pkg_postinst_${PN}-config-common-singleseat() {
+ ln -s -f /etc/tlm-singleseat.conf $D/etc/tlm.conf
+}
 
 pkg_postinst_${PN}-config-ivi-singleseat() {
  ln -s -f /etc/tlm-singleseat.conf $D/etc/tlm.conf

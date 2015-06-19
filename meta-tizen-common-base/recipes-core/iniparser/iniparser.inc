@@ -2,7 +2,7 @@ DESCRIPTION = "Stand-alone ini file parsing library"
 HOMEPAGE = "http://ndevilla.free.fr/iniparser/"
 SECTION = "System/Libraries"
 LICENSE = "MIT"
-PV = "2.17"
+PV = "3.1"
 
 SRC_URI = ""
 

@@ -1,5 +1,5 @@
 DESCRIPTION = "OAuth plugin for GLib"
-HOMEPAGE = "http://nohomepage.org"
+HOMEPAGE = "https://01.org/gsso"
 SECTION = "Security/Accounts"
 LICENSE = "LGPL-2.1+"
 PV = "1.0.0"
