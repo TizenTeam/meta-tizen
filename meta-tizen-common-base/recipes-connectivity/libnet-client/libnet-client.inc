@@ -2,7 +2,7 @@ DESCRIPTION = "Network Client library (Shared library)"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "System/Network"
 LICENSE = "Flora License"
-PV = "0.1.77_55"
+PV = "0.1.77_60"
 
 SRC_URI = ""
 
