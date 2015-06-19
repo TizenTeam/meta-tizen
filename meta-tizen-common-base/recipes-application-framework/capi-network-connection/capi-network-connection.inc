@@ -2,7 +2,7 @@ DESCRIPTION = "Network Connection library in TIZEN C API"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "System/Network"
 LICENSE = "Apache-2.0"
-PV = "0.1.3_19"
+PV = "0.1.3_24"
 
 SRC_URI = ""
 
@@ -130,6 +130,7 @@ capi-network-connection-dev_files += "${prefix}/lib/libcapi-network-connection.s
 MANIFESTFILES_${PN}-dev = "capi-network-connection.manifest"
 
 capi-network-connection_files = ""
+capi-network-connection_files += "${prefix}/bin/connection_test"
 capi-network-connection_files += "${prefix}/lib/libcapi-network-connection.so.*"
 capi-network-connection_files += "${prefix}/share/license/capi-network-connection"
 MANIFESTFILES_${PN} = "capi-network-connection.manifest"
