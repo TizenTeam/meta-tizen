@@ -35,13 +35,15 @@ DEPENDS += "dlog"
 DEPENDS += "ecore"
 DEPENDS += "vconf"
 DEPENDS += "capi-base-common"
+DEPENDS += "openssl"
+DEPENDS += "glib-2.0"
 
 do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
  #setup -q
  cp ${S}/packaging/capi-system-info.manifest .
- 
+ cp ${S}/packaging/tizenid.service .
  
 }
 do_patch_append() {
@@ -71,6 +73,10 @@ do_compile() {
          -DCMAKE_SKIP_RPATH:BOOL=ON \
          -DBUILD_SHARED_LIBS:BOOL=ON \
          -DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain.cmake \
+         -DCONFIG_FILE_PATH=/etc/config/model-config.xml \
+         -DINFO_FILE_PATH=/etc/info.ini \
+         -DOS_RELEASE_FILE_PATH=/etc/os-release \
+         -DSERIAL_PATH=/csa/imei/serialno.dat \
          ${EXTRA_OECMAKE} . -DFULLVER=0.2.0 -DMAJORVER=${MAJORVER} -DENABLE_WAYLAND=TRUE
  oe_runmake
  
@@ -98,7 +104,10 @@ do_install() {
    find ${D} -regex ".*\.a$" | xargs rm -f --
  mkdir -p ${D}${sysconfdir}
  cp -f script/make_info_file.sh ${D}${sysconfdir}/make_info_file.sh
- 
+ mkdir -p ${D}%{prefix}/lib/systemd/system/multi-user.target.wants
+ install -m 0644 tizenid.service ${D}%{prefix}/lib/systemd/system/tizenid.service
+ ln -s ../tizenid.service ${D}%{prefix}/lib/systemd/system/multi-user.target.wants/tizenid.service
+
  
 }
 
@@ -120,6 +129,7 @@ PACKAGES += " capi-system-info "
 
 capi-system-info-dev_files = ""
 capi-system-info-dev_files += "${prefix}/include/system/system_info.h"
+capi-system-info-dev_files += "${prefix}/include/system/system_info_type.h"
 capi-system-info-dev_files += "${prefix}/lib/pkgconfig/*.pc"
 capi-system-info-dev_files += "${prefix}/lib/libcapi-system-info.so"
 MANIFESTFILES_${PN}-dev = "capi-system-info.manifest"
@@ -127,6 +137,9 @@ MANIFESTFILES_${PN}-dev = "capi-system-info.manifest"
 capi-system-info_files = ""
 capi-system-info_files += "${prefix}/lib/libcapi-system-info.so.*"
 capi-system-info_files += "${sysconfdir}/make_info_file.sh"
+capi-system-info_files += "${prefix}/bin/tizen_id"
+capi-system-info_files += "${prefix}/lib/systemd/system/tizenid.service"
+capi-system-info_files += "${prefix}/lib/systemd/system/multi-user.target.wants/tizenid.service"
 MANIFESTFILES_${PN} = "capi-system-info.manifest"
 
 FILES_${PN}-dev = "${capi-system-info-dev_files}"
