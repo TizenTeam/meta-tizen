@@ -1,0 +1,26 @@
+From d96be5093291f89aade85f6c5f60ba2f2d5997a3 Mon Sep 17 00:00:00 2001
+From: Jean-Benoit MARTIN <jean-benoit.martin@open.eurogiciel.org>
+Date: Mon, 22 Jun 2015 13:20:51 +0200
+Subject: [PATCH] add link to dbus-glib
+
+Change-Id: Iedf26454e8916461201855ca7c391a31d9d5ff19
+Signed-off-by: Jean-Benoit MARTIN <jean-benoit.martin@open.eurogiciel.org>
+---
+ src/libdeviced/CMakeLists.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/libdeviced/CMakeLists.txt b/src/libdeviced/CMakeLists.txt
+index 71e13b0..17de698 100755
+--- a/src/libdeviced/CMakeLists.txt
++++ b/src/libdeviced/CMakeLists.txt
+@@ -23,6 +23,7 @@ pkg_check_modules(libpkgs REQUIRED
+ 	vconf
+ 	dlog
+ 	dbus-1
++	dbus-glib-1
+ 	edbus)
+ 
+ FOREACH(flag ${libpkgs_CFLAGS})
+-- 
+1.8.4.5
+

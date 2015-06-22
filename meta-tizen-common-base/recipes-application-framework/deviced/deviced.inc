@@ -16,6 +16,8 @@ PROVIDES = ""
 #PROVIDES by libdevman-dev
 PROVIDES += "libdevman-dev"
 
+#PROVIDES by deviced-tools
+PROVIDES += "deviced-tools"
 
 #PROVIDES by libhaptic
 PROVIDES += "libhaptic"
@@ -79,6 +81,9 @@ RDEPENDS_libdevman-dev += "libdevman"
 #RDEPENDS of libdeviced (lib${PN})
 RDEPENDS_lib${PN} += "deviced"
 
+#RDEPENDS of deviced-toods (deviced-tools)
+RDEPENDS_deviced-tools += "deviced"
+
 #RDEPENDS of sysman-dev (sysman-dev)
 RDEPENDS_sysman-dev += "sysman"
 
@@ -138,6 +143,7 @@ DEPENDS += "capi-base-common"
 DEPENDS += "openssl"
 DEPENDS += "smack"
 DEPENDS += "libprivilege-control"
+DEPENDS += "libinput"
 
 do_prep() {
  cd ${S}
@@ -164,6 +170,7 @@ do_configure() {
  	     -DCMAKE_INSTALL_PREFIX=${prefix} \
  	     -DARCH=emulator \
  	     -DTIZEN_DISPLAY:BOOL=ON \
+ 	     -DDPMS=wayland \
          ${EXTRA_OECMAKE} . 
  	#eol
  
@@ -217,10 +224,7 @@ do_install() {
  
  mkdir -p ${D}/${systemd_unitdir}/system/graphical.target.wants 
  ln -s ../zbooting-done.service  ${D}/${systemd_unitdir}/system/graphical.target.wants/zbooting-done.service  
- 
- mkdir -p ${D}/${systemd_unitdir}/system/graphical.target.wants 
- ln -s ../devicectl-stop@.service  ${D}/${systemd_unitdir}/system/graphical.target.wants/devicectl-stop@.service  
- 
+  
  
 }
 
@@ -232,33 +236,23 @@ pkg_postinst_${PN}() {
     vconftool set -t int memory/sysman/usbhost_status -1 -i
     vconftool set -t int memory/sysman/mmc -1 -i
     vconftool set -t int memory/sysman/earjack_key 0 -i
-    vconftool set -t int memory/sysman/added_usb_storage 0 -i
-    vconftool set -t int memory/sysman/removed_usb_storage 0 -i
     vconftool set -t int memory/sysman/charger_status -1 -i
     vconftool set -t int memory/sysman/charge_now -1 -i
     vconftool set -t int memory/sysman/battery_status_low -1 -i
     vconftool set -t int memory/sysman/battery_capacity -1 -i
     vconftool set -t int memory/sysman/usb_status -1 -i
     vconftool set -t int memory/sysman/earjack -1 -i
-    vconftool set -t int memory/sysman/low_memory 1 -i
-    vconftool set -t int memory/sysman/sliding_keyboard -1 -i
     vconftool set -t int memory/sysman/mmc_mount -1 -i
-    vconftool set -t int memory/sysman/mmc_unmount -1 -i
     vconftool set -t int memory/sysman/mmc_format -1 -i
     vconftool set -t int memory/sysman/mmc_format_progress 0 -i
-    vconftool set -t int memory/sysman/mmc_err_status 0 -i
     vconftool set -t int memory/sysman/power_off 0 -g "$users_gid" -i -f
     vconftool set -t int memory/sysman/battery_level_status -1 -i
-    vconftool set -t string memory/private/sysman/added_storage_uevent "" -i
-    vconftool set -t string memory/private/sysman/removed_storage_uevent "" -g "$users_gid" -i
     vconftool set -t int memory/sysman/hdmi 0 -i
     vconftool set -t int memory/sysman/stime_changed 0 -i
     #db type vconf key init
-    vconftool set -t int db/sysman/mmc_dev_changed 0 -i
     vconftool set -t int memory/pm/state 0 -i -g "$users_gid"
     vconftool set -t int memory/pm/battery_timetofull -1 -i
     vconftool set -t int memory/pm/battery_timetoempty -1 -i
-    vconftool set -t int memory/pm/sip_status 0 -i -g "$users_gid"
     vconftool set -t int memory/pm/custom_brightness_status 0 -i -g "$users_gid"
     vconftool set -t bool memory/pm/brt_changed_lpm 0 -i
     vconftool set -t int memory/pm/current_brt 60 -i -g "$users_gid"
@@ -268,6 +262,11 @@ pkg_postinst_${PN}() {
     	systemctl restart zbooting-done.service
     fi
 
+}
+pkg_postinst_deviced-tools() {
+    #!/bin/sh -e
+
+    [ "x$D" == "x" ] && ldconfig
 }
 
 pkg_postinst_libslp-pm() {
@@ -308,6 +307,12 @@ pkg_prerm_${PN}() {
     	systemctl stop zbooting-done.service
     fi
 
+}
+
+pkg_postrm_deviced-tools() {
+    #!/bin/sh -e
+
+    [ "x$D" == "x" ] && ldconfig
 }
 
 pkg_postrm_libhaptic() {
@@ -353,6 +358,7 @@ PACKAGES += " libhaptic "
 PACKAGES += " sysman-dev "
 PACKAGES += " libslp-pm-dev "
 PACKAGES += " deviced "
+PACKAGES += " deviced-tools "
 PACKAGES += " libdevman "
 PACKAGES += " libslp-pm "
 PACKAGES += " libdeviced-dev "
@@ -394,18 +400,21 @@ deviced_files = ""
 deviced_files += "${sysconfdir}/dbus-1/system.d/deviced.conf"
 deviced_files += "${prefix}/bin/deviced-pre.sh"
 deviced_files += "${prefix}/bin/deviced"
-deviced_files += "${prefix}/bin/devicectl"
 deviced_files += "${prefix}/bin/movi_format.sh"
+deviced_files += "${prefix}/bin/mmc-smack-label"
+deviced_files += "${prefix}/bin/fsck_msdosfs"
+deviced_files += "${prefix}/bin/newfs_msdos"
+deviced_files += "${sysconfdir}/deviced/usb-operation.conf"
+deviced_files += "${sysconfdir}/deviced/usb-setting.conf"
 deviced_files += "${systemd_unitdir}/system/multi-user.target.wants/deviced.service"
 deviced_files += "${systemd_unitdir}/system/sockets.target.wants/deviced.socket"
 deviced_files += "${systemd_unitdir}/system/graphical.target.wants/zbooting-done.service"
-deviced_files += "${systemd_unitdir}/system/graphical.target.wants/devicectl-stop@.service"
 deviced_files += "${systemd_unitdir}/system/deviced.service"
 deviced_files += "${systemd_unitdir}/system/deviced.socket"
 deviced_files += "${systemd_unitdir}/system/deviced-pre.service"
 deviced_files += "${systemd_unitdir}/system/zbooting-done.service"
-deviced_files += "${systemd_unitdir}/system/devicectl-start@.service"
-deviced_files += "${systemd_unitdir}/system/devicectl-stop@.service"
+deviced_files += "${prefix}/share/license/fsck_msdosfs"
+deviced_files += "${prefix}/share/license/newfs_msdos"
 
 deviced_files += "${prefix}/lib/systemd/system/deviced-pre.service"
 deviced_files += "${prefix}/lib/systemd/system/zbooting-done.service"
@@ -413,6 +422,10 @@ deviced_files += "${prefix}/lib/systemd/system/devicectl-stop@.service"
 deviced_files += "${prefix}/lib/systemd/system/devicectl-start@.service"
 deviced_files += "${prefix}/lib/systemd/system/deviced.socket"
 deviced_files += "${prefix}/lib/systemd/system/deviced.service"
+
+deviced-tools_files = ""
+deviced-tools_files += "${prefix}/bin/devicectl"
+deviced-tools_files += "${prefix}/bin/direct_set_debug.sh"
 
 CONFFILES_${PN} = ""
 CONFFILES_${PN} += "${sysconfdir}/dbus-1/system.d/deviced.conf"
@@ -464,6 +477,7 @@ FILES_libhaptic = "${libhaptic_files}"
 FILES_sysman-dev = "${sysman-dev_files}"
 FILES_libslp-pm-dev = "${libslp-pm-dev_files}"
 FILES_${PN} = "${deviced_files}"
+FILES_deviced-tools = "${deviced-tools_files}"
 FILES_libdevman = "${libdevman_files}"
 FILES_libslp-pm = "${libslp-pm_files}"
 FILES_lib${PN}-dev = "${libdeviced-dev_files}"
@@ -479,6 +493,7 @@ PKG_libhaptic= "libhaptic"
 PKG_sysman-dev= "sysman-dev"
 PKG_libslp-pm-dev= "libslp-pm-dev"
 PKG_deviced= "deviced"
+PKG_deviced-tools= "deviced-tools"
 PKG_libdevman= "libdevman"
 PKG_libslp-pm= "libslp-pm"
 PKG_libdeviced-dev= "libdeviced-dev"
