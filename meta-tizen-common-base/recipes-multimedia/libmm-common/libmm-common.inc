@@ -2,7 +2,7 @@ DESCRIPTION = "Multimedia Framework Common Library"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "Multimedia/Libraries"
 LICENSE = "Apache-2.0"
-PV = "0.2.85"
+PV = "0.2.86"
 
 SRC_URI = ""
 
