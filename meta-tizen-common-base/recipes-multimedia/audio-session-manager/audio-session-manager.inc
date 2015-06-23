@@ -2,7 +2,7 @@ DESCRIPTION = "Audio Session Manager"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "Multimedia/Service"
 LICENSE = "Apache-2.0"
-PV = "0.2.6"
+PV = "0.2.7"
 
 SRC_URI = ""
 
