@@ -1,0 +1,25 @@
+From 26b485036d8a4b9261f8da5677ceab87b654448e Mon Sep 17 00:00:00 2001
+From: Thiago Santos <thiagoss@osg.samsung.com>
+Date: Mon, 22 Jun 2015 21:27:02 -0300
+Subject: [PATCH] pkgmgr: do not set an absolute path to msgfmt
+
+---
+ server/po/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/server/po/CMakeLists.txt b/server/po/CMakeLists.txt
+index e3aebb4..340f706 100644
+--- a/server/po/CMakeLists.txt
++++ b/server/po/CMakeLists.txt
+@@ -2,7 +2,7 @@
+ 
+ SET(POFILES en_US.po en_GB.po ja_JP.po ko_KR.po zh_CN.po)
+ 
+-SET(MSGFMT "/usr/bin/msgfmt")
++SET(MSGFMT "msgfmt")
+ 
+ FOREACH(pofile ${POFILES})
+ 	SET(pofile ${CMAKE_CURRENT_SOURCE_DIR}/${pofile})
+-- 
+2.1.4
+
