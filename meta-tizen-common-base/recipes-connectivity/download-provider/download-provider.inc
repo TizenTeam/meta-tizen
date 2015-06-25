@@ -1,8 +1,8 @@
 DESCRIPTION = "Download the contents in background"
 HOMEPAGE = "http://nohomepage.org"
-SECTION = "System/Libraries"
+SECTION = "Development/Libraries"
 LICENSE = "Apache-2.0"
-PV = "1.1.6"
+PV = "2.1.23"
 
 SRC_URI = ""
 
@@ -26,37 +26,35 @@ RDEPENDS_${PN} += "sqlite3"
 RDEPENDS_${PN} += "connman"
 RDEPENDS_${PN} += "glibc"
 RDEPENDS_${PN} += "vconf"
-RDEPENDS_${PN} += "net-config"
+#RDEPENDS_${PN} += "sys-assert"
+RDEPENDS_${PN} += "libdevice-node"
 
 #RDEPENDS of download-provider-dev (${PN}-dev)
 RDEPENDS_${PN}-dev += "download-provider"
 
-
 DEPENDS = ""
 #DEPENDS of download-provider
 DEPENDS += "dlog"
-DEPENDS += "xdgmime"
 DEPENDS += "systemd"
 inherit tizen_cmake
-DEPENDS += "notification"
 DEPENDS += "app-svc"
+DEPENDS += "curl"
 inherit pkgconfig
 #Replace "DEPENDS" on gettext by "inherit gettext"
 inherit gettext
 DEPENDS += "glib-2.0"
-DEPENDS += "libsoup-2.4"
-DEPENDS += "sqlite3"
-DEPENDS += "libprivilege-control"
 DEPENDS += "capi-appfw-app-manager"
-DEPENDS += "tizen-platform-config"
+DEPENDS += "capi-appfw-application"
+DEPENDS += "capi-content-mime-type"
+#DEPENDS += "capi-network-wifi-direct"
 DEPENDS += "bundle"
 DEPENDS += "smack"
 DEPENDS += "vconf"
-DEPENDS += "libwifi-direct"
 DEPENDS += "capi-network-connection"
-DEPENDS_append_class-native = " fdupes-native"
-DEPENDS_append_class-target = " fdupes-native"
 DEPENDS += "capi-base-common"
+#DEPENDS += "resourced"
+DEPENDS += "libstorage"
+DEPENDS += "notification"
 
 do_prep() {
  cd ${S}
@@ -71,6 +69,15 @@ do_patch_append() {
 
 do_configure() {
 }
+
+#+%define _ipc_socket /opt/data/%{name}/%{name}.sock
+
+#+%define wifi_direct ON
+#+%if 0%{?model_build_feature_wlan_p2p_disable }
+#+%define wifi_direct OFF
+#+%endif
+	
+
 
 do_compile() {
  cd ${S}
@@ -99,22 +106,38 @@ do_compile() {
          ${EXTRA_OECMAKE} . \
           -DBIN_INSTALL_DIR:PATH=${prefix}/bin \
           -DPKG_NAME=download-provider \
-          -DPKG_VERSION=1.1.6 \
-          -DPKG_RELEASE=0 \
-          -DIMAGE_DIR:PATH=${prefix}/share/download-provider/images \
-          -DLOCALE_DIR:PATH=${prefix}/share/locale \
-          -DSYSTEMD_DIR:PATH=${systemd_unitdir}/system \
-          -DDATABASE_SCHEMA_DIR=${prefix}/share/download-provider/sql \
-          -DDATABASE_SCHEMA_FILE=${prefix}/share/download-provider/sql/download-provider-schema.sql \
+          -DPKG_VERSION=${PV} \
+          -DPKG_RELEASE=0 \          
+          -DIPC_SOCKET:PATH=/run/${PN}/${PN}.sock \
+          -DPROVIDER_DIR:PATH=${datadir} \
+          -DNOTIFY_DIR:PATH=${datadir}/notify \
+          -DDATABASE_DIR:PATH=${datadir}/database \
+          -DDATABASE_CLIENT_DIR:PATH=${datadir}/clients \          
+         -DIMAGE_DIR:PATH=${prefix}/share/download-provider/images \
+          -DLOCALE_DIR:PATH=${prefix}/share/locale \          
+          -DLICENSE_DIR:PATH=${prefix}/share/license \
           -DSUPPORT_WIFI_DIRECT:BOOL=OFF \
-          -DSUPPORT_LOG_MESSAGE:BOOL=ON \
-          -DSUPPORT_CHECK_IPC:BOOL=ON
+          -DSUPPORT_SYS_RESOURCE:BOOL=OFF \
+          -DSUPPORT_DOWNLOAD_BOOSTER:BOOL=OFF \
+          -DSUPPORT_NOTIFICATION:BOOL=ON \
+          -DSUPPORT_OMA_DRM:BOOL=OFF \
+          -DSUPPORT_SECURITY_PRIVILEGE:BOOL=OFF \
+          -DSUPPORT_COMPANION_MODE:BOOL=OFF \
+          -DSUPPORT_KNOX:BOOL=ON \
+          -DSUPPORT_LOG_MESSAGE:BOOL=ON \          
+          -DCMAKE_LOG_DUMP_SCRIPT_DIR=${sysconfdir}/dump.d/module.d \
+          -DHTTP_LIB=libcurl 
  
  oe_runmake
  
  
  
 }
+
+#          -DSYSTEMD_DIR:PATH=${systemd_unitdir}/system
+#          -DDATABASE_SCHEMA_DIR=${prefix}/share/download-provider/sql
+#          -DDATABASE_SCHEMA_FILE=${prefix}/share/download-provider/sql/download-provider-schema.sql
+
 
 do_install() {
  export RPM_BUILD_ROOT=${D}

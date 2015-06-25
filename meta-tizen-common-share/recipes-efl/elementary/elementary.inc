@@ -2,7 +2,7 @@ DESCRIPTION = "EFL toolkit for small touchscreens"
 HOMEPAGE = "http://trac.enlightenment.org/e/wiki/Elementary"
 SECTION = "Graphics & UI Framework/Development"
 LICENSE = "LGPL-2.1+"
-PV = "1.12.2"
+PV = "1.13.1"
 
 SRC_URI = ""
 

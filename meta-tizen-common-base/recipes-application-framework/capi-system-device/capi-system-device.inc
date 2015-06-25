@@ -29,13 +29,11 @@ DEPENDS = ""
 #DEPENDS of capi-system-device
 inherit tizen_cmake
 DEPENDS += "capi-system-info"
-DEPENDS += "dbus"
 inherit pkgconfig
+DEPENDS += "glib-2.0"
 DEPENDS += "dlog"
-DEPENDS += "deviced"
 DEPENDS += "capi-base-common"
 DEPENDS += "vconf"
-DEPENDS += "dbus-glib"
 
 do_prep() {
  cd ${S}

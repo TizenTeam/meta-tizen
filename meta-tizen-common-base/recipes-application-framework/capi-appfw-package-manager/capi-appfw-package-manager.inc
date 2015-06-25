@@ -37,6 +37,7 @@ DEPENDS += "ail"
 DEPENDS += "dlog"
 DEPENDS += "vconf"
 DEPENDS += "capi-base-common"
+DEPENDS += "glib-2.0"
 
 do_prep() {
  cd ${S}

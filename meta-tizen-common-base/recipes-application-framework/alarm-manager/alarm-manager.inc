@@ -1,14 +1,15 @@
 DESCRIPTION = "Alarm library"
 HOMEPAGE = "http://nohomepage.org"
-SECTION = "Application Framework/Libraries"
+SECTION = "System/Libraries"
 LICENSE = "Apache-2.0"
-PV = "0.4.86"
+PV = "0.4.178"
 
 SRC_URI = ""
 
 S = "${WORKDIR}/git"
 
 inherit manifest autotools-brokensep
+inherit cmake tizen_cmake
 
 BBCLASSEXTEND = ""
 PROVIDES = ""
@@ -42,26 +43,27 @@ RDEPENDS_libalarm-dev += "libalarm"
 DEPENDS = ""
 #DEPENDS of alarm-manager
 DEPENDS += "dlog"
-DEPENDS += "dbus"
 DEPENDS += "app-svc"
 DEPENDS += "tizen-platform-config"
 inherit pkgconfig
 DEPENDS += "bundle"
 DEPENDS += "aul"
-DEPENDS += "deviced"
 DEPENDS += "dbus-glib"
-DEPENDS += "security-server"
-DEPENDS += "heynoti"
 DEPENDS += "glib-2.0"
-DEPENDS += "libtapi"
 DEPENDS += "vconf"
 DEPENDS += "libslp-db-util"
+#DEPENDS += "sqlite3"
+DEPENDS += "pkgmgr-info"
+#DEPENDS += "gio-2.0"
+#DEPENDS += "gio-unix-2.0"
+DEPENDS += "capi-system-device"
+#DEPENDS += "python-xml"
 
 do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
  #setup -q
- cp ${S}/packaging/alarm-manager.manifest .
+# cp ${S}/packaging/alarm-manager.manifest .
  
  
 }
@@ -78,15 +80,24 @@ do_compile() {
   export LANG
   unset DISPLAY
   LD_AS_NEEDED=1; export LD_AS_NEEDED ;
-  
-  dbus-binding-tool --mode=glib-server --prefix=alarm_manager ./alarm_mgr.xml > ./include/alarm-skeleton.h
-  dbus-binding-tool --mode=glib-client --prefix=alarm_manager ./alarm_mgr.xml > ./include/alarm-stub.h
-  dbus-binding-tool --mode=glib-server --prefix=alarm_client ./alarm-expire.xml > ./include/alarm-expire-skeleton.h
-  dbus-binding-tool --mode=glib-client --prefix=alarm_client ./alarm-expire.xml > ./include/alarm-expire-stub.h
-  
-  autotools_do_configure
+
+  export CFLAGS="$CFLAGS -DTIZEN_DEBUG_ENABLE"
+  export CXXFLAGS="$CXXFLAGS -DTIZEN_DEBUG_ENABLE"
+  export FFLAGS="$FFLAGS -DTIZEN_DEBUG_ENABLE"
+
+   cmake \
+         -DCMAKE_VERBOSE_MAKEFILE=ON \
+         -DCMAKE_INSTALL_PREFIX:PATH=${prefix} \
+         -DCMAKE_INSTALL_LIBDIR:PATH=${prefix}/lib \
+         -DCMAKE_SKIP_RPATH:BOOL=ON \
+         -DBUILD_SHARED_LIBS:BOOL=ON \
+         -DFULLVER=${PV} \
+         -DMAJORVER=0 \
+         -D_APPFW_FEATURE_ALARM_MANAGER_MODULE_LOG:BOOL=ON \
+         ${EXTRA_OECMAKE} . 
+
   oe_runmake
-  
+
   
   
 }
@@ -98,7 +109,6 @@ do_install() {
  LANG=C
  export LANG
  unset DISPLAY
- rm -rf ${D}
  mkdir -p ${D}
  
  
@@ -115,11 +125,8 @@ do_install() {
  install -m0644 ${S}/packaging/alarm-server.service ${D}${systemd_unitdir}/system
  ln -sf ../alarm-server.service ${D}${systemd_unitdir}/system/multi-user.target.wants/alarm-server.service
  
- mkdir -p ${D}/${sysconfdir}/udev/rules.d
- install -m0644  ${S}/packaging/60-alarm-manager-rtc.rules ${D}${sysconfdir}/udev/rules.d/
- 
  mkdir -p ${D}/${sysconfdir}/dbus-1/system.d
- install -m0644  ${S}/packaging/alarm-service.conf ${D}${sysconfdir}/dbus-1/system.d/
+ install -m0644  ${S}/alarm-service.conf ${D}${sysconfdir}/dbus-1/system.d/
  
  
 }
@@ -127,13 +134,12 @@ do_install() {
 pkg_postinst_alarm-server() {
     #!/bin/sh -e
 
-    vconftool set -t int db/system/timechange 0
-    vconftool set -t double db/system/timechange_external 0
-    vconftool set -t int memory/system/timechanged 0 -i -g 5000
-    systemctl daemon-reload
-    if [ $1 == 1 ]; then
-        systemctl restart alarm-server.service
-    fi
+    vconftool set -t double db/system/timechange_external 0 -u 200 -g 5000 -s system::vconf_system
+    vconftool set -t int memory/system/timechanged 0 -i -u 200 -g 5000 -s system::vconf_system
+
+    chsmack -a System %{TZ_SYS_DB}/.alarmmgr.db
+    chsmack -a System %{TZ_SYS_DB}/.alarmmgr.db-journal
+    chown system:system /var/log/alarmmgr.log
 
 }
 
@@ -176,23 +182,20 @@ PACKAGES += " libalarm-dev "
 libalarm_files = ""
 libalarm_files += "${prefix}/lib/libalarm.so.0.0.0"
 libalarm_files += "${prefix}/lib/libalarm.so.0"
-MANIFESTFILES_libalarm = "alarm-manager.manifest"
+MANIFESTFILES_libalarm = "alarm-lib.manifest"
 
 alarm-server_files = ""
 alarm-server_files += "${prefix}/bin/alarm-server"
-alarm-server_files += "${systemd_unitdir}/system/multi-user.target.wants/alarm-server.service"
 alarm-server_files += "${systemd_unitdir}/system/alarm-server.service"
 alarm-server_files += "${sysconfdir}/dbus-1/system.d/alarm-service.conf"
-alarm-server_files += "%config ${sysconfdir}/udev/rules.d/60-alarm-manager-rtc.rules"
-CONFFILES_alarm-server = ""
-CONFFILES_alarm-server += "${sysconfdir}/dbus-1/system.d/alarm-service.conf"
-MANIFESTFILES_alarm-server = "alarm-manager.manifest"
+alarm-server_files += "${sysconfdir}/dump.d/module.d/alarmmgr_log_dump.sh"
+MANIFESTFILES_alarm-server = "alarm-server.manifest"
 
 libalarm-dev_files = ""
 libalarm-dev_files += "${prefix}/include/*.h"
 libalarm-dev_files += "${prefix}/lib/pkgconfig/*.pc"
 libalarm-dev_files += "${prefix}/lib/libalarm.so"
-MANIFESTFILES_libalarm-dev = "alarm-manager.manifest"
+MANIFESTFILES_libalarm-dev = "alarm-lib.manifest"
 
 FILES_libalarm = "${libalarm_files}"
 FILES_alarm-server = "${alarm-server_files}"
