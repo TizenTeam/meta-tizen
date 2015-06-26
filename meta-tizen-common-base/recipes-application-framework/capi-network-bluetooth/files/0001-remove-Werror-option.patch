@@ -22,15 +22,6 @@ index 57156d0..ed24ecf 100755
  SET(CMAKE_C_FLAGS_DEBUG "-O0 -g")
  
  IF("${ARCH}" STREQUAL "arm")
-@@ -79,8 +79,6 @@ CONFIGURE_FILE(
- )
- INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/${fw_name}.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
- 
--ADD_SUBDIRECTORY(test)
--
- IF(UNIX)
- 
- ADD_CUSTOM_TARGET (distclean @echo cleaning for source distribution)
 -- 
 1.8.4.5
 

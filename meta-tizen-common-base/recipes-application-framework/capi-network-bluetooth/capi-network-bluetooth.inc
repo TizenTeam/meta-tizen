@@ -36,9 +36,8 @@ DEPENDS += "vconf"
 DEPENDS += "dbus-glib"
 DEPENDS += "bluetooth-frwk"
 
-CFLAGS_prepend = " -Wall -g -fvisibility=hidden -fPIC -DTIZEN_ENGINEER_MODE  -DTIZEN_DEBUG_ENABLE -DARCH64"
+CFLAGS_prepend = " -Wall -g -fPIC -DTIZEN_ENGINEER_MODE  -DTIZEN_DEBUG_ENABLE -DARCH64"
 
-LDFLAGS_append = " -fuse-ld=bfd"
 do_prep() {
  cd ${S}
  chmod -Rf a+rX,u+w,g-w,o-w ${S}
@@ -125,9 +124,6 @@ capi-network-bluetooth-dev_files = ""
 capi-network-bluetooth-dev_files += "${prefix}/include/network/bluetooth.h"
 capi-network-bluetooth-dev_files += "${prefix}/include/network/bluetooth_type.h"
 capi-network-bluetooth-dev_files += "${prefix}/include/network/bluetooth_internal.h"
-capi-network-bluetooth-dev_files += "${prefix}/include/network/bluetooth_type_internal.h"
-capi-network-bluetooth-dev_files += "${prefix}/include/network/bluetooth_type_extention.h"
-capi-network-bluetooth-dev_files += "${prefix}/include/network/bluetooth_extention.h"
 capi-network-bluetooth-dev_files += "${prefix}/lib/pkgconfig/capi-network-bluetooth.pc"
 capi-network-bluetooth-dev_files += "${prefix}/lib/libcapi-network-bluetooth.so"
 MANIFESTFILES_${PN}-dev = "capi-network-bluetooth-devel.manifest"
