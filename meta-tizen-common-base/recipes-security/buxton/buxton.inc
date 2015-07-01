@@ -120,13 +120,11 @@ pkg_postinst_${PN}() {
     #buxtond runs as user buxton, which much be created
     buxtonctl create-db base
     buxtonctl create-db isp
-    if [ "$1" -eq 1 ] ; then
-        # The initial DBs will not have the correct labels and
-        # permissions when created in postinstall during image
-        # creation, so we set these file attributes here.
-        chsmack -a System ${localstatedir}/lib/buxton/*.db
-        chown buxton:buxton ${localstatedir}/lib/buxton/*.db
-    fi
+    # The initial DBs will not have the correct labels and
+    # permissions when created in postinstall during image
+    # creation, so we set these file attributes here.
+    chown -R buxton:buxton ${localstatedir}/lib/buxton
+    chsmack -a System ${localstatedir}/lib/buxton ${localstatedir}/lib/buxton/*.db
 
 }
 

@@ -1,4 +1,4 @@
-SRC_URI_class-native = "git://review.tizen.org/platform/upstream/buxton;tag=30ff93b6f03098ab14626e2212776b05594cb212;nobranch=1"
+#SRC_URI_class-native = "git://review.tizen.org/platform/upstream/buxton;tag=30ff93b6f03098ab14626e2212776b05594cb212;nobranch=1"
 SRC_URI_class-native += "file://0001-remove-buxtondgeneration.patch"
 
 

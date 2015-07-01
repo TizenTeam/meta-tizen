@@ -2,7 +2,7 @@ DESCRIPTION = "A Media content library in SLP C API"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "Multimedia/API"
 LICENSE = "Apache-2.0"
-PV = "0.2.59"
+PV = "0.2.62"
 
 SRC_URI = ""
 
