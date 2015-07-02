@@ -89,6 +89,7 @@ do_compile() {
          -DCMAKE_VERBOSE_MAKEFILE=ON \
          -DCMAKE_INSTALL_PREFIX:PATH=${prefix} \
          -DCMAKE_INSTALL_LIBDIR:PATH=${prefix}/lib \
+         -DSYSCONF_INSTALL_DIR:PATH=${sysconfdir} \
          -DCMAKE_SKIP_RPATH:BOOL=ON \
          -DBUILD_SHARED_LIBS:BOOL=ON \
          -DFULLVER=${PV} \
@@ -180,13 +181,14 @@ PACKAGES += " alarm-server "
 PACKAGES += " libalarm-dev "
 
 libalarm_files = ""
-libalarm_files += "${prefix}/lib/libalarm.so.0.0.0"
-libalarm_files += "${prefix}/lib/libalarm.so.0"
+libalarm_files += "${prefix}/lib/libalarm.so.*"
 MANIFESTFILES_libalarm = "alarm-lib.manifest"
 
 alarm-server_files = ""
 alarm-server_files += "${prefix}/bin/alarm-server"
+alarm-server_files += "${prefix}/bin/alarmmgr*"
 alarm-server_files += "${systemd_unitdir}/system/alarm-server.service"
+alarm-server_files += "${systemd_unitdir}/system/multi-user.target.wants/alarm-server.service"
 alarm-server_files += "${sysconfdir}/dbus-1/system.d/alarm-service.conf"
 alarm-server_files += "${sysconfdir}/dump.d/module.d/alarmmgr_log_dump.sh"
 MANIFESTFILES_alarm-server = "alarm-server.manifest"

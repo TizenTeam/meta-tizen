@@ -84,8 +84,6 @@ do_install() {
  rm -rf ${D}
  mkdir -p ${D}
  
- mkdir -p ${D}/{${mandir}/{man1,man3},usr/{bin,lib,include}}
- 
    oe_runmake \
          DESTDIR=${D} \
          INSTALL_ROOT=${D} \
@@ -143,6 +141,7 @@ libtiff-dev_files += "${prefix}/include/*"
 libtiff-dev_files += "${prefix}/lib/*.so"
 libtiff-dev_files += "${prefix}/lib/pkgconfig/*.pc"
 MANIFESTFILES_lib${PN}-dev = "tiff.manifest"
+
 
 FILES_${PN} = "${tiff_files}"
 FILES_${PN}-docs = "${tiff-docs_files}"

@@ -60,8 +60,9 @@ PROVIDES += "libswscale"
 PROVIDES += "libavformat-dev"
 
 
+DEPENDS = ""
 RDEPENDS = ""
-DEPENDS += "libbz2"
+DEPENDS += "bzip2"
 #RDEPENDS of libavfilter-dev (${PN}filter-dev)
 RDEPENDS_${PN}filter-dev += "libavfilter"
 
@@ -77,8 +78,6 @@ RDEPENDS_${PN}util-dev += "libavutil"
 #RDEPENDS of libavformat-dev (${PN}format-dev)
 RDEPENDS_${PN}format-dev += "libavformat"
 
-
-DEPENDS = ""
 
 do_prep() {
  cd ${S}

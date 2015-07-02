@@ -6,6 +6,8 @@ PV = "2.1.23"
 
 SRC_URI = ""
 
+SRC_URI += "file://0001-Fix-systemd-directory.patch"
+
 S = "${WORKDIR}/git"
 
 inherit manifest autotools-brokensep
@@ -70,15 +72,6 @@ do_patch_append() {
 do_configure() {
 }
 
-#+%define _ipc_socket /opt/data/%{name}/%{name}.sock
-
-#+%define wifi_direct ON
-#+%if 0%{?model_build_feature_wlan_p2p_disable }
-#+%define wifi_direct OFF
-#+%endif
-	
-
-
 do_compile() {
  cd ${S}
  LANG=C
@@ -107,7 +100,8 @@ do_compile() {
           -DBIN_INSTALL_DIR:PATH=${prefix}/bin \
           -DPKG_NAME=download-provider \
           -DPKG_VERSION=${PV} \
-          -DPKG_RELEASE=0 \          
+          -DPKG_RELEASE=0 \  
+          -DSYSTEMD_DIR:PATH=${systemd_unitdir}/system \    
           -DIPC_SOCKET:PATH=/run/${PN}/${PN}.sock \
           -DPROVIDER_DIR:PATH=${datadir} \
           -DNOTIFY_DIR:PATH=${datadir}/notify \
@@ -133,10 +127,6 @@ do_compile() {
  
  
 }
-
-#          -DSYSTEMD_DIR:PATH=${systemd_unitdir}/system
-#          -DDATABASE_SCHEMA_DIR=${prefix}/share/download-provider/sql
-#          -DDATABASE_SCHEMA_FILE=${prefix}/share/download-provider/sql/download-provider-schema.sql
 
 
 do_install() {
@@ -216,13 +206,15 @@ download-provider_files += "${systemd_unitdir}/system/default.target.wants/downl
 download-provider_files += "${systemd_unitdir}/system/download-provider.socket"
 download-provider_files += "${systemd_unitdir}/system/sockets.target.wants/download-provider.socket"
 download-provider_files += "${prefix}/share/download-provider/sql/download-provider-schema.sql"
+download-provider_files += "${prefix}/share/license/download-provider"
+download-provider_files += "${prefix}/share/download-provider/download-provider.res"
+download-provider_files += "${sysconfdir}/dump.d/module.d/dump-download-provider.sh"
 MANIFESTFILES_${PN} = "download-provider.manifest"
 
 download-provider-dev_files = ""
 download-provider-dev_files += "${prefix}/lib/libdownloadagent2.so"
 download-provider-dev_files += "${prefix}/lib/libdownload-provider-interface.so"
-download-provider-dev_files += "${prefix}/include/download-provider/download-provider-defs.h"
-download-provider-dev_files += "${prefix}/include/download-provider/download-provider-interface.h"
+download-provider-dev_files += "${prefix}/include/download-provider/*.h"
 download-provider-dev_files += "${prefix}/lib/pkgconfig/download-provider.pc"
 download-provider-dev_files += "${prefix}/lib/pkgconfig/download-provider-interface.pc"
 MANIFESTFILES_${PN}-dev = "download-provider.manifest"

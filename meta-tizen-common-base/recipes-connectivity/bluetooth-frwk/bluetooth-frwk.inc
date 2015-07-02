@@ -69,6 +69,7 @@ DEPENDS += "app-core-efl"
 DEPENDS += "pkgmgr"
 DEPENDS += "libcynara-client"
 DEPENDS += "libcynara-creds-dbus"
+DEPENDS += "syspopup-caller"
 
 CFLAGS_prepend = " -Wall -g -fvisibility=hidden -fPIC -DRFCOMM_DIRECT"
 

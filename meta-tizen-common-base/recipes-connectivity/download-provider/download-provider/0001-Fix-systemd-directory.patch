@@ -1,0 +1,27 @@
+From 2a1020bdcd7d6d713d533b3aaea655d0fcbd5770 Mon Sep 17 00:00:00 2001
+From: Nicolas Guyomard <nicolas.guyomard@open.eurogiciel.org>
+Date: Wed, 1 Jul 2015 16:19:04 +0200
+Subject: [PATCH] Fix systemd directory
+
+---
+ CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bcb7370..d3ef34e 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -79,8 +79,8 @@ SET(PACKAGE_DESCRIPTION "Defines for ${PROJECT_NAME}")
+ CONFIGURE_FILE(download-provider.pc.in download-provider.pc @ONLY)
+ INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/download-provider.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
+ 
+-INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/systemd/download-provider.service DESTINATION ${LIB_INSTALL_DIR}/systemd/system)
+-INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/systemd/download-provider.socket DESTINATION ${LIB_INSTALL_DIR}/systemd/system)
++INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/systemd/download-provider.service DESTINATION ${SYSTEMD_DIR})
++INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/systemd/download-provider.socket DESTINATION ${SYSTEMD_DIR})
+ 
+ # install images
+ IF(TIZEN_2_3_UX)
+-- 
+1.9.1
+

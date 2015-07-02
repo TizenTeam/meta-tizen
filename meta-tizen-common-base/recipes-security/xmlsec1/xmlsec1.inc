@@ -54,6 +54,7 @@ DEPENDS_append_class-native = " fdupes-native"
 DEPENDS_append_class-target = " fdupes-native"
 inherit pkgconfig
 DEPENDS += "libxslt"
+DEPENDS += "nspr"
 
 do_prep() {
  cd ${S}

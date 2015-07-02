@@ -14,3 +14,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=673e626420c7f859fbe2be3a9c13632d"
 DEPENDS = "libevdev udev mtdev"
 
 inherit manifest autotools pkgconfig
+
+FILES_${PN} += "/usr/lib/udev/libinput-device-group"
+FILES_${PN}-dbg += "/usr/lib/udev/.debug/libinput-device-group"

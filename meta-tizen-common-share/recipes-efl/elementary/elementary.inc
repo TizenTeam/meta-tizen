@@ -175,6 +175,9 @@ FILES_${PN}-tools = "${elementary-tools_files}"
 FILES_${PN} = "${elementary_files}"
 FILES_${PN}-dev = "${elementary-dev_files}"
 
+FILES_${PN}-dbg += "${prefix}/lib/edje/modules/elm/v-*/.debug/module.so"
+FILES_${PN}-dbg += "${prefix}/lib/elementary/modules/*/v-*/.debug/module.so"
+
 PKG_elementary-tools= "elementary-tools"
 PKG_elementary= "elementary"
 PKG_elementary-dev= "elementary-dev"

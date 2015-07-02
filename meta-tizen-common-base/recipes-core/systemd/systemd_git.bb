@@ -172,12 +172,12 @@ do_install() {
 	mkdir -p ${D}${prefix}/lib/systemd/user-generators
 	
 	# Create new-style configuration files so that we can ghost-own them
-	touch ${D}${sysconfdir}/hostname
+	#touch ${D}${sysconfdir}/hostname
 	touch ${D}${sysconfdir}/vconsole.conf
 	touch ${D}${sysconfdir}/locale.conf
 	touch ${D}${sysconfdir}/machine-id
 	touch ${D}${sysconfdir}/machine-info
-	touch ${D}${sysconfdir}/timezone
+	#touch ${D}${sysconfdir}/timezone
 	
 	mkdir -p ${D}/lib/systemd/system-preset/
 	mkdir -p ${D}/lib/systemd/user-preset/
@@ -311,6 +311,9 @@ FILES_${PN} = " ${base_bindir}/* \
                 ${sysconfdir}/bash_completion.d/ \
                 ${sysconfdir}/dbus-1/ \
                 ${sysconfdir}/machine-id \
+                ${sysconfdir}/vconsole.conf \
+                ${sysconfdir}/locale.conf \
+                ${sysconfdir}/machine-info \
                 ${sysconfdir}/modules-load.d/ \
                 ${sysconfdir}/sysctl.d/ \
                 ${sysconfdir}/systemd/ \

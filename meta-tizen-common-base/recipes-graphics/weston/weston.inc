@@ -98,6 +98,8 @@ do_compile() {
 }
 EXTRA_OECONF += " --disable-static --disable-setuid-install --enable-simple-clients --enable-clients --disable-libunwind --disable-xwayland --disable-xwayland-test --disable-x11-compositor --disable-rpi-compositor --with-cairo=glesv2 "
 
+EXTRA_OECONF += " --enable-sys-uid --disable-ivi-shell"
+
 do_install() {
  export RPM_BUILD_ROOT=${D}
  cd ${S}
@@ -142,7 +144,7 @@ do_install() {
  install -m 755 weston-transformed ${D}${prefix}/bin
  install -m 755 weston-fullscreen ${D}${prefix}/bin
  
- #rm -rf %{buildroot}%{_datadir}/wayland-sessions
+ rm -rf ${D}${prefix}/share/wayland-sessions
 }
 
 pkg_preinst_${PN}() {
