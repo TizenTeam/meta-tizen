@@ -1,0 +1,25 @@
+From 2d68ab46ddb541a2fd7fac0ed43539ed5351f6aa Mon Sep 17 00:00:00 2001
+From: Thiago Santos <thiagoss@osg.samsung.com>
+Date: Sun, 5 Jul 2015 20:04:33 -0300
+Subject: [PATCH] po: do not use absolute path for msgfmt
+
+---
+ po/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/po/CMakeLists.txt b/po/CMakeLists.txt
+index 9e2d8c6..34f8628 100755
+--- a/po/CMakeLists.txt
++++ b/po/CMakeLists.txt
+@@ -6,7 +6,7 @@ SET(POFILES ar.po az.po bg.po ca.po cs.po da.po de_DE.po el_GR.po en.po en_PH.po
+ 	nb.po nl_NL.po pl.po pt_BR.po pt_PT.po ro.po ru_RU.po sk.po sl.po sr.po sv.po
+ 	tr_TR.po uk.po uz.po zh_CN.po zh_HK.po zh_SG.po zh_TW.po)
+ 
+-SET(MSGFMT "/usr/bin/msgfmt")
++SET(MSGFMT "msgfmt")
+ 
+ FOREACH(pofile ${POFILES})
+ 	SET(pofile ${CMAKE_CURRENT_SOURCE_DIR}/${pofile})
+-- 
+2.1.4
+
