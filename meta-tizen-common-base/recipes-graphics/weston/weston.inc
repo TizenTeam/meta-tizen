@@ -56,7 +56,6 @@ DEPENDS_append_class-target = " libtool-cross"
 DEPENDS += "libffi"
 DEPENDS += "pango"
 DEPENDS += "poppler"
-DEPENDS += "virtual/libgles2"
 DEPENDS += "libpam"
 DEPENDS += "virtual/egl"
 DEPENDS += "libxkbcommon"
@@ -91,11 +90,16 @@ do_compile() {
   autotools_do_configure
   
   oe_runmake
-  
-  
-  
 }
-EXTRA_OECONF += " --disable-static --disable-setuid-install --enable-simple-clients --enable-clients --disable-libunwind --disable-xwayland --disable-xwayland-test --disable-x11-compositor --disable-rpi-compositor --with-cairo=glesv2 "
+
+PACKAGECONFIG ??= "${@bb.utils.contains('SOC_FAMILY', 'rpi', '', 'cairo-glesv2', d)}"
+
+EXTRA_OECONF += " --disable-static --disable-setuid-install --enable-simple-clients --enable-clients --disable-libunwind --disable-xwayland --disable-xwayland-test --disable-x11-compositor --disable-rpi-compositor"
+# The current experimental vc4 drivers for RPI2 don't like the glesv2 backend
+#	so, only enable it for archs where this is known to work
+
+EXTRA_OECONF += "${@bb.utils.contains('PACKAGECONFIG', 'cairo-glesv2', ' --with-cairo=glesv2', '', d)}"
+DEPENDS += "${@bb.utils.contains('PACKAGECONFIG', 'cairo-glesv2', 'virtual/libgles2', '', d)}"
 
 do_install() {
  export RPM_BUILD_ROOT=${D}
@@ -122,8 +126,10 @@ do_install() {
  install -m 755 weston-simple-shm ${D}${prefix}/bin
  install -m 755 weston-simple-egl ${D}${prefix}/bin
  install -m 755 weston-simple-damage ${D}${prefix}/bin
+if ${@bb.utils.contains('PACKAGECONFIG','cairo-glesv2','true','false',d)}; then
  install -m 755 weston-nested-client ${D}${prefix}/bin
  install -m 755 weston-nested ${D}${prefix}/bin
+fi
  install -m 755 weston-flower ${D}${prefix}/bin
  install -m 755 weston-image ${D}${prefix}/bin
  install -m 755 weston-cliptest ${D}${prefix}/bin
@@ -135,7 +141,9 @@ do_install() {
  install -m 755 weston-resizor ${D}${prefix}/bin
  install -m 755 weston-eventdemo ${D}${prefix}/bin
  install -m 755 weston-clickdot ${D}${prefix}/bin
+if ${@bb.utils.contains('PACKAGECONFIG','cairo-glesv2','true','false',d)}; then
  install -m 755 weston-subsurfaces ${D}${prefix}/bin
+fi
  install -m 755 weston-transformed ${D}${prefix}/bin
  install -m 755 weston-fullscreen ${D}${prefix}/bin
  
