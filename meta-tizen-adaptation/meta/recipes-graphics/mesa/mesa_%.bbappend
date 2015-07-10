@@ -17,10 +17,11 @@ DRIDRIVERSTIZEN_append_x86 = ",i965,i915"
 DRIDRIVERSTIZEN_append_x86-64 = ",i965,i915"
 PACKAGECONFIG[dri] = "--enable-dri --with-dri-drivers=${DRIDRIVERSTIZEN}, --disable-dri, dri2proto libdrm"
 
-
-GALLIUMDRIVERSTIZEN_append = ",i915"
-
 GALLIUMDRIVERSTIZEN = "swrast"
+GALLIUMDRIVERSTIZEN_append_x86 = ",i915"
+GALLIUMDRIVERSTIZEN_append_x86-64 = ",i915"
+GALLIUMDRIVERSTIZEN_append_raspberrypi2 = ",vc4"
+
 GALLIUMDRIVERSTIZEN_LLVM33 = ""
 GALLIUMDRIVERSTIZEN_LLVM33_ENABLED = "${@base_version_less_or_equal('MESA_LLVM_RELEASE', '3.2', False, len('${GALLIUMDRIVERSTIZEN_LLVM33}') > 0, d)}"
 GALLIUMDRIVERSTIZEN_LLVM = "svga,"
