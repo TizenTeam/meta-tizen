@@ -4,7 +4,11 @@ SUMMARY = "A very basic Wayland image with a terminal"
 LICENSE = "MIT"
 DESCRIPTION = "A weston image with Tizen common."
 
-inherit core-image distro_features_check image-bootdirect
+IMAGE_CLASSES ?= "core-image distro_features_check"
+IMAGE_CLASSES_append_x86 += "image-bootdirect"
+IMAGE_CLASSES_append_x86-64 += "image-bootdirect"
+
+inherit ${IMAGE_CLASSES}
 
 IMAGE_FEATURES += "splash package-management ssh-server-dropbear hwcodecs"
 
