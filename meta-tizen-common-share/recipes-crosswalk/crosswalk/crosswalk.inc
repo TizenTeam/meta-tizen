@@ -151,8 +151,8 @@ do_compile() {
  
  GYP_EXTRA_FLAGS="${GYP_EXTRA_FLAGS} -Duse_ozone=1"
  
- # disable nacl if necessary
- GYP_EXTRA_FLAGS="${GYP_EXTRA_FLAGS} -Ddisable_nacl=1"
+ # Force gold binary from chroot ld.gold provided by binutils-gold
+ GYP_EXTRA_FLAGS="${GYP_EXTRA_FLAGS} -Ddisable_nacl=1 -Dlinux_use_bundled_binutils=0 -Dlinux_use_bundled_gold=0 "
  
  # Linking fails when fatal ld warnings are enabled. See XWALK-1379.
  GYP_EXTRA_FLAGS="${GYP_EXTRA_FLAGS} -Ddisable_fatal_linker_warnings=1"
@@ -162,6 +162,9 @@ do_compile() {
  # sysroot variable is automatically set for cross compilation to use arm-sysroot provided by Chromium project
  # sysroot usage is not needed, we need to use arm libraries from the virtualized environment.
  #
+
+ GYP_EXTRA_FLAGS="${GYP_EXTRA_FLAGS} -Dsysroot= "
+
  # Crosswalk build fails if the fpu selected in the gcc option is different from neon in case of arm7 compilation
  # So force it.
  
@@ -170,6 +173,7 @@ do_compile() {
  # --no-parallel is added because chroot does not mount a /dev/shm, this will
  # cause python multiprocessing.SemLock error.
  export GYP_GENERATORS='ninja'
+ export GYP_DEFINES="$GYP_DEFINES arm_float_abi=hard"
  ./src/xwalk/gyp_xwalk src/xwalk/xwalk.gyp \
  --no-parallel \
  ${GYP_EXTRA_FLAGS} \
@@ -177,6 +181,7 @@ do_compile() {
  -Dclang=0 \
  -Dlinux_use_bundled_binutils=0 \
  -Dlinux_use_bundled_gold=0 \
+ -Dlinux_use_gold_flags=1 \
  -Dtizen=1 \
  -Dpython_ver=2.7 \
  -Duse_aura=1 \
@@ -190,7 +195,9 @@ do_compile() {
  -Duse_system_nspr=1 \
  -Duse_system_yasm=1 \
  -Dshared_process_mode=1 \
- -Denable_hidpi=1
+ -Denable_hidpi=1 \
+ -Dwerror= \
+ -Dskia_warnings_as_errors=0
  
  ninja ${PARALLEL_MAKE} -C src/out/Release xwalk xwalk_launcher xwalk_application_tools widget-manifest-parser
  
