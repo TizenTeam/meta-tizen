@@ -1,0 +1,56 @@
+From e349048de96ee99c40992a28eec587675f950b0d Mon Sep 17 00:00:00 2001
+From: Thiago Santos <thiagoss@osg.samsung.com>
+Date: Tue, 21 Jul 2015 18:02:38 -0300
+Subject: [PATCH] configure: improve check for wayland-scanner binary
+
+The plugin doesn't need the wayland-scanner package to be built
+or run, it only needs the wayland-scanner program during compile time.
+
+When cross-compiling, build systems might not have the wayland-scanner
+package for the target system as it is a developer's tool, while it should
+still be possible to use wayland-scanner from the host system.
+
+This patch fixes it by not requiring the wayland-scanner package but
+just the binary itself.
+
+Note that the check is done outside of the PKG_CHECK_MODULES
+as it doesn't work inside of it.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=752688
+---
+ configure.ac | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 2cb967b..27dd37e 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1906,14 +1906,23 @@ AG_GST_CHECK_FEATURE(DIRECTFB, [directfb], dfbvideosink , [
+ ])
+ 
+ dnl **** Wayland ****
++# AC_CHECK_PROG inside the PKG_CHECK_MODULES fails, so use it here
++AC_CHECK_PROG(HAVE_WAYLAND_SCANNER, [wayland-scanner], yes, no)
+ translit(dnm, m, l) AM_CONDITIONAL(USE_WAYLAND, true)
+ AG_GST_CHECK_FEATURE(WAYLAND, [wayland sink], wayland , [
+-  PKG_CHECK_MODULES(WAYLAND, wayland-client >= 1.4.0 wayland-scanner, [
+-    HAVE_WAYLAND="yes" ], [ HAVE_WAYLAND="no"
++  PKG_CHECK_MODULES(WAYLAND, wayland-client >= 1.4.0, [
++    if test "x$HAVE_WAYLAND_SCANNER" = "xyes"; then
++      HAVE_WAYLAND="yes"
++    else
++      AC_MSG_RESULT([wayland-scanner is required to build the wayland plugin])
++      HAVE_WAYLAND="no"
++    fi
++    ],
++    [ HAVE_WAYLAND="no"
+   ])
+ ])
+ 
+-AC_PATH_PROG([wayland_scanner], [wayland-scanner])
++AC_PATH_PROG([wayland_scanner], [wayland-scanner])],
+ 
+ dnl **** WebP ****
+ translit(dnm, m, l) AM_CONDITIONAL(USE_WEBP, true)
+-- 
+2.1.4
