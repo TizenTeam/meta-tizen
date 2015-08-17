@@ -1,7 +1,7 @@
 DESCRIPTION = "Chromium-based app runtime"
 HOMEPAGE = "https://github.com/otcshare/crosswalk"
 SECTION = "Web Framework/Web Run Time"
-LICENSE = "(BSD-3-Clause and LGPL-2.1+)"
+LICENSE = "BSD-3-Clause LGPL-2.1+"
 PV = "11.40.277.0"
 
 SRC_URI = ""

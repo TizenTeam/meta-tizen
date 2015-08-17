@@ -1,7 +1,7 @@
 DESCRIPTION = "Tizen Web APIs implemented using Crosswalk"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "Development/Libraries"
-LICENSE = "BSD-3-Clause and Apache-2.0"
+LICENSE = "BSD-3-Clause & Apache-2.0"
 PV = "0.143"
 
 SRC_URI = ""

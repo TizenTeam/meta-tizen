@@ -1,7 +1,7 @@
 DESCRIPTION = "Secure storage"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "System/Security"
-LICENSE = "Apache 2.0"
+LICENSE = "Apache-2.0"
 PV = "0.12.9"
 
 SRC_URI = ""

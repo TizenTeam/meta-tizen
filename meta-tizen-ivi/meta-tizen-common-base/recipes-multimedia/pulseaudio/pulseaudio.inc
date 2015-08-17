@@ -1,7 +1,7 @@
 DESCRIPTION = "Improved Linux sound server"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "Multimedia/Audio"
-LICENSE = "GPL-2.0+ and LGPL-2.1+"
+LICENSE = "GPL-2.0+ & LGPL-2.1+"
 PV = "5.0"
 
 SRC_URI = ""

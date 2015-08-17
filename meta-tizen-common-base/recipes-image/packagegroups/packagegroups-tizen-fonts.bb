@@ -1,5 +1,5 @@
 SUMMARY = "Tizen fonts packagegroups"
-LICENSE = "(BitstreamVera and LGPLv2.0+)"
+LICENSE = "BitstreamVera & LGPLv2.0+"
 DESCRIPTION = "Pango and ttf fonts packages."
 
 inherit packagegroup

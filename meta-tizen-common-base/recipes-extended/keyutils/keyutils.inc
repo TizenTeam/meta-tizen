@@ -1,7 +1,7 @@
 DESCRIPTION = "Linux Key Management Utilities"
 HOMEPAGE = "http://people.redhat.com/~dhowells/keyutils/"
 SECTION = "System/Kernel"
-LICENSE = "GPL-2.0+ and LGPL-2.1+"
+LICENSE = "GPL-2.0+ & LGPL-2.1+"
 PV = "1.5.3"
 
 SRC_URI = ""

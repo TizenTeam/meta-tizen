@@ -1,7 +1,7 @@
 DESCRIPTION = "GLib based Single Sign-On daemon"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "Security/Accounts"
-LICENSE = "LGPL-2.1+ and GPL-2.0+"
+LICENSE = "LGPL-2.1+ & GPL-2.0+"
 PV = "1.0.3"
 
 SRC_URI = ""

@@ -1,7 +1,7 @@
 DESCRIPTION = "A free speech synthesis and text-to-speech system"
 HOMEPAGE = "http://www.cstr.ed.ac.uk/projects/festival/"
 SECTION = "System/Libraries"
-LICENSE = "MIT and GPL-2.0+ and TCL"
+LICENSE = "MIT & GPL-2.0+ & TCL"
 PV = "2.1"
 
 SRC_URI = ""

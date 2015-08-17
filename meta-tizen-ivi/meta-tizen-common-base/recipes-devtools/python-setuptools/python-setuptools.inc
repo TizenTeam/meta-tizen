@@ -1,7 +1,7 @@
 DESCRIPTION = "Easily build and distribute Python packages"
 HOMEPAGE = "http://nohomepage.org"
 SECTION = "Applications/System"
-LICENSE = "Python or ZPLv2.0"
+LICENSE = "Python | ZPLv2.0"
 PV = "0.6c11"
 
 SRC_URI = ""

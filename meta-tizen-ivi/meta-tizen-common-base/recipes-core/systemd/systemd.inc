@@ -1,7 +1,7 @@
 DESCRIPTION = "A System and Service Manager"
 HOMEPAGE = "http://www.freedesktop.org/wiki/Software/systemd"
 SECTION = "Base/Startup"
-LICENSE = "LGPL-2.0+ and MIT and GPL-2.0+"
+LICENSE = "LGPL-2.0+ & MIT & GPL-2.0+"
 PV = "216"
 
 SRC_URI = ""
