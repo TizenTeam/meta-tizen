@@ -118,23 +118,23 @@ pkg_postinst_${PN}() {
     HOME="$D${sysconfdir}/skel"
     . "$D${sysconfdir}/tizen-platform.conf"
     cat << ENDOFCAT |
-    $TZ_USER_HOME        User::Home           true
-    $TZ_USER_CONTENT     User::Home           true
-    $TZ_USER_CAMERA      User::App::Shared    true
-    $TZ_USER_DOCUMENTS   User::App::Shared    true
-    $TZ_USER_DOWNLOADS   User::App::Shared    true
-    $TZ_USER_GAMES       User::App::Shared    true
-    $TZ_USER_IMAGES      User::App::Shared    true
-    $TZ_USER_OTHERS      User::App::Shared    true
-    $TZ_USER_SOUNDS      User::App::Shared    true
-    $TZ_USER_VIDEOS      User::App::Shared    true
-    $TZ_USER_SHARE       User::App::Shared    true
-    $TZ_USER_APP         User                 false
-    $TZ_USER_DB          User                 false
-    $TZ_USER_DESKTOP     User                 false
-    $TZ_USER_ICONS       User::Home           true
-    $TZ_USER_PACKAGES    User                 false
-    ENDOFCAT
+$TZ_USER_HOME        User::Home           true
+$TZ_USER_CONTENT     User::Home           true
+$TZ_USER_CAMERA      User::App::Shared    true
+$TZ_USER_DOCUMENTS   User::App::Shared    true
+$TZ_USER_DOWNLOADS   User::App::Shared    true
+$TZ_USER_GAMES       User::App::Shared    true
+$TZ_USER_IMAGES      User::App::Shared    true
+$TZ_USER_OTHERS      User::App::Shared    true
+$TZ_USER_SOUNDS      User::App::Shared    true
+$TZ_USER_VIDEOS      User::App::Shared    true
+$TZ_USER_SHARE       User::App::Shared    true
+$TZ_USER_APP         User                 false
+$TZ_USER_DB          User                 false
+$TZ_USER_DESKTOP     User                 false
+$TZ_USER_ICONS       User::Home           true
+$TZ_USER_PACKAGES    User                 false
+ENDOFCAT
     LANG= sort | while read skelname context transmute; do
     	mkdir -p "$skelname"
     	chsmack -a "$context" "$skelname"
