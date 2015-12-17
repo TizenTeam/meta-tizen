@@ -103,7 +103,8 @@ do_install() {
  
  rm -rf ${D}${prefix}/share/doc/tiff*
  rm -f ${D}${prefix}/lib/*.la
- find html -name "Makefile*" | xargs rm
+ find ${D} -name "Makefile*" | xargs rm -fv
+ 
  
  
  
