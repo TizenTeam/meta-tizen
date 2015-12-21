@@ -1,3 +1,7 @@
+PACKAGECONFIG ??= "${@bb.utils.contains('SOC_FAMILY', 'rpi', '', 'egl', d)}"
+
+PACKAGECONFIG[efl] = "--enable-drm --enable-egl, --disable-drm --disable-egl"
+
 INSANE_SKIP_${PN} = "dev-so"
 
 DEPENDS += "efl-native"

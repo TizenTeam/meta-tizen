@@ -405,8 +405,6 @@ EXTRA_OECONF += " --enable-g-main-loop \
 					--enable-fb \
 					--disable-tslib \
 					--enable-wayland \
-					--enable-drm \
-					--enable-egl \
 					--with-opengl=es \
 					--enable-tile-rotate \
 					--disable-rpath \
