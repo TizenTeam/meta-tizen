@@ -87,9 +87,12 @@ do_install() {
  export LANG
  unset DISPLAY
  rm -rf ${D}
- mkdir -p ${D}
  
- mkdir -p ${D}/{${mandir}/{man1,man3},usr/{bin,lib,include}}
+ install -d ${D}/${mandir}/man1
+ install -d ${D}/${mandir}/man3
+ install -d ${D}/usr/bin
+ install -d ${D}/usr/include
+ install -d ${D}/usr/lib
  
    oe_runmake \
          DESTDIR=${D} \
