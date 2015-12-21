@@ -1,13 +1,13 @@
 # Base this image on rpi-hwup-image
 include recipes-core/images/rpi-hwup-image.bb	
 
-CORE_IMAGE_EXTRA_INSTALL += "nodejs"
-CORE_IMAGE_EXTRA_INSTALL += "nodejs-npm"
-CORE_IMAGE_EXTRA_INSTALL += "nginx"
-CORE_IMAGE_EXTRA_INSTALL += "wpa-supplicant"	
-CORE_IMAGE_EXTRA_INSTALL += "openssh openssh-sftp-server"	
-CORE_IMAGE_EXTRA_INSTALL += "systemd-serialgetty util-linux-agetty procps"	
-CORE_IMAGE_EXTRA_INSTALL += "userland"
+IMAGE_EXTRA_INSTALL += "nodejs"
+IMAGE_EXTRA_INSTALL += "nodejs-npm"
+IMAGE_EXTRA_INSTALL += "nginx"
+IMAGE_EXTRA_INSTALL += "wpa-supplicant"
+IMAGE_EXTRA_INSTALL += "openssh openssh-sftp-server"
+IMAGE_EXTRA_INSTALL += "systemd-serialgetty util-linux-agetty procps"
+IMAGE_EXTRA_INSTALL += "userland"
 
 # Set root password to "root"
 ROOTFS_POSTPROCESS_COMMAND += "set_root_passwd;"
