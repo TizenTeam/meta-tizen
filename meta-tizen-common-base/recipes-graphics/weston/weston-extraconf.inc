@@ -1,5 +1,18 @@
-PACKAGECONFIG ??= "${@bb.utils.contains('SOC_FAMILY', 'rpi', '', 'egl', d)}"
+PACKAGECONFIG ??= ""
+
+# The current experimental vc4 drivers for RPI2 don't like the glesv2 backend
+#	so, only enable it for archs where this is known to work
+PACKAGECONFIG += "${@bb.utils.contains('SOC_FAMILY', 'rpi', '', 'egl', d)}"
 PACKAGECONFIG += "${@bb.utils.contains('SOC_FAMILY', 'rpi', '', 'cairo-glesv2', d)}"
+
+DEPENDS[egl] += "virtual/egl"
+DEPENDS += "${@bb.utils.contains('PACKAGECONFIG', 'egl', 'virtual/egl' , 'virtual/mesa',  d)}"
+DEPENDS += "${@bb.utils.contains('PACKAGECONFIG', 'cairo-glesv2', 'virtual/libgles2', '', d)}"
+DEPENDS[egl] += "virtual/libgles2"
+
+PACKAGECONFIG[egl] = "--enable-egl --enable-simple-egl-clients,--disable-egl --disable-simple-egl-clients,virtual/egl"
+
+PACKAGECONFIG[cairo-glesv2] = "--with-cairo-glesv2,--with-cairo=image,cairo"
 
 RDEPENDS_${PN} += "xkeyboard-config"
 RRECOMMENDS_${PN} = "liberation-fonts"
@@ -35,16 +48,6 @@ EXTRA_OECONF += " --disable-static \
   --disable-xwayland \
   --disable-xwayland-test \
   "
-
-# The current experimental vc4 drivers for RPI2 don't like the glesv2 backend
-#	so, only enable it for archs where this is known to work
-
-EXTRA_OECONF += "${@bb.utils.contains('PACKAGECONFIG', 'cairo-glesv2', ' --with-cairo=glesv2', '', d)}"
-
-
-# Weston with EGL support
-EXTRA_OECONF += "${@bb.utils.contains('PACKAGECONFIG', 'egl', ' --enable-egl --enable-simple-egl-clients --enable-drm-compositor --enable-wayland-compositor', '--disable-egl', d)}"
-
 
 do_configure_prepend() {
     sed -i 's/PKG_CHECK_MODULES(WAYLAND_SCANNER, wayland-scanner)//' configure.ac
