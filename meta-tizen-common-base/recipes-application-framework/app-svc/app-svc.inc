@@ -22,7 +22,6 @@ PROVIDES += "app-svc-dev"
 
 RDEPENDS = ""
 #RDEPENDS of app-svc (${PN})
-RDEPENDS_${PN} += "glibc"
 
 #RDEPENDS of app-svc-dev (${PN}-dev)
 RDEPENDS_${PN}-dev += "app-svc"
@@ -32,6 +31,7 @@ DEPENDS = ""
 #DEPENDS of app-svc
 DEPENDS += "pkgmgr-info"
 DEPENDS += "libsoup-2.4"
+
 inherit tizen_cmake
 DEPENDS += "iniparser"
 DEPENDS += "tizen-platform-config"
