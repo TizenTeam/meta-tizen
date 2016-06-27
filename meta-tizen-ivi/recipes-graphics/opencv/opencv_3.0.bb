@@ -12,8 +12,9 @@ DEPENDS = "python-numpy libtool swig swig-native python bzip2 zlib glib-2.0"
 SRCREV = "ae4cb571ab4fdca3c7be57f0de19743f823daf3f"
 SRC_URI = "git://github.com/Itseez/opencv.git;branch=master \
 "
-
 PV = "3.0.0-beta+git${SRCPV}"
+OPENCV_ICV_URL = "http://downloads.sourceforge.net/project/opencvlibrary/3rdparty/ippicv/"
+
 
 S = "${WORKDIR}/git"
 
@@ -21,13 +22,14 @@ S = "${WORKDIR}/git"
 OECMAKE_SOURCEPATH = "${S}"
 OECMAKE_BUILDPATH = "${WORKDIR}/build-${TARGET_ARCH}"
 
-EXTRA_OECMAKE = "-DPYTHON_NUMPY_INCLUDE_DIR:PATH=${STAGING_LIBDIR}/${PYTHON_DIR}/site-packages/numpy/core/include \
+EXTRA_OECMAKE = "-VV -DPYTHON_NUMPY_INCLUDE_DIR:PATH=${STAGING_LIBDIR}/${PYTHON_DIR}/site-packages/numpy/core/include \
                  -DBUILD_PYTHON_SUPPORT=ON \
                  -DWITH_GSTREAMER=OFF \
                  -DCMAKE_SKIP_RPATH=ON \
                  ${@bb.utils.contains("TARGET_CC_ARCH", "-msse3", "-DENABLE_SSE=1 -DENABLE_SSE2=1 -DENABLE_SSE3=1 -DENABLE_SSSE3=1", "", d)} \
                  ${@base_conditional("libdir", "/usr/lib64", "-DLIB_SUFFIX=64", "", d)} \
                  ${@base_conditional("libdir", "/usr/lib32", "-DLIB_SUFFIX=32", "", d)} \
+                 -DOPENCV_ICV_URL=${OPENCV_ICV_URL} \
 "
 
 # libav not enabled by default because ffmpeg_codecs.hpp fails to compile
