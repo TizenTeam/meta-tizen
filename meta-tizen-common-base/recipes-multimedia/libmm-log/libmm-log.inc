@@ -50,7 +50,7 @@ do_compile() {
   unset DISPLAY
   LD_AS_NEEDED=1; export LD_AS_NEEDED ;
   
-  export CFLAGS+=" -DUSE_DLOG"
+  CFLAGS="$CFLAG -DUSE_DLOG"; export CFLAGS
   
   
   
