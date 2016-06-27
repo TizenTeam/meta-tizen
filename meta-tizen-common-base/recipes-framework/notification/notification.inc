@@ -31,7 +31,10 @@ RDEPENDS_${PN}-service-dev += "notification"
 #RDEPENDS of notification (${PN})
 RDEPENDS_${PN} += "sqlite3"
 RDEPENDS_${PN} += "glibc"
+RDEPENDS_${PN}_remove_class-native = "glibc-native"
+
 RDEPENDS_${PN} += "libtzplatform-config"
+RDEPENDS_${PN}_remove_class-native = "libtzplatform-config-native"
 
 #RDEPENDS of notification-dev (${PN}-dev)
 RDEPENDS_${PN}-dev += "notification"
