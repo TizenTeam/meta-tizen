@@ -8,3 +8,5 @@ SRC_URI += "git://review.tizen.org/platform/core/multimedia/libmm-common;tag=b27
 
 BBCLASSEXTEND += " native "
 
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-${PV}:"
+SRC_URI += "file://mm_list_private.patch"
