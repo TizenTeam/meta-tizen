@@ -25,7 +25,6 @@ RDEPENDS = ""
 RDEPENDS_${PN}-dev += "capi-base-common"
 
 #RDEPENDS of capi-base-common (${PN})
-RDEPENDS_${PN} += "glibc"
 
 
 DEPENDS = ""
